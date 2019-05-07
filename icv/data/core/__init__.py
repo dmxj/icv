@@ -1,0 +1,3 @@
+# transpose
+FLIP_LEFT_RIGHT = 0
+FLIP_TOP_BOTTOM = 1
