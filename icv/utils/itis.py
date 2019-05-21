@@ -29,6 +29,12 @@ def is_seq_equal(seq1,seq2,strict=False):
 def is_file(input):
     return os.path.isfile(input) and os.path.exists(input)
 
+def is_dir(input):
+    return os.path.isdir(input) and os.path.exists(input)
+
+def is_path(input):
+    return is_file(input) or is_dir(input)
+
 def is_empty(input):
     if is_str(input):
         return input == ""
@@ -36,6 +42,12 @@ def is_empty(input):
         return len(input) == 0
 
     return input is None
+
+def is_valid_url(url):
+    import re
+    if re.match(r'^https?:/{2}\w.+$', url):
+        return True
+    return False
 
 def is_py3():
     import sys

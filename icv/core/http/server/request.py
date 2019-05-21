@@ -2,7 +2,7 @@
 
 import re
 import logging
-from .exceptions import HttpParseException
+from ..exceptions import HttpParseException
 
 Log = logging.getLogger('simpleHttpServer.server')
 

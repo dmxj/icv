@@ -8,7 +8,6 @@ except ImportError:
     # Python 3.x
     from socketserver import ThreadingMixIn
     from http.server import SimpleHTTPRequestHandler, HTTPServer
-from .simple_http_handler import IcvHandler
 
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
     pass
@@ -20,7 +19,7 @@ class IcvServer(object):
         self.server = None
         self.handler = IcvServer
 
-    def run(self):
-        self.server = ThreadingSimpleServer((self.host, self.port), IcvHandler)
+    def run(self,handler_class):
+        self.server = ThreadingSimpleServer((self.host, self.port), handler_class)
         self.server.serve_forever()
 

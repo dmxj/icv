@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 import logging
-from .status_code import HTTP_STATUS_CODES
+from ..status_code import HTTP_STATUS_CODES
 
 Log = logging.getLogger('simpleHttpServer.response')
 

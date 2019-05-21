@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 from easydict import EasyDict as edict
+import numpy as np
 
 class BBox(object):
     def __init__(self,xmin,ymin,xmax,ymax,label=None,**kwargs):
@@ -31,6 +32,16 @@ class BBox(object):
         self.add_field("width", self.width)
         self.add_field("height", self.height)
 
+    @staticmethod
+    def init_from(bbox):
+        assert isinstance(bbox, BBox) or isinstance(bbox, list) or isinstance(bbox, np.ndarray)
+        if isinstance(bbox, np.ndarray):
+            bbox = bbox.tolist()
+        if isinstance(bbox, list):
+            assert len(bbox) == 4
+            bbox = BBox(xmin=bbox[0], ymin=bbox[1], xmax=bbox[2], ymax=bbox[3])
+        return bbox
+
     def add_field(self, field, field_data):
         self.fields[field] = field_data
 
@@ -42,6 +53,10 @@ class BBox(object):
 
     def fields(self):
         return list(self.fields.keys())
+
+    @property
+    def bbox(self):
+        return [self._xmin,self._ymin,self._xmax,self._ymax]
 
     @property
     def xmin(self):
@@ -70,6 +85,31 @@ class BBox(object):
     @property
     def height(self):
         return self._height
+
+    def iou(self,bbox):
+        bbox = BBox.init_from(bbox)
+        # TODO: check it
+        # determine the (x, y)-coordinates of the intersection rectangle
+        xA = max(self.xmin, bbox.xmin)
+        yA = max(self.ymin, bbox.ymin)
+        xB = min(self.xmax, bbox.xmax)
+        yB = min(self.ymax, bbox.ymax)
+
+        # compute the area of intersection rectangle
+        interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
+
+        # compute the area of both the prediction and ground-truth
+        # rectangles
+        boxAArea = (self.xmax - self.xmin + 1) * (self.ymax - self.ymin + 1)
+        boxBArea = (bbox.xmax - bbox.xmin + 1) * (bbox.ymax - bbox.ymin + 1)
+
+        # compute the intersection over union by taking the intersection
+        # area and dividing it by the sum of prediction + ground-truth
+        # areas - the interesection area
+        iou = interArea / float(boxAArea + boxBArea - interArea)
+
+        # return the intersection over union value
+        return iou
 
     def __repr__(self) -> str:
         s = self.__class__.__name__ + "("

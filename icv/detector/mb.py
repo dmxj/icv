@@ -8,10 +8,11 @@ except ImportError as e:
 
 from .detector import Detector
 from .result import DetectionResult
-from icv.image import imwrite,imshow,imresize
+from icv.image import imread,imwrite,imshow,imresize
 import torch
-from icv.image import imread
-from icv.utils import Timer
+import os
+import numpy as np
+from icv.utils import Timer,is_file
 from torchvision import transforms as T
 from maskrcnn_benchmark.modeling.detector import build_detection_model
 from maskrcnn_benchmark.utils.checkpoint import DetectronCheckpointer
@@ -25,10 +26,13 @@ class MbDetector(Detector):
     def __init__(self,model_path,config_file,categories,show_mask_heatmaps=False,iou_thr=0.5,score_thr=0.5,device=None):
         super(MbDetector, self).__init__(categories=categories, iou_thr=iou_thr, score_thr=score_thr,device=device)
 
+        assert is_file(model_path),"model path does not exist!"
+        assert is_file(config_file),"config path does not exist!"
+
         self.model_path = model_path
         self.config_file = config_file
+        cfg.merge_from_file(config_file)
         self.cfg = cfg.clone()
-        self.cfg.merge_from_file(config_file)
         self.cpu_device = torch.device("cpu")
 
         mask_threshold = -1 if show_mask_heatmaps else 0.5
@@ -43,7 +47,7 @@ class MbDetector(Detector):
         self.model.to(self.device)
 
         checkpointer = DetectronCheckpointer(self.cfg, self.model)
-        _ = checkpointer.load(cfg.MODEL.WEIGHT)
+        _ = checkpointer.load(self.model_path)
 
         self.transforms = self._build_transform()
 
@@ -139,38 +143,54 @@ class MbDetector(Detector):
                   list(zip(original_image_list, predictions))]
         return predictions
 
-    def _build_result(self, inference_result, inference_time=0):
+    def _build_result(self, inference_result, inference_time=0, score_thr=-1):
         assert isinstance(inference_result,BoxList),"inference result should be type of BoxList!"
-        detection_classes = inference_result.get_field("labels")
-        detection_scores = inference_result.get_field("scores")
-
-        detection_bboxes = []
+        classes_result = inference_result.get_field("labels")
+        scores_result = inference_result.get_field("scores")
         bbox_result = inference_result.bbox
-        for ix in enumerate(bbox_result.shape[0]):
-            detection_bboxes.append(BBox(bbox_result[ix,0],bbox_result[ix,1],bbox_result[ix,2],bbox_result[ix,3]))
 
         segm_result = None
         if inference_result.has_field("mask"):
             segm_result = inference_result.get_field("mask")
 
+        detection_classes = []
+        detection_scores = []
+        detection_bboxes = []
+        detection_segm = []
+        for ix in range(bbox_result.shape[0]):
+            xmin,ymin,xmax,ymax = bbox_result[ix,:]
+            if xmin >= xmax or ymin >= ymax:
+                continue
+            detection_classes.append(classes_result[ix])
+            detection_scores.append(scores_result[ix])
+            detection_bboxes.append(BBox(xmin,ymin,xmax,ymax))
+            if segm_result is not None:
+                detection_segm.append(segm_result[ix,...])
+
+        detection_segm = None if len(detection_segm) == 0 else detection_segm
+
+        score_thr = score_thr if score_thr >= 0 else self.score_thr
         det_result = DetectionResult(
             det_bboxes=detection_bboxes,
-            det_classes=detection_classes,
-            det_scores=detection_scores,
-            det_masks=segm_result,
+            det_classes=np.array(detection_classes),
+            det_scores=np.array(detection_scores),
+            det_masks=np.array(detection_segm),
             det_time=inference_time,
+            categories=self.categories,
+            score_thr=score_thr
         )
 
         return det_result
 
-    def inference(self, image, is_show=False, save_path=None):
-        image_np = self.transforms(imread(image))
+    def inference(self, image, is_show=False, save_path=None, score_thr=-1):
+        image_np = imread(image)
         timer = Timer()
         result = self._compute_prediction(image_np)
         inference_time = timer.since_start()
 
-        det_result = self._build_result(result, inference_time)
-        det_result.vis(image_np)
+        score_thr = score_thr if score_thr >= 0 else self.score_thr
+        det_result = self._build_result(result, inference_time, score_thr)
+        det_result.vis(image)
 
         if is_show:
             imshow(det_result.det_image)
@@ -180,7 +200,7 @@ class MbDetector(Detector):
 
         return det_result
 
-    def inference_batch(self, image_batch, resize=None):
+    def inference_batch(self, image_batch, save_dir=None, resize=None, score_thr=-1):
         image_np_list = [imread(img) for img in image_batch]
         if resize:
             image_np_list = [imresize(img_np,resize) for img_np in image_np_list]
@@ -191,15 +211,17 @@ class MbDetector(Detector):
         timer = Timer()
         predictions = self._compute_prediction_on_batch(image_np_list)
         inference_time = timer.since_start()
+        score_thr = score_thr if score_thr >= 0 else self.score_thr
 
         det_result_list = []
         for ix,result in enumerate(predictions):
-            det_result = self._build_result(result,inference_time)
+            det_result = self._build_result(result,inference_time,score_thr)
             det_result.vis(image_np_list[ix])
+
+            if save_dir is not None:
+                save_path = os.path.join(save_dir,os.path.basename(image_batch[ix])) if is_file(image_batch[0]) else os.path.join(save_dir,str(ix)+".jpg")
+                imwrite(det_result.det_image, save_path)
 
             det_result_list.append(det_result)
 
         return det_result_list
-
-    def start_server(self,port=8088,token=None):
-        pass

@@ -1,17 +1,19 @@
 # -*- coding: UTF-8 -*-
-from icv.image import imread,imwrite,imresize
+import os
+from icv.image import imread,imwrite,imresize,imshow
 from .detector import Detector
 from icv.data import BBox
-from icv.vis import imshow
-from icv.utils import Timer
+from icv.utils import Timer,is_file,is_seq
 from .result import DetectionResult
 import tensorflow as tf
 import numpy as np
 from .utils import ops as utils_ops
 
 class TfObjectDetector(Detector):
-    def __init__(self,model_path,labelmap_path,iou_thr=0.5,score_thr=0.5,device=None):
-        super(TfObjectDetector,self).__init__(labelmap_path=labelmap_path,iou_thr=iou_thr,score_thr=score_thr,device=device)
+    def __init__(self,model_path,labelmap_path=None,categories=[],iou_thr=0.5,score_thr=0.5,device=None):
+        assert is_file(model_path)
+        assert (is_seq(categories) and len(categories) > 0) or is_file(labelmap_path)
+        super(TfObjectDetector,self).__init__(categories=categories,labelmap_path=labelmap_path,iou_thr=iou_thr,score_thr=score_thr,device=device)
 
         self.model_path = model_path
         self._build_detector()
@@ -77,8 +79,9 @@ class TfObjectDetector(Detector):
             self.tensor_dict['detection_masks'] = tf.expand_dims(
                 detection_masks_reframed, 0)
 
-    def inference(self,image,is_show=False,save_path=None):
+    def inference(self,image,is_show=False,save_path=None, score_thr=-1):
         image_np = imread(image)
+        img_height,img_width = image_np.shape[:2]
         self._reframe_detection_mask(image_np)
         timer = Timer()
         # Run inference
@@ -97,14 +100,25 @@ class TfObjectDetector(Detector):
         if 'detection_masks' in output_dict:
             detection_masks = output_dict['detection_masks'][0]
 
-        detection_bboxes = [BBox(det_box[1],det_box[0],det_box[3],det_box[2]) for det_box in detection_boxes]
+        detection_bboxes = [
+            BBox(
+                xmin=det_box[1]*img_width,
+                ymin=det_box[0]*img_height,
+                xmax=det_box[3]*img_width,
+                ymax=det_box[2]*img_height
+            )
+            for det_box in detection_boxes
+        ]
 
+        score_thr = score_thr if score_thr >= 0 else self.score_thr
         det_result = DetectionResult(
             det_bboxes  = detection_bboxes,
             det_classes = detection_classes,
             det_scores  = detection_scores,
             det_masks = detection_masks,
             det_time=inference_time,
+            categories=self.categories,
+            score_thr=score_thr
         )
 
         det_result.vis(image_np)
@@ -117,7 +131,7 @@ class TfObjectDetector(Detector):
 
         return det_result
 
-    def inference_batch(self,image_batch,resize=None):
+    def inference_batch(self,image_batch,save_dir=None, resize=None, score_thr=-1):
         self._reframe_detection_mask(imread(image_batch[0]))
         if isinstance(image_batch,np.ndarray):
             image_np_batch = image_batch
@@ -142,8 +156,10 @@ class TfObjectDetector(Detector):
 
         inference_time = timer.since_start()
 
+        score_thr = score_thr if score_thr >= 0 else self.score_thr
         det_result_list = []
         for ix, image in enumerate(image_np_batch):
+            img_height, img_width = image.shape[:2]
             # all outputs are float32 numpy arrays, so convert types as appropriate
             num_detections = int(output_dict['num_detections'][ix])
             detection_classes = output_dict[
@@ -154,7 +170,15 @@ class TfObjectDetector(Detector):
             if 'detection_masks' in output_dict:
                 detection_masks = output_dict['detection_masks'][ix]
 
-            detection_bboxes = [BBox(det_box[1], det_box[0], det_box[3], det_box[2]) for det_box in detection_boxes]
+            detection_bboxes = [
+                BBox(
+                    xmin=det_box[1] * img_width,
+                    ymin=det_box[0] * img_height,
+                    xmax=det_box[3] * img_width,
+                    ymax=det_box[2] * img_height
+                )
+                for det_box in detection_boxes
+            ]
 
             det_result = DetectionResult(
                 det_bboxes=detection_bboxes,
@@ -162,13 +186,15 @@ class TfObjectDetector(Detector):
                 det_scores=detection_scores,
                 det_masks=detection_masks,
                 det_time=inference_time,
+                score_thr=score_thr
             )
             det_result.vis(image)
+
+            if save_dir is not None:
+                save_path = os.path.join(save_dir,os.path.basename(image_batch[ix])) if is_file(image_batch[0]) else os.path.join(save_dir,str(ix)+".jpg")
+                imwrite(det_result.det_image, save_path)
 
             det_result_list.append(det_result)
 
         return det_result_list
-
-    def start_server(self,port=8088,token=None):
-        pass
 

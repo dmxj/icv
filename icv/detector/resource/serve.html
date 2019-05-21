@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{name}}</title>
+    <style>
+    *, :after, :before {
+        box-sizing: border-box;
+    }
+    ::selection {
+        background-color: rgba(0,0,0,.2);
+    }
+    input, button, select, optgroup, textarea {
+        margin: 0;
+        color: inherit;
+        font-size: inherit;
+        font-family: inherit;
+        line-height: inherit;
+    }
+    input[type='text'], input[type='password'], input[type='number'], textarea {
+        -webkit-appearance: none;
+    }
+    button, select {
+        text-transform: none;
+    }
+    button, [role='button'], input:not([type='range']){
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+    }
+    button, html [type="button"], [type="reset"], [type="submit"] {
+        -webkit-appearance: button;
+    }
+
+    body {
+        line-height: 20px;
+        font-family: PingFangSC,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Helvetica Neue,sans-serif;
+        font-size: 14px;
+        color: #383838;
+    }
+    body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-overflow-scrolling: touch;
+    }
+    @media only screen and (min-width: 0){
+        .middle-xs {
+            -ms-flex-align: center;
+            align-items: center;
+        }
+        .center-xs {
+            -ms-flex-pack: center;
+            justify-content: center;
+            text-align: center;
+        }
+    }
+    .row {
+        box-sizing: border-box;
+        /*display: -ms-flexbox;*/
+        /*display: flex;*/
+        /*-ms-flex: 0 1 auto;*/
+        /*flex: 0 1 auto;*/
+        /*-ms-flex-direction: row;*/
+        /*flex-direction: row;*/
+        /*-ms-flex-wrap: wrap;*/
+        /*flex-wrap: wrap;*/
+        margin-right: -5px;
+        margin-left: -5px;
+    }
+    .app-container {
+        height: 100%;
+    }
+    .landing-root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        /*display: -ms-flexbox;*/
+        /*display: flex;*/
+        /*-ms-flex-direction: column;*/
+        /*flex-direction: column;*/
+        /*-ms-flex-pack: center;*/
+        /*justify-content: center;*/
+        /*-ms-flex-align: center;*/
+        /*align-items: center;*/
+        background: url(https://cdn.ruguoapp.com/jike-web/static/images/bg.bbf9111.svg) 50% no-repeat;
+        background-size: cover;
+    }
+    .landing-footer, .landing-header {
+        /*position: absolute;*/
+        width: 100%;
+        /*left: 0;*/
+    }
+    .landing-header {
+        z-index: 99;
+        top: 0;
+        height: 50px;
+        line-height: 50px;
+        background: #fff;
+        border-bottom: 1px solid #ebedf0;
+        -webkit-box-shadow: 0 2px 8px #f0f1f2;
+        box-shadow: 0 2px 8px #f0f1f2;
+    }
+    .landing-header .brand-name {
+        font-size: 16px;
+        font-weight: 700;
+        margin-left: 10px;
+    }
+    #body{
+        width: 100%;
+        min-height: 571px;
+        /*margin-top: 100px;*/
+        /*position: fixed;*/
+        /*top: 60px;*/
+    }
+    .option-box{
+        width: 50%;
+        margin: -20px auto 20px;
+    }
+    .option-box-title{
+        width: 100%;
+        text-align: right;
+        margin-right: 10px;
+        background-color: #ffffff;
+        line-height: 40px;
+    }
+    .option-box-title a{
+        margin-right: 10px;
+        color: #314659;
+        font-weight: 500;
+        font-size: 14px;
+    }
+    .option-box-title a,.option-box-title a:active,.option-box-title a:hover,.option-box-title a:link{
+        text-decoration: none;
+        outline: 0;
+    }
+    .option-box-content{
+        padding: 10px;
+        border: 1px dashed #e9e9e9;
+        border-top: none;
+        border-radius: 6px;
+        background-color: #fafafa;
+    }
+    .form-item{
+        display: flex;
+        display: -webkit-flex;
+        margin: 5px;
+        height: 32px;
+    }
+    .form-item-label{
+        width: 200px;
+        text-align: right;
+        margin-right: 8px;
+        height: 28px;
+        line-height: 28px;
+    }
+    .form-item-control{
+        width: 80%;
+    }
+    .form-input{
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-variant: tabular-nums;
+        list-style: none;
+        -webkit-font-feature-settings: 'tnum';
+        font-feature-settings: 'tnum';
+        position: relative;
+        display: inline-block;
+        /* width: 100%; */
+        height: 32px;
+        padding: 4px 11px;
+        color: rgba(0,0,0,0.65);
+        font-size: 14px;
+        line-height: 1.5;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        -webkit-transition: all .3s;
+        transition: all .3s;
+    }
+    .form-input:hover{
+        border-color: #40a9ff;
+        border-right-width: 1px !important;
+    }
+    .form-input:focus{
+        border-color:#40a9ff;
+        border-right-width:1px !important;
+        outline:0;
+        -webkit-box-shadow:0 0 0 2px rgba(24,144,255,0.2);
+        box-shadow:0 0 0 2px rgba(24,144,255,0.2);
+    }
+    .landing-footer {
+        bottom: 0;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        color: #efefef;
+        background: rgba(64, 64, 64, 0.5);
+    }
+    .landing-footer .row, .landing-header .row {
+        width: 100%;
+        max-width: 1090px;
+        height: 100%;
+        margin: auto;
+    }
+    .box-item{
+        display: flex;
+        display: -webkit-flex;
+        margin: 10px 20px;
+    }
+    .box-item span{
+        width: 20px;
+    }
+    .box-left,.box-right{
+        border: 1px solid #ebedf0;
+        border-radius: 2px;
+        -webkit-transition: all .2s;
+        transition: all .2s;
+        padding: 10px;
+        text-align: center;
+    }
+    .box-left{
+        flex:0 1 50%;
+    }
+    .box-right{
+        flex:1;
+    }
+    .image-item{
+        min-height: 80px;
+        min-width: 100px;
+        max-height: 2000px;
+        max-width: 96%;
+        cursor: pointer;
+    }
+    .image-about{
+        margin-top: 10px;
+        border-top: 1px dashed #ebedf0;
+        opacity: .7;
+        -webkit-transition: opacity .3s;
+        transition: opacity .3s;
+    }
+    img.intense{
+        cursor: url('/static/plus_cursor.png') 25 25, auto;
+    }
+
+    .ant-upload {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        color: rgba(0,0,0,0.65);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5;
+        list-style: none;
+        -webkit-font-feature-settings: 'tnum';
+        font-feature-settings: 'tnum';
+        outline: 0;
+    }
+    .ant-upload.ant-upload-select {
+        display: inline-block;
+    }
+    .ant-upload input[type='file'] {
+        cursor: pointer;
+    }
+    .ant-btn {
+        line-height: 1.499;
+        position: relative;
+        display: inline-block;
+        font-weight: 400;
+        white-space: nowrap;
+        text-align: center;
+        background-image: none;
+        border: 1px solid transparent;
+        -webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.015);
+        box-shadow: 0 2px 0 rgba(0,0,0,0.015);
+        cursor: pointer;
+        -webkit-transition: all .3s cubic-bezier(.645, .045, .355, 1);
+        transition: all .3s cubic-bezier(.645, .045, .355, 1);
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        height: 32px;
+        padding: 0 15px;
+        font-size: 14px;
+        border-radius: 4px;
+        color: rgba(0,0,0,0.65);
+        background-color: #fff;
+        border-color: #d9d9d9;
+    }
+
+    .ant-btn, .ant-btn:active, .ant-btn:focus {
+        outline: 0;
+    }
+    .ant-btn:hover, .ant-btn:focus {
+        color: #40a9ff;
+        background-color: #fff;
+        border-color: #40a9ff;
+    }
+    .ant-btn:active, .ant-btn.active {
+        color: #096dd9;
+        background-color: #fff;
+        border-color: #096dd9;
+    }
+    .ant-btn:hover, .ant-btn:focus, .ant-btn:active, .ant-btn.active {
+        text-decoration: none;
+        background: #fff;
+    }
+    .ant-btn:not([disabled]):hover {
+        text-decoration: none;
+    }
+    .ant-btn:not([disabled]):active {
+        outline: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+    .ant-btn .anticon {
+        -webkit-transition: margin-left .3s cubic-bezier(.645, .045, .355, 1);
+        transition: margin-left .3s cubic-bezier(.645, .045, .355, 1);
+    }
+    .ant-btn>.anticon {
+        line-height: 1;
+    }
+    .ant-btn>i, .ant-btn>span {
+        display: inline-block;
+        pointer-events: none;
+    }
+    .anticon>* {
+        line-height: 1;
+    }
+    svg:not(:root) {
+        overflow: hidden;
+    }
+    .anticon svg {
+        display: inline-block;
+    }
+
+    .progress {
+        margin-bottom:0;
+        margin-top:6px;
+        margin-left:10px;
+    }
+
+    @-webkit-keyframes rotate-forever { 0% { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); -moz-transform: rotate(360deg); -ms-transform: rotate(360deg); -o-transform: rotate(360deg); transform: rotate(360deg); } }
+    @-moz-keyframes rotate-forever { 0% { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); -moz-transform: rotate(360deg); -ms-transform: rotate(360deg); -o-transform: rotate(360deg); transform: rotate(360deg); } }
+    @keyframes rotate-forever { 0% { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); -moz-transform: rotate(360deg); -ms-transform: rotate(360deg); -o-transform: rotate(360deg); transform: rotate(360deg); } }
+
+    .modalDialog {
+        position: fixed;
+        font-family: Arial, Helvetica, sans-serif;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 99999;
+        opacity: 0;
+        -webkit-transition: opacity 400ms ease-in;
+        -moz-transition: opacity 400ms ease-in;
+        transition: opacity 400ms ease-in;
+        pointer-events: none;
+    }
+    .modalDialog:target {
+        opacity:1;
+        pointer-events: auto;
+    }
+    .modalDialog > div {
+        width: 100%;
+        position: relative;
+        margin: 20% auto;
+    }
+    .loading-spinner {
+        -webkit-animation-duration: 0.75s;
+        -moz-animation-duration: 0.75s;
+        animation-duration: 0.75s;
+        -webkit-animation-iteration-count: infinite;
+        -moz-animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
+        -webkit-animation-name: rotate-forever;
+        -moz-animation-name: rotate-forever;
+        animation-name: rotate-forever;
+        -webkit-animation-timing-function: linear;
+        -moz-animation-timing-function: linear;
+        animation-timing-function: linear;
+        height: 30px;
+        width: 30px;
+        border: 8px solid #ffffff;
+        border-right-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        right: 0;
+        bottom: 0;
+        left: 50%;
+        margin: -15px 0 -15px;
+    }
+    .loading-title {
+        position: absolute;
+        top: 30px;
+        left: 18px;
+        width: 100%;
+        text-align: center;
+        color: #ffffff;
+    }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/static/notie.min.css"></link>
+    <script type="text/javascript" src="/static/notie.min.js"></script>
+    <script type="text/javascript" src="/static/intense.min.js"></script>
+    <script type="text/javascript" src="/static/simple_ajax_uploader.js"></script>
+</head>
+<body>
+    <div id="container" class="app-container">
+        <div class="landing-root">
+            <header id="header" class="landing-header">
+                <div class="row middle-xs landing-header-content">
+                    <span class="brand-name">{{name}}</span>
+                </div>
+            </header>
+            <div id="body">
+                <div class="row" style="padding-top:10px;text-align: center;display: inline;">
+                    <div>
+                      <span class=""><div id="uploadBtn" class="ant-upload ant-upload-select ant-upload-select-text"><span tabindex="0" class="ant-upload" role="button"><input type="file" accept="" style="display: none;"><button type="button" class="ant-btn"><i aria-label="图标: upload" class="anticon anticon-upload"><svg viewBox="64 64 896 896" class="" data-icon="upload" width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false"><path d="M400 317.7h73.9V656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V317.7H624c6.7 0 10.4-7.7 6.3-12.9L518.3 163a8 8 0 0 0-12.6 0l-112 141.7c-4.1 5.3-.4 13 6.3 13zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z"></path></svg></i><span> Click to Upload</span></button></span></div><div class="ant-upload-list ant-upload-list-text"></div></span>
+                      <!--<button id="uploadBtn" class="btn btn-large btn-primary">Choose File</button>-->
+                    </div>
+                    <div id="progressOuter" class="progress progress-striped active" style="display:none;">
+                        <div id="progressBar" class="progress-bar progress-bar-success"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:10px;">
+                    <div id="msgBox">
+                    </div>
+                </div>
+                <div id="option-box" class="option-box">
+                    <div class="option-box-title">
+                        <a href="javascript:;" id="toggle-option-box">关闭选项</a>
+                    </div>
+                    <div style="border-top: 1px dashed #e9e9e9;;margin-top: -20px;"></div>
+                    <div class="option-box-content" id="option-box-content">
+                        <form action="">
+                            <div class="form-item">
+                                <div class="form-item-label">
+                                    <label for="score_thr">置信度阈值</label>
+                                </div>
+                                <div class="form-item-control">
+                                    <input type="text" class="form-input" id="score_thr" name="score_thr" value="{{default_params_score_thr}}">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="result_container">
+
+                </div>
+            </div>
+            <footer id="footer" class="landing-footer">
+                <div class="row middle-xs landing-footer-content center-xs">
+                    © 2019 Rensike, Inc.
+                </div>
+            </footer>
+        </div>
+    </div>
+
+<div id="openModalLoading" class="modalDialog">
+    <div><div class="loading-spinner"></div><div class="loading-title">模型预测中，请稍候...</div></div>
+</div>
+<script>
+function escapeTags( str ) {
+  return String( str )
+           .replace( /&/g, '&amp;' )
+           .replace( /"/g, '&quot;' )
+           .replace( /'/g, '&#39;' )
+           .replace( /</g, '&lt;' )
+           .replace( />/g, '&gt;' );
+}
+
+var loadingModal = document.getElementById('openModalLoading');
+function loading(show){
+    if(show){
+        loadingModal.style.opacity=1.0;
+    }else{
+        loadingModal.style.opacity=0;
+    }
+}
+
+var toggle_option_box_btn = document.getElementById("toggle-option-box");
+toggle_option_box_btn.onclick=function(){
+    var option_box_content = document.getElementById("option-box-content");
+    if(option_box_content.style.display == "none"){
+        option_box_content.style.display = "block";
+        toggle_option_box_btn.innerText = "关闭选项";
+    }else{
+        option_box_content.style.display = "none";
+        toggle_option_box_btn.innerText = "打开选项";
+    }
+};
+window.onload = function() {
+  document.getElementById("body").style.minHeight=document.body.clientHeight-100;
+  var btn = document.getElementById('uploadBtn'),
+      progressBar = document.getElementById('progressBar'),
+      progressOuter = document.getElementById('progressOuter'),
+      msgBox = document.getElementById('msgBox');
+  var uploader = new ss.SimpleUpload({
+        button: btn,
+        url: '/upload',
+        name: 'uploadfile',
+        multipart: true,
+        hoverClass: 'hover',
+        focusClass: 'focus',
+        responseType: 'json',
+        startXHR: function() {
+            progressOuter.style.display = 'block'; // make progress bar visible
+            this.setProgressBar( progressBar );
+            loading(true);
+        },
+        onSubmit: function() {
+            this.setData({
+                "name":"rsk",
+                "score_thr":document.getElementById("score_thr").value,
+            });
+            msgBox.innerHTML = ''; // empty the message box
+          },
+        onComplete: function( filename, response ) {
+            loading(false);
+            progressOuter.style.display = 'none'; // hide progress bar when upload is completed
+            if ( !response ) {
+                msgBox.innerHTML = 'Unable to upload file';
+                return;
+            }
+            if ( response.success === true ) {
+                var result_container = document.getElementById("result_container");
+                var image_vis_html = '<div class="box-item">\n' +
+                    '                        <div class="box-left">\n' +
+                    '                            <div class="image-wrapper">\n' +
+                    '                                <img class="image-item image-origin intense" src="IMAGE_ORIGIN"/>\n' +
+                    '                            </div>\n' +
+                    '                            <div class="image-about">\n' +
+                    '                                <p class="image-origin-name">IMAGE_ORIGIN_NAME</p>\n' +
+                    '                            </div>\n' +
+                    '                        </div>\n' +
+                    '                        <span></span>\n' +
+                    '                        <div class="box-right">\n' +
+                    '                            <div class="image-wrapper">\n' +
+                    '                                <img class="image-item image-detection intense" src="IMAGE_DETECTION" />\n' +
+                    '                            </div>\n' +
+                    '                            <div class="image-about">\n' +
+                    '                                <div class="image-detection-result">IMAGE_DETECTION_RESULT\n' +
+                    '\n' +
+                    '                                </div>\n' +
+                    '                            </div>\n' +
+                    '                        </div>\n' +
+                    '                    </div>';
+
+                if(response.image_origin){
+                    image_vis_html = image_vis_html.replace(/IMAGE_ORIGIN_NAME/g,escapeTags( filename ));
+                    image_vis_html = image_vis_html.replace(/IMAGE_ORIGIN/g,response.image_origin);
+                }else{
+                    image_vis_html = image_vis_html.replace(/IMAGE_ORIGIN_NAME/g,"");
+                    image_vis_html = image_vis_html.replace(/IMAGE_ORIGIN/g,"/default.jpg");
+                }
+
+                if(response.data){
+                    var detection_result_html = "";
+                    for(var key in response.data){
+                        detection_result_html += "<p><span>"+key+"</span> <code>"+response.data[key]+"</code></p>";
+                    }
+                    image_vis_html = image_vis_html.replace(/IMAGE_DETECTION_RESULT/g,detection_result_html);
+                }else{
+                    image_vis_html = image_vis_html.replace(/IMAGE_DETECTION_RESULT/g,"");
+                }
+
+                if(response.image_detect){
+                    image_vis_html = image_vis_html.replace(/IMAGE_DETECTION/g,response.image_detect);
+                }else{
+                    image_vis_html = image_vis_html.replace(/IMAGE_DETECTION/g,"/static/default.jpg");
+                }
+
+                result_container.innerHTML = image_vis_html + result_container.innerHTML;
+                var elements = document.querySelectorAll( '.intense' );
+                Intense( elements );
+                notie.alert({ type: 1, text: 'Successfully Uploaded!',time:2});
+            } else {
+                if ( response.message )  {
+                    notie.alert({ type: 3, text: response.message,time:5});
+                    msgBox.innerHTML = escapeTags( response.message );
+                } else {
+                    notie.alert({ type: 2, text: "An error occurred and the upload failed.",time:5});
+                    msgBox.innerHTML = 'An error occurred and the upload failed.';
+                }
+            }
+          },
+        onError: function() {
+            progressOuter.style.display = 'none';
+            notie.alert({ type: 3, text: "Unable to upload file",time:5});
+            msgBox.innerHTML = 'Unable to upload file';
+            loading(false);
+        }
+	});
+};
+</script>
+</body>
+</html>

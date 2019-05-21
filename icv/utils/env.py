@@ -14,3 +14,4 @@ def is_port_open(ip,port):
 def collect_env_info():
     env_str = get_pretty_env_info()
     return env_str
+

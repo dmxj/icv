@@ -40,9 +40,11 @@ def immerge(img_list,origin="x",resize=False):
             if (origin == "x" and imgnp.shape[0] != shape[0]) or (origin == "y" and imgnp.shape[1] != shape[1]):
                 raise Exception("image shape must match exactly or use resize=True.")
         shape = (imgnp.shape[0], imgnp.shape[1])
+        print("===> image shape:", imgnp.shape)
         imgnp_list.append(imgnp)
 
     merged_img_np = np.concatenate(imgnp_list, axis=1 if origin == "x" else 0)
+    print("===> merged image shape:", merged_img_np.shape)
     return merged_img_np
 
 def imshow_bboxes(
@@ -51,7 +53,7 @@ def imshow_bboxes(
         classes=None,
         labels=None,
         scores=None,
-        score_thresh=0.5,
+        score_thresh=0,
         masks=None,
         color="red",
         thickness=2,
@@ -65,20 +67,26 @@ def imshow_bboxes(
     assert masks is None or is_seq(masks) or isinstance(masks,np.ndarray)
 
     if isinstance(bboxes,BBoxList):
-        bboxes = np.array(bboxes.bbox_list)
+        bboxes = np.array(bboxes.tolist())
+    elif isinstance(bboxes,list) and isinstance(bboxes[0],BBox):
+        bboxes = np.array([bbox.bbox for bbox in bboxes])
+    else:
+        bboxes = np.array(bboxes)
 
-    bboxes = bboxes[np.where(scores >= score_thresh)] if scores else bboxes
+    bboxes = bboxes[np.where(scores >= score_thresh)] if scores is not None else bboxes
+
+    print("===> vis det labels:",labels)
 
     if labels is not None:
         if not isinstance(labels,np.ndarray):
             labels = np.array(labels)
-        labels = labels[np.where(scores >= score_thresh)] if scores else labels
+        labels = labels[np.where(scores >= score_thresh)] if scores is not None else labels
         assert labels.shape[0] == bboxes.shape[0], "param labels's length is not equals to bboxes!"
 
     if masks is not None:
         if not isinstance(masks,np.ndarray):
             masks = np.array(masks)
-        masks = masks[np.where(scores >= score_thresh)] if scores else masks
+        masks = masks[np.where(scores >= score_thresh)] if scores is not None else masks
         assert masks.shape[0] == bboxes.shape[0], "param masks's length is not equals to bboxes!"
 
     if scores is not None:
@@ -102,14 +110,14 @@ def imshow_bboxes(
     for ix,bbox in enumerate(bboxes):
         if isinstance(bbox,BBox):
             label = labels[ix] if labels is not None else bbox.lable
-            label = label if label is not None else ""
-            label = label + ": " + scores[ix] if scores else label
             color = colorMap[label] if label in colorMap else default_color
+            label = label if label is not None else ""
+            label = label + ": " + str(round(scores[ix],3)) if scores is not None else label
             image_pil = imdraw_bbox(image_pil,bbox.xmin,bbox.ymin,bbox.xmax,bbox.ymax,color,thickness,label,use_normalized_coordinates)
         else:
             label = labels[ix] if labels is not None else ""
-            label = label + ": " + scores[ix] if scores else label
             color = colorMap[label] if label in colorMap else default_color
+            label = label + ": " + str(round(scores[ix],3)) if scores is not None else label
             image_pil = imdraw_bbox(image_pil,bbox[0],bbox[1],bbox[2],bbox[3],color,thickness,label,use_normalized_coordinates)
 
         if masks is not None:
@@ -126,10 +134,15 @@ def imshow_bboxes(
     return image
 
 def imdraw_bbox(image,xmin,ymin,xmax,ymax,color="red",thickness=2,display_str="",use_normalized_coordinates=False):
-    assert xmin < xmax,"xmin shouldn't be langer than xmax!"
-    assert ymin < ymax,"ymin shouldn't be langer than ymax!"
+    assert xmin <= xmax,"xmin shouldn't be langer than xmax!"
+    assert ymin <= ymax,"ymin shouldn't be langer than ymax!"
+
     if isinstance(image,np.ndarray):
         image = Image.fromarray(image).convert('RGB')
+
+    if xmin == xmax or ymin == ymax:
+        return image
+
     draw = ImageDraw.Draw(image)
     im_height, im_width = image.size
     if use_normalized_coordinates:

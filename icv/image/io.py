@@ -1,9 +1,11 @@
 # -*- coding: UTF-8 -*-
 import cv2
 import numpy as np
+import torch
 from icv.utils import is_str,check_file_exist,USE_OPENCV2,mkdir
 import os
 from PIL import Image
+import matplotlib.pyplot as plt
 
 if not USE_OPENCV2:
     from cv2 import IMREAD_COLOR, IMREAD_GRAYSCALE, IMREAD_UNCHANGED
@@ -31,6 +33,8 @@ def imread(img_or_path, flag='color'):
     """
     if isinstance(img_or_path, np.ndarray):
         return img_or_path
+    elif isinstance(img_or_path,torch.Tensor):
+        return img_or_path.numpy()
     elif is_str(img_or_path):
         flag = imread_flags[flag] if is_str(flag) else flag
         check_file_exist(img_or_path,
@@ -58,7 +62,11 @@ def imwrite(img, file_path, params=None, auto_mkdir=True):
     if auto_mkdir:
         dir_name = os.path.abspath(os.path.dirname(file_path))
         mkdir(dir_name)
-    return cv2.imwrite(file_path, img, params)
+
+    img = imread(img)
+    return load_numpy_array_into_image(img).save(file_path)
+
+    # return cv2.imwrite(file_path, img, params)
 
 def load_image_into_numpy_array(image):
     '''

@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 from icv.utils.itis import is_seq
+import numpy as np
 from .bbox import BBox
 
 class BBoxList(object):
@@ -15,6 +16,14 @@ class BBoxList(object):
         self._labels = None
         self._bbox_list = bbox_list
 
+    def select(self,ixs):
+        if isinstance(ixs,np.ndarray):
+            ixs = ixs.tolist()
+        assert is_seq(ixs) and len(ixs) <= self.length
+        self._bbox_list = [_ for ix,_ in enumerate(self._bbox_list) if ix in ixs]
+        if self._labels is not None:
+            self._labels = [_ for ix,_ in enumerate(self._labels) if ix in ixs]
+
     def __len__(self):
         return len(self.bbox_list)
 
@@ -24,7 +33,7 @@ class BBoxList(object):
         return bbox
 
     def tolist(self):
-        return [[bbox.xmin,bbox.ymin,bbox.xmax,bbox.ymax] for bbox in self._bbox_list]
+        return [[float(bbox.xmin),float(bbox.ymin),float(bbox.xmax),float(bbox.ymax)] for bbox in self._bbox_list]
 
     @property
     def bbox_list(self):
