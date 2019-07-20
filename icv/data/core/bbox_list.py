@@ -2,8 +2,9 @@
 from icv.utils.itis import is_seq
 import numpy as np
 from .bbox import BBox
+from collections import Iterable
 
-class BBoxList(object):
+class BBoxList(Iterable):
     def __init__(self,bbox_list):
         assert is_seq(bbox_list) or isinstance(bbox_list,BBoxList),"param bbox_list should be type of sequence or BBoxList"
         if isinstance(bbox_list,BBoxList):
@@ -32,8 +33,12 @@ class BBoxList(object):
         bbox = self.bbox_list[item]
         return bbox
 
+    def __iter__(self):
+        for bbox in self._bbox_list:
+            yield bbox
+
     def tolist(self):
-        return [[float(bbox.xmin),float(bbox.ymin),float(bbox.xmax),float(bbox.ymax)] for bbox in self._bbox_list]
+        return [[bbox.xmin,bbox.ymin,bbox.xmax,bbox.ymax] for bbox in self._bbox_list]
 
     @property
     def bbox_list(self):

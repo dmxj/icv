@@ -10,6 +10,9 @@ from bottle import template,Bottle,request,static_file,tob
 from io import BytesIO
 import tempfile
 
+import bottle
+bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024
+
 ERROR_AUTH = 100
 ERROR_JSON_PARSER = 101
 ERROR_PARAM_LACK = 102
@@ -169,7 +172,6 @@ class DetectorServer(object):
         if not os.path.exists(upload_dir):
             raise Exception("Can not create upload directory!")
 
-        print("===> upload directory:",upload_dir)
         self.upload_dir = upload_dir
 
         self.app.route("/static/:path#.+#",HttpMethod.GET,lambda path:static_file(path,self.static_root))

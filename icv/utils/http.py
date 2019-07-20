@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 from icv.core.http.client.client import IcvHttpClient
 from icv.core.http.methods import HttpMethod
+from .itis import is_dir,is_seq
 
 def request(method,url,data=None,params=None,headers=None,timeout=3000):
     method = str(method).upper()
@@ -37,4 +38,30 @@ def do_options(url,data=None,params=None,headers=None,timeout=3000):
     http_client = IcvHttpClient(url, data=data, params=params, headers=headers, timeout=timeout)
     return http_client.options()
 
+def file_server(dir,port,url_path_prefix="",debug=False,include_sub=False):
+    assert is_dir(dir)
+    from bottle import static_file,Bottle
+    app = Bottle()
+    url_path = "/%s/:path#.+#" % url_path_prefix.strip("/") if include_sub else "/%s/:filename" % url_path_prefix.strip("/")
+    app.route(url_path, HttpMethod.GET, lambda path: static_file(path, dir))
+    app.run(host="0.0.0.0",port=port,debug=debug)
 
+def simple(port,methods=None,debug=False):
+    assert methods is None or is_seq(methods) or len([m for m in methods if m not in HttpMethod.methods])
+    if methods is None:
+        methods = HttpMethod.methods
+
+    from bottle import Bottle,request
+    app = Bottle()
+
+    app.route("/<url:path>",
+              methods,
+              lambda url: dict(
+                  url_path=url,
+                  url_query=request.query.decode(),
+                  request_method=request.method,
+                  request_data=request.json,
+                  request_headers=request.headers
+              ))
+
+    app.run(host="0.0.0.0",port=port,debug=debug)

@@ -25,3 +25,14 @@ STANDARD_COLORS = [
     'Teal', 'Thistle', 'Tomato', 'Turquoise', 'Violet', 'Wheat', 'White',
     'WhiteSmoke', 'Yellow', 'YellowGreen'
 ]
+
+MASK_COLORS = [
+    (0,0,139),
+    (67,205,128),
+    (0,206,209),
+    (255,106,106),
+    (192,255,62),
+    (130,130,130),
+    (139,87,66),
+    (25,25,112)
+]

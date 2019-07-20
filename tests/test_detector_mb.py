@@ -91,7 +91,6 @@ if __name__ == '__main__':
         categories=classes,
         iou_thr=0.9
     )
-
     # detector.inference("/Users/rensike/Files/data/images/street.jpg",is_show=True)
 
     detector.start_server(port=9528,secret="keke",upload_dir="./uploads")

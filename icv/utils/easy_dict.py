@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 class EasyDict(dict):
     """
     Get attributes
@@ -126,6 +128,12 @@ class EasyDict(dict):
     def pop(self, k, d=None):
         delattr(self, k)
         return super(EasyDict, self).pop(k, d)
+
+    def dict(self):
+        return {
+            k:self[k]
+            for k in self
+        }
 
 
 if __name__ == "__main__":

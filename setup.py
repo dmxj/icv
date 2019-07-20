@@ -22,7 +22,7 @@ VERSION = "0.0.1.1"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'Pillow', 'numpy', 'opencv-python'
+    'Pillow', 'numpy', 'opencv-python', 'bottle'
 ]
 
 # What packages are optional?

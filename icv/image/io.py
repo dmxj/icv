@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 import cv2
 import numpy as np
-import torch
-from icv.utils import is_str,check_file_exist,USE_OPENCV2,mkdir
+from icv.utils import is_str,is_seq,is_dir,check_file_exist,USE_OPENCV2,mkdir,np_to_base64
 import os
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -20,6 +19,23 @@ imread_flags = {
     'unchanged': IMREAD_UNCHANGED
 }
 
+def imlist(img_dir, valid_exts=None, if_recursive=False):
+    """
+    List images under directory
+    :param img_dir:
+    :param valid_exts:
+    :param if_recursive:
+    :return:
+    """
+    from glob import glob
+    if is_str(valid_exts):
+        valid_exts = [valid_exts.strip(".")]
+    valid_exts = list(valid_exts) if is_seq(valid_exts) else ["jpg","jpeg","bmp","tif","gif","png"]
+    images = []
+    for ext in valid_exts:
+        images.extend(glob(os.path.join(img_dir,"**","*.%s" % ext),recursive=if_recursive))
+    return images
+
 def imread(img_or_path, flag='color'):
     """Read an image.
     Args:
@@ -33,8 +49,6 @@ def imread(img_or_path, flag='color'):
     """
     if isinstance(img_or_path, np.ndarray):
         return img_or_path
-    elif isinstance(img_or_path,torch.Tensor):
-        return img_or_path.numpy()
     elif is_str(img_or_path):
         flag = imread_flags[flag] if is_str(flag) else flag
         check_file_exist(img_or_path,
@@ -47,6 +61,21 @@ def imread(img_or_path, flag='color'):
             return load_image_into_numpy_array(img_or_path)
         except:
             raise TypeError('"img" must be a numpy array or a filename')
+
+def imread_topil(img_or_path):
+    if is_str(img_or_path):
+        return Image.open(img_or_path)
+    elif isinstance(img_or_path, np.ndarray):
+        return load_numpy_array_into_image(img_or_path)
+    elif Image.isImageType(img_or_path):
+        return img_or_path
+    else:
+        raise TypeError('"img" must be a numpy array or a filename or a PIL Image')
+
+def imread_tob64(img_or_path):
+    img = imread(img_or_path)
+    img_b64 = np_to_base64(img)
+    return img_b64.decode("utf-8")
 
 def imwrite(img, file_path, params=None, auto_mkdir=True):
     """Write image to file
