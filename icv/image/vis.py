@@ -2,8 +2,8 @@
 import os
 from PIL import Image, ImageDraw, ImageFont, ImageColor
 # from icv.data import BBoxList, BBox
-from icv.image import imread, imread_topil, imwrite
-from icv.utils import is_seq, is_empty, is_np_array
+from icv.image import imread, imread_topil, imwrite,pil_img_to_np
+from icv.utils import is_seq, is_empty, is_np_array,is_str
 from icv.vis.color import STANDARD_COLORS, MASK_COLORS
 import random
 import cv2
@@ -173,7 +173,7 @@ def imdraw_bbox(image, xmin, ymin, xmax, ymax, color="red", thickness=1, display
     if display_str == "":
         return image
 
-    rgb = ImageColor.getrgb(color)
+    rgb = ImageColor.getrgb(color) if is_str(color) else color
     rgba = rgb + (128,)
 
     try:
@@ -204,8 +204,7 @@ def imdraw_bbox(image, xmin, ymin, xmax, ymax, color="red", thickness=1, display
         fill='black',
         font=font)
 
-    return image
-
+    return pil_img_to_np(image)
 
 def imdraw_mask(image, mask, color='red', alpha=0.4):
     """Draws mask on an image.
@@ -231,7 +230,7 @@ def imdraw_mask(image, mask, color='red', alpha=0.4):
         raise ValueError('The image has spatial dimensions %s but the mask has '
                          'dimensions %s' % (image.shape[:2], mask.shape))
 
-    color_mask = ImageColor.getrgb(color)
+    color_mask = ImageColor.getrgb(color) if is_str(color) else color
     color_mask = np.array(color_mask, dtype=np.uint8)
 
     mask_bin = mask.astype(np.bool)
@@ -245,8 +244,8 @@ def imdraw_polygons(image, polygons, color='red', alpha=0.4):
 
     polygons = _format_polygons(polygons)
 
-    rgb = ImageColor.getrgb(color)
-    alpha = int(alpha * 100) if alpha <= 1 else int(alpha)
+    rgb = ImageColor.getrgb(color) if is_str(color) else color
+    alpha = int(alpha * 255) if alpha <= 1 else int(alpha)
     rgba = rgb + (alpha,)
     pil_image = Image.fromarray(image)
 
@@ -257,7 +256,6 @@ def imdraw_polygons(image, polygons, color='red', alpha=0.4):
 
     np.copyto(image, np.array(pil_image.convert('RGB')))
     return image
-
 
 def _format_polygons(polygons):
     if is_np_array(polygons):

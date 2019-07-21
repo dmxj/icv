@@ -3,7 +3,7 @@ import numpy as np
 from .kps import Keypoint
 from icv.utils import EasyDict as edict
 from icv.utils import is_np_array
-from icv.image.vis import imdraw_polygons
+from icv.image.vis import imdraw_polygons,imdraw_polygons_with_bbox
 import pycocotools.mask as mask_utils
 
 class Polygon(object):
@@ -48,8 +48,6 @@ class Polygon(object):
             self.add_field(k, kwargs[k])
 
         self.label = label
-        if label:
-            self.add_field("label", self.label)
 
         self.add_field("xx", self.xx)
         self.add_field("xx_int", self.xx_int)
@@ -309,10 +307,7 @@ class Polygon(object):
 
         result = np.copy(image) if copy else image
 
-        if isinstance(color, (tuple, list)):
-            color = np.uint8(color)
-
-        result = imdraw_polygons(result,self.exterior.tolist(), color=color,alpha=alpha)
+        result = imdraw_polygons(result,[self.exterior.tolist()], color=color,alpha=alpha)
         return result
 
     def __repr__(self):

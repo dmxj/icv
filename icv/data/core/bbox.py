@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 from icv.utils import EasyDict as edict
-from icv.image import imread
+from icv.image import imread,imdraw_bbox
 from icv.utils import is_float_array
 import skimage.draw
 import skimage.measure
@@ -25,8 +25,6 @@ class BBox(object):
             self.add_field(k,kwargs[k])
 
         self.label = label
-        if label:
-            self.add_field("label", self.label)
 
         self.add_field("xmin", self.xmin)
         self.add_field("ymin", self.ymin)
@@ -320,9 +318,6 @@ class BBox(object):
                 self.xmin, self.ymin, self.xmax, self.ymax, image.shape))
 
         result = np.copy(image) if copy else image
-
-        if isinstance(color, (tuple, list)):
-            color = np.uint8(color)
 
         display = "%s %.2f" % (
             self.label if self.label is not None else "",

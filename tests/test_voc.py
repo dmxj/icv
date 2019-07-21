@@ -14,8 +14,13 @@ if __name__ == '__main__':
     voc1_sub = voc1.sub(10)
     print("voc1_sub.ids:",voc1_sub.ids)
 
-    voc_concat = voc.concat(voc1_sub,output_dir="/Users/rensike/Work/icv/test_voc_concat")
+    voc_concat = voc.concat(voc1_sub,output_dir="/Users/rensike/Work/icv/test_voc_concat",reset=True)
 
     print("concat voc finish!")
 
-    voc_concat.vis(output_path="/Users/rensike/Work/icv/test_voc_concat_vis")
+    voc1.statistic(print_log=True)
+
+    # voc1_sub.vis(save_dir="/Users/rensike/Work/icv/test_voc_sub_concat_vis")
+
+    # voc_concat.vis(save_dir="/Users/rensike/Work/icv/test_voc_concat_vis")
+

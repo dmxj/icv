@@ -54,11 +54,12 @@ def imread(img_or_path, flag='color'):
         check_file_exist(img_or_path,
                          'img file does not exist: {}'.format(img_or_path))
         image = cv2.imread(img_or_path, flag)
-        image = image[...,::-1]
+        if flag != 0:
+            image = image[...,::-1]
         return image
     else:
         try:
-            return load_image_into_numpy_array(img_or_path)
+            return pil_img_to_np(img_or_path)
         except:
             raise TypeError('"img" must be a numpy array or a filename')
 
@@ -66,7 +67,7 @@ def imread_topil(img_or_path):
     if is_str(img_or_path):
         return Image.open(img_or_path)
     elif isinstance(img_or_path, np.ndarray):
-        return load_numpy_array_into_image(img_or_path)
+        return np_img_to_pil(img_or_path)
     elif Image.isImageType(img_or_path):
         return img_or_path
     else:
@@ -93,11 +94,11 @@ def imwrite(img, file_path, params=None, auto_mkdir=True):
         mkdir(dir_name)
 
     img = imread(img)
-    return load_numpy_array_into_image(img).save(file_path)
+    return np_img_to_pil(img).save(file_path)
 
     # return cv2.imwrite(file_path, img, params)
 
-def load_image_into_numpy_array(image):
+def pil_img_to_np(image):
     '''
     将图片加载为numpy数组
     :param image: PIL图片
@@ -109,7 +110,7 @@ def load_image_into_numpy_array(image):
         (im_height, im_width, dim)).astype(np.uint8)
 
 
-def load_numpy_array_into_image(np_arr):
+def np_img_to_pil(np_arr):
     '''
     将numpy array转换为图片
     :param np_arr:

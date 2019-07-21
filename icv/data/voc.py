@@ -4,16 +4,17 @@ import os
 import shutil
 import cv2
 import numpy as np
-from icv.utils import load_voc_anno, make_empty_voc_anno, fcopy, list_from_file, list_to_file,is_file,is_dir
+from icv.utils import load_voc_anno, make_empty_voc_anno, fcopy, list_from_file, list_to_file, is_file, is_dir
 from icv.image import imread, imshow_bboxes
-from .core.meta import SampleMeta, AnnoMeta
-from .core.sample import Sample,Anno
-from .core.bbox import BBox
-from .core.bbox_list import BBoxList
+from icv.data.core.meta import SampleMeta, AnnoMeta
+from icv.data.core.sample import Sample, Anno
+from icv.data.core.bbox import BBox
+from icv.data.core.mask import Mask
 from lxml.etree import Element, SubElement, ElementTree
 import sys
 import random
-import copy
+from icv.vis.color import STANDARD_COLORS
+from skimage.measure import label as measure_label
 
 if sys.version_info[0] == 2:
     import xml.etree.cElementTree as ET
@@ -46,6 +47,7 @@ class Voc(IcvDataSet):
         self.id2img = {k: v for k, v in enumerate(self.ids)}
 
         self.sample_db = {}
+        self.color_map = {}
         if categories is not None:
             self.categories = categories
         else:
@@ -61,7 +63,7 @@ class Voc(IcvDataSet):
                 new_split = self.split + voc.split
 
         anno_path, image_path, imgset_path, imgset_seg_path, seg_class_image_path, seg_object_image_path = Voc.reset_dir(
-            output_dir,reset=reset)
+            output_dir, reset=reset)
 
         ps0 = fcopy([self._imgpath % id for id in self.ids], image_path)
         ps1 = fcopy([self._imgpath % id for id in voc.ids], image_path)
@@ -109,8 +111,9 @@ class Voc(IcvDataSet):
         )
 
     def sub(self, count=0, ratio=0, shuffle=True, output_dir=None):
-        voc = super(Voc, self).sub(count,ratio,shuffle,output_dir)
+        voc = super(Voc, self).sub(count, ratio, shuffle, output_dir)
         voc.root = output_dir
+        return voc
 
     def save(self, output_dir, split=None):
         split = split if split is not None else self.split
@@ -128,7 +131,7 @@ class Voc(IcvDataSet):
             list_to_file(self.ids, os.path.join(imgset_path, "%s.txt" % split))
 
     @staticmethod
-    def reset_dir(dist_dir,reset=False):
+    def reset_dir(dist_dir, reset=False):
         if not reset:
             assert is_dir(dist_dir)
         if reset and os.path.exists(dist_dir):
@@ -142,7 +145,7 @@ class Voc(IcvDataSet):
         seg_class_image_path = os.path.join(dist_dir, "SegmentationClass")
         seg_object_image_path = os.path.join(dist_dir, "SegmentationObject")
 
-        for _path in [anno_path,image_path,imgset_path,imgset_seg_path,seg_class_image_path,seg_object_image_path]:
+        for _path in [anno_path, image_path, imgset_path, imgset_seg_path, seg_class_image_path, seg_object_image_path]:
             if reset or not is_dir(_path):
                 os.makedirs(_path)
 
@@ -152,7 +155,7 @@ class Voc(IcvDataSet):
         self.get_samples()
         categories = []
         for anno_sample in self.samples:
-            label_list = anno_sample.bbox_list.labels
+            label_list = [l.label for l in anno_sample.annos if l.label is not None]
             if label_list:
                 categories.extend(label_list)
         categories = list(set(categories))
@@ -175,12 +178,20 @@ class Voc(IcvDataSet):
             anno_data = load_voc_anno(anno_file)["annotation"]
 
         sample_meta = SampleMeta({
-            k:anno_data[k]
+            k: anno_data[k]
             for k in anno_data if k not in ["object"]
         })
 
         segcls_file = self._seg_class_imgpath % id
         segobj_file = self._seg_object_imgpath % id
+
+        img_segcls = None
+        if is_file(segcls_file):
+            img_segcls = imread(segcls_file,0)
+
+        img_segobj = None
+        if is_file(segobj_file):
+            img_segobj = imread(segobj_file,0)
 
         annos = []
         if "object" in anno_data:
@@ -188,23 +199,60 @@ class Voc(IcvDataSet):
                 if "difficult" in obj and obj["difficult"] != '0' and self.use_difficult:
                     continue
                 label = obj["name"]
+                if label not in self.color_map:
+                    self.color_map[label] = random.choice(STANDARD_COLORS)
+
+                xmin = int(obj["bndbox"]["xmin"])
+                ymin = int(obj["bndbox"]["ymin"])
+                xmax = int(obj["bndbox"]["xmax"])
+                ymax = int(obj["bndbox"]["ymax"])
                 anno = Anno(
                     bbox=BBox(
-                        xmin=int(obj["bndbox"]["xmin"]),
-                        ymin=int(obj["bndbox"]["ymin"]),
-                        xmax=int(obj["bndbox"]["xmax"]),
-                        ymax=int(obj["bndbox"]["ymax"]),
+                        xmin=xmin,
+                        ymin=ymin,
+                        xmax=xmax,
+                        ymax=ymax,
                         label=label,
                     ),
                     label=label,
+                    color=self.color_map[label],
                     meta=AnnoMeta({
-                        k:obj["k"]
-                        for k in obj if k not in ["name","bndbox"]
+                        k: obj[k]
+                        for k in obj if k not in ["name", "bndbox"]
                     })
                 )
 
-                if is_file(segcls_file):
-                    pass
+                if img_segobj is not None:
+                    bin_mask = np.zeros_like(img_segobj, np.uint8)
+                    bin_mask[ymin:ymax,xmin:xmax] = img_segobj[ymin:ymax,xmin:xmax]
+                    bin_mask[np.where(bin_mask != 0)] = 1
+                    anno.mask = Mask(bin_mask)
+
+                    # focus = img_segobj[int(anno.bbox.center_y), int(anno.bbox.center_x)]
+                    # if focus[0] == 0:
+                    #     bin_mask[np.where(img_segobj != focus)] = 1
+                    # else:
+                    #     bin_mask[np.where(img_segobj == focus)] = 1
+                    # anno.mask = Mask(bin_mask[...,0])
+                elif img_segcls is not None:
+                    bin_mask = np.zeros_like(img_segcls, np.uint8)
+                    bin_mask[ymin:ymax, xmin:xmax] = img_segcls[ymin:ymax, xmin:xmax]
+                    bin_mask[np.where(bin_mask != 0)] = 1
+                    anno.mask = Mask(bin_mask)
+                    # bin_mask = np.zeros_like(img_segobj, np.uint8)
+                    # focus = img_segobj[int(anno.bbox.center_y), int(anno.bbox.center_x)]
+                    # if focus[0] == 0:
+                    #     bin_mask[np.where(img_segobj != focus)] = 1
+                    # else:
+                    #     bin_mask[np.where(img_segobj == focus)] = 1
+                    #
+                    # labels = measure_label(bin_mask > 0, connectivity=bin_mask.ndim)
+                    # labels = measure_label(labels > 0, connectivity=1)
+                    #
+                    # labels[np.where(labels != labels[int(anno.bbox.center_y), int(anno.bbox.center_x)])] = 0
+                    # labels[np.where(labels != 0)] = 1
+                    #
+                    # anno.mask = Mask(bin_mask[...,0])
 
                 annos.append(anno)
 
@@ -297,82 +345,24 @@ class Voc(IcvDataSet):
         tree = ElementTree(root)
         tree.write(dist_path, encoding='utf-8', pretty_print=True)
 
-    def _get_mask_np(self, mask_image_path, bboxes):
-        """
-        根据mask png分割图片返回mask数组
-        :param mask_image_path: 分割的mask png图片文件路径
-        :param bbox: 分割框列表
-        :return:
-        """
-        seg_image_mask = cv2.imread(mask_image_path, 0)
-        maskes = []
-        for bbox in bboxes:
-            mask = np.copy(seg_image_mask)
-            xmin, ymin, xmax, ymax = bbox[0], bbox[1], bbox[2], bbox[3]
-            global_idx = np.array(np.where(mask != 0))
-            inbox_idx = global_idx[:, np.where(
-                (global_idx[0, :] >= ymin) & (global_idx[0, :] <= ymax) & (global_idx[1, :] >= xmin) & (
-                            global_idx[1, :] <= xmax))[0]]
-            mask[inbox_idx[0], inbox_idx[1]] = 256
-            mask[(mask != 256) & (mask != 0)] = 0
-            mask[inbox_idx[0], inbox_idx[1]] = 1
-            maskes.append(mask)
+    def vis(self, id=None, with_bbox=True, with_seg=True, is_show=False, save_dir=None, reset_dir=False):
+        if save_dir is not None:
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+            elif reset_dir:
+                shutil.rmtree(save_dir)
+                os.makedirs(save_dir)
 
-        return np.array(maskes)
-
-    def _cover_with_maskpng(self, sample, with_segobj=False):
-        assert isinstance(sample, Sample)
-        image = imread(sample.image)
-
-        if with_segobj:
-            seg_image_mask = cv2.imread(self._seg_object_imgpath % sample.name, 0)
-        else:
-            seg_image_mask = cv2.imread(self._seg_class_imgpath % sample.name, 0)
-
-        if seg_image_mask is None:
-            return image
-
-        binset = list(set(seg_image_mask.flatten().tolist()))
-        for bin in binset:
-            color_mask = self.color_map[self.id2cat[bin % self.num_classes]]
-            color_mask = np.array(color_mask)
-            if bin == 0:
-                continue
-            mask = np.zeros_like(seg_image_mask, dtype=np.uint8)
-            mask[seg_image_mask == bin] = 1
-            mask_bin = mask.astype(np.bool)
-            image[mask_bin] = image[mask_bin] * 0.5 + color_mask * 0.5
-
-        return image
-
-    def vis(self, id=None, is_show=False, output_path=None, seg_inbox=True):
-        samples = []
-        if id:
+        if id is not None:
             sample = self.get_sample(id)
-            samples.append(sample)
-        else:
-            samples = self.get_samples()
-
-        print(self.ids)
+            save_path = None if save_dir is None else os.path.join(save_dir, "%s.jpg" % sample.name)
+            return sample.vis(with_bbox=with_bbox, with_seg=with_seg, is_show=is_show, save_path=save_path)
 
         image_vis = []
-        for sample in samples:
-            mask_np = None
-
-            image = sample.image
-            if sample.fields.segmented == "1":
-                if seg_inbox:
-                    mask_image_path = self._seg_object_imgpath % sample.name
-                    mask_np = self._get_mask_np(mask_image_path, sample.bbox_list.tolist())
-                    mask_np.astype(np.uint8)
-                    mask_np[mask_np != 0] = 1
-                else:
-                    image = self._cover_with_maskpng(sample, with_segobj=True)
-
-            save_path = (output_path if id else os.path.join(output_path,sample.fields.filename)) if output_path else None
-
-            image_drawed = imshow_bboxes(image, sample.bbox_list, sample.bbox_list.labels, classes=self.categories,
-                                         masks=mask_np, is_show=is_show, save_path=save_path)
-            image_vis.append(image_drawed)
-
-        return image_vis[0] if id else image_vis
+        for id in self.ids:
+            sample = self.get_sample(id)
+            print("====> vis:",id)
+            save_path = None if save_dir is None else os.path.join(save_dir, "%s.jpg" % sample.name)
+            image = sample.vis(with_bbox=with_bbox, with_seg=with_seg, is_show=is_show, save_path=save_path)
+            image_vis.append(image)
+        return image_vis

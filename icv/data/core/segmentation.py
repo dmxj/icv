@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
-from .mask_list import MaskList
-from .polygon_list import PolygonList
+from icv.data.core.mask_list import MaskList
+from icv.data.core.polygon_list import PolygonList
 
 class SegmentationMask(object):
 

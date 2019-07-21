@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 import numpy as np
-from .polygon import PolygonInstance
-from . import FLIP_LEFT_RIGHT,FLIP_TOP_BOTTOM
-from .mask_list import MaskList
+from icv.data.core.polygon import PolygonInstance
+from icv.data.core import FLIP_LEFT_RIGHT,FLIP_TOP_BOTTOM
+from icv.data.core.mask_list import MaskList
 
 class PolygonList(object):
     """

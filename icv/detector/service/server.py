@@ -3,8 +3,8 @@ import numpy as np
 import os
 import base64
 from icv.core.http.methods import HttpMethod
-from ..process.detect_processor import DetectionProcessor
-from ..result import DetectionResult
+from icv.detector.process.detect_processor import DetectionProcessor
+from icv.detector.result import DetectionResult
 from icv import detector
 from bottle import template,Bottle,request,static_file,tob
 from io import BytesIO

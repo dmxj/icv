@@ -1,24 +1,29 @@
 # -*- coding: UTF-8 -*-
 import numpy as np
 import cv2
+from skimage import measure
 from icv.utils import EasyDict as edict
-from icv.utils import is_seq,is_np_array
+from icv.utils import is_seq, is_np_array
 from .bbox import BBox
 from .polys import Polygon
 import pycocotools.mask as mask_utils
 from icv.image.vis import imdraw_mask
 
+
 class Mask(object):
     """
     Binary Mask
     """
-    def __init__(self,mask,label=None,**kwargs):
+
+    def __init__(self, mask, label=None, **kwargs):
         assert is_seq(mask) or is_np_array(mask)
         self.mask = np.array(mask).astype(np.uint8)
         assert len(self.mask.shape) == 2
         self.size = tuple(self.mask.shape)
 
+        self.mask[self.mask != 0] = 1
         self.label = label
+
         self.polygon = None
         self.bbox = None
 
@@ -27,14 +32,14 @@ class Mask(object):
             self.add_field(k, kwargs[k])
 
         self.label = label
-        if label:
+        if label is not None:
             self.add_field("label", self.label)
 
     @staticmethod
     def init_from(mask, label=None):
-        if isinstance(mask,Mask):
+        if isinstance(mask, Mask):
             return mask.deepcopy(label=label)
-        return Mask(mask,label=label)
+        return Mask(mask, label=label)
 
     def add_field(self, field, field_data):
         self.fields[field] = field_data
@@ -49,23 +54,39 @@ class Mask(object):
         return list(self.fields.keys())
 
     def find_contours(self):
-        mask = cv2.UMat(self.mask)
-        contour, hierarchy = cv2.findContours(
-            mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1
-        )
+        contours = measure.find_contours(self.mask, 0.5)
 
         reshaped_contour = []
-        for entity in contour:
-            assert len(entity.shape) == 3
-            assert entity.shape[1] == 1, "Hierarchical contours are not allowed"
-            reshaped_contour.append(entity.reshape(-1).tolist())
+        for contour in contours:
+            contour = np.flip(contour, axis=1)
+            s = contour.ravel().tolist()
+            assert len(s) % 2 == 0
+            s = [(s[i], s[i + 1]) for i in range(len(s)) if i % 2 == 0]
+            reshaped_contour.append(s)
+
         return reshaped_contour
+
+        # mask = cv2.UMat(self.mask)
+        # contour, hierarchy = cv2.findContours(
+        #     mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1
+        # )
+        #
+        # reshaped_contour = []
+        # for entity in contour:
+        #     assert len(entity.shape) == 3
+        #     assert entity.shape[1] == 1, "Hierarchical contours are not allowed"
+        #     reshaped_contour.append(entity.reshape(-1).tolist())
+        #
+        # return reshaped_contour
 
     def to_ploygons(self):
         if self.polygon is not None:
             return self.polygon
         contour = self.find_contours()
-        self.polygon = Polygon.init_from(contour[0],self.label)
+        if len(contour) > 0:
+            self.polygon = Polygon.init_from(contour[0], self.label)
+        else:
+            self.polygon = Polygon.init_from([[0, 0]], self.label)
         return self.polygon
 
     def to_bounding_box(self):
@@ -116,13 +137,13 @@ class Mask(object):
 
         bbox = self.to_bounding_box()
         if raise_if_out_of_image and bbox.is_out_of_image(image):
-            raise Exception("Cannot draw mask xmin = %.8f, ymin = %.8f, xmax = %.8f, ymax = %.8f on image with shape %s." % (
-                bbox.xmin, bbox.ymin, bbox.xmax, bbox.ymax, image.shape))
+            raise Exception(
+                "Cannot draw mask xmin = %.8f, ymin = %.8f, xmax = %.8f, ymax = %.8f on image with shape %s." % (
+                    bbox.xmin, bbox.ymin, bbox.xmax, bbox.ymax, image.shape))
 
         result = np.copy(image) if copy else image
 
         if isinstance(color, (tuple, list)):
             color = np.uint8(color)
 
-        return imdraw_mask(image=result,mask=self.mask,color=color,alpha=alpha)
-
+        return imdraw_mask(image=result, mask=self.mask, color=color, alpha=alpha)
