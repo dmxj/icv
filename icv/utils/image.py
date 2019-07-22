@@ -3,7 +3,7 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 import base64
-from icv.utils.itis import is_np_array
+from .itis import is_np_array
 
 def base64_to_np(b64_code):
     image = Image.open(BytesIO(base64.b64decode(b64_code)))

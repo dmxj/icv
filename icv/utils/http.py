@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
-from icv.core.http.client.client import IcvHttpClient
-from icv.core.http.methods import HttpMethod
+from ..core.http.client.client import IcvHttpClient
+from ..core.http.methods import HttpMethod
 from .itis import is_dir,is_seq
 
 def request(method,url,data=None,params=None,headers=None,timeout=3000):

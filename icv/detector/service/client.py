@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
-from icv.image import imread,imshow,imwrite,imshow_bboxes,immerge
-from icv.utils import do_post,is_file,is_seq,labelmap_to_categories
+from ...image import imshow,imwrite,imshow_bboxes,immerge
+from ...utils import do_post,is_file,is_seq,labelmap_to_categories
 import os
 import base64
 import json

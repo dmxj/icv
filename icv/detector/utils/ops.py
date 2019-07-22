@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -* -
 import tensorflow as tf
 
-
 def reframe_box_masks_to_image_masks(box_masks, boxes, image_height,
                                      image_width):
     """Transforms the box masks back to full image masks.

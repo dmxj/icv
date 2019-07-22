@@ -2,24 +2,17 @@
 from .dataset import IcvDataSet
 import os
 import shutil
-import cv2
 import numpy as np
-from icv.utils import load_voc_anno, make_empty_voc_anno, fcopy, list_from_file, list_to_file, is_file, is_dir
-from icv.image import imread, imshow_bboxes
-from icv.data.core.meta import SampleMeta, AnnoMeta
-from icv.data.core.sample import Sample, Anno
-from icv.data.core.bbox import BBox
-from icv.data.core.mask import Mask
+from ..utils import load_voc_anno, make_empty_voc_anno, fcopy, list_from_file, list_to_file, is_file, is_dir
+from ..image import imread
+from ..data.core.meta import SampleMeta, AnnoMeta
+from ..data.core.sample import Sample, Anno
+from ..data.core.bbox import BBox
+from ..data.core.mask import Mask
 from lxml.etree import Element, SubElement, ElementTree
 import sys
 import random
-from icv.vis.color import STANDARD_COLORS
-from skimage.measure import label as measure_label
-
-if sys.version_info[0] == 2:
-    import xml.etree.cElementTree as ET
-else:
-    import xml.etree.ElementTree as ET
+from ..vis.color import STANDARD_COLORS
 
 
 # TODO: 分割数据（图像目录、segment=1）
@@ -187,11 +180,11 @@ class Voc(IcvDataSet):
 
         img_segcls = None
         if is_file(segcls_file):
-            img_segcls = imread(segcls_file,0)
+            img_segcls = imread(segcls_file, 0)
 
         img_segobj = None
         if is_file(segobj_file):
-            img_segobj = imread(segobj_file,0)
+            img_segobj = imread(segobj_file, 0)
 
         annos = []
         if "object" in anno_data:
@@ -224,7 +217,7 @@ class Voc(IcvDataSet):
 
                 if img_segobj is not None:
                     bin_mask = np.zeros_like(img_segobj, np.uint8)
-                    bin_mask[ymin:ymax,xmin:xmax] = img_segobj[ymin:ymax,xmin:xmax]
+                    bin_mask[ymin:ymax, xmin:xmax] = img_segobj[ymin:ymax, xmin:xmax]
                     bin_mask[np.where(bin_mask != 0)] = 1
                     anno.mask = Mask(bin_mask)
 
@@ -361,7 +354,7 @@ class Voc(IcvDataSet):
         image_vis = []
         for id in self.ids:
             sample = self.get_sample(id)
-            print("====> vis:",id)
+            print("====> vis:", id)
             save_path = None if save_dir is None else os.path.join(save_dir, "%s.jpg" % sample.name)
             image = sample.vis(with_bbox=with_bbox, with_seg=with_seg, is_show=is_show, save_path=save_path)
             image_vis.append(image)

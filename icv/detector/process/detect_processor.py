@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -* -
 from .processor import Processor
-from icv.utils import base64_to_np
-import numpy as np
+from ...utils import base64_to_np
 
 class DetectionProcessor(Processor):
     @classmethod

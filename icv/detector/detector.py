@@ -1,9 +1,8 @@
 # -*- coding: UTF-8 -*-
 import torch
 import numpy as np
-from icv.utils import is_seq,is_file,is_str,labelmap_to_category_index
-from abc import ABC,ABCMeta,abstractmethod
-from .process.detect_processor import DetectionProcessor
+from ..utils import is_seq,is_file,is_str,labelmap_to_category_index
+from abc import ABCMeta,abstractmethod
 from .service.server import DetectorServer
 
 class Detector(object):

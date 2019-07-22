@@ -1,9 +1,6 @@
 # -*- coding: UTF-8 -*-
 from icv.utils import EasyDict as edict
 from icv.image import imread,imdraw_bbox
-from icv.utils import is_float_array
-import skimage.draw
-import skimage.measure
 import numpy as np
 
 class BBox(object):

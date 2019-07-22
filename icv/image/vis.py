@@ -1,28 +1,23 @@
 # -*- coding: UTF-8 -*-
 import os
 from PIL import Image, ImageDraw, ImageFont, ImageColor
-# from icv.data import BBoxList, BBox
-from icv.image import imread, imread_topil, imwrite,pil_img_to_np
-from icv.utils import is_seq, is_empty, is_np_array,is_str
-from icv.vis.color import STANDARD_COLORS, MASK_COLORS
+from .io import imread, imwrite, pil_img_to_np
+from ..utils import is_seq, is_empty, is_np_array, is_str
+from ..vis.color import STANDARD_COLORS, MASK_COLORS
 import random
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-def imshow(img, win_name='', wait_time=0):
+def imshow(img):
     """Show an image.
     Args:
         img (str or ndarray): The image to be displayed.
-        win_name (str): The window name.
-        wait_time (int): Value of waitKey param.
     """
     plt.axis('off')
     plt.imshow(imread(img))
     plt.show()
-    # cv2.imshow(win_name, imread(img))
-    # cv2.waitKey(wait_time)
 
 
 def immerge(img_list, origin="x", resize=False):
@@ -41,11 +36,9 @@ def immerge(img_list, origin="x", resize=False):
             if (origin == "x" and imgnp.shape[0] != shape[0]) or (origin == "y" and imgnp.shape[1] != shape[1]):
                 raise Exception("image shape must match exactly or use resize=True.")
         shape = (imgnp.shape[0], imgnp.shape[1])
-        print("===> image shape:", imgnp.shape)
         imgnp_list.append(imgnp)
 
     merged_img_np = np.concatenate(imgnp_list, axis=1 if origin == "x" else 0)
-    print("===> merged image shape:", merged_img_np.shape)
     return merged_img_np
 
 
@@ -206,6 +199,7 @@ def imdraw_bbox(image, xmin, ymin, xmax, ymax, color="red", thickness=1, display
 
     return pil_img_to_np(image)
 
+
 def imdraw_mask(image, mask, color='red', alpha=0.4):
     """Draws mask on an image.
 
@@ -256,6 +250,7 @@ def imdraw_polygons(image, polygons, color='red', alpha=0.4):
 
     np.copyto(image, np.array(pil_image.convert('RGB')))
     return image
+
 
 def _format_polygons(polygons):
     if is_np_array(polygons):

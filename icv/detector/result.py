@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
-from icv.utils import is_seq
-from icv.data import BBox,BBoxList
-from icv.image import imshow_bboxes
+from ..utils import is_seq
+from ..data import BBox,BBoxList
+from ..image import imshow_bboxes
 import numpy as np
 
 class DetectionResult(object):

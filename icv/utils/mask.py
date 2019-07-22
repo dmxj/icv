@@ -6,7 +6,6 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 
-
 def getsegmentation(seg_img_path, bbox):
     '''
     获取分割图片区域的mask（pascal voc数据中，每个分割区域都有一个检测框与之对应）

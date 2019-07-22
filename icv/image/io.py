@@ -1,10 +1,9 @@
 # -*- coding: UTF-8 -*-
 import cv2
 import numpy as np
-from icv.utils import is_str,is_seq,is_dir,check_file_exist,USE_OPENCV2,mkdir,np_to_base64
+from ..utils import is_str,is_seq,check_file_exist,USE_OPENCV2,mkdir,np_to_base64
 import os
 from PIL import Image
-import matplotlib.pyplot as plt
 
 if not USE_OPENCV2:
     from cv2 import IMREAD_COLOR, IMREAD_GRAYSCALE, IMREAD_UNCHANGED

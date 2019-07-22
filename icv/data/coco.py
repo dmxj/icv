@@ -4,14 +4,12 @@ import json
 import shutil
 from .dataset import IcvDataSet
 from .core.meta import SampleMeta, AnnoMeta
-from .core.sample import Sample, Anno, AnnoShape
+from .core.sample import Sample, Anno
 from .core.bbox import BBox
-from .core.bbox_list import BBoxList
 from .core.polys import Polygon
 from pycocotools.coco import COCO
-from icv.utils import fcopy, is_dir, is_file, is_seq_equal
-from icv.image import imread, imshow, imwrite
-from icv.image.vis import imdraw_polygons_with_bbox
+from ..utils import fcopy, is_dir
+from ..image import imwrite
 import numpy as np
 
 
@@ -144,7 +142,7 @@ class Coco(IcvDataSet):
                 polys=Polygon(ann["segmentation"][0], label=cat) if "segmentation" in ann else None,
                 label=cat,
                 color=self.color_map[cat],
-                meta=AnnoMeta({k:ann[k] for k in ann if k not in ["bbox", "category_id", "segmentation"]})
+                meta=AnnoMeta({k: ann[k] for k in ann if k not in ["bbox", "category_id", "segmentation"]})
             ))
 
         img_info = self.coco.imgs[id]

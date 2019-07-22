@@ -2,15 +2,16 @@
 import numpy as np
 import os
 import base64
-from icv.core.http.methods import HttpMethod
-from icv.detector.process.detect_processor import DetectionProcessor
-from icv.detector.result import DetectionResult
-from icv import detector
-from bottle import template,Bottle,request,static_file,tob
+from ...core.http.methods import HttpMethod
+from ..process.detect_processor import DetectionProcessor
+from ..result import DetectionResult
+from .. import detector
+from bottle import template, Bottle, request, static_file, tob
 from io import BytesIO
 import tempfile
 
 import bottle
+
 bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024
 
 ERROR_AUTH = 100
@@ -21,6 +22,7 @@ ERROR_IMAGE_FORMAT = 104
 ERROR_DETECT_ERROR = 105
 
 RESOURCE_ROOT = os.path.dirname(detector.__file__) + "/resource"
+
 
 class DetectorServer(object):
     html_path = RESOURCE_ROOT + "/serve.html"
@@ -52,7 +54,7 @@ class DetectorServer(object):
 
     def _json_response(self, code, message="", success=False, data=None, **kwargs):
         if data is not None:
-            res =  {
+            res = {
                 "code": code,
                 "message": message,
                 "success": success,
@@ -70,7 +72,7 @@ class DetectorServer(object):
 
         return res
 
-    def _decrypt(self,encoded):
+    def _decrypt(self, encoded):
         return str(base64.b64decode(encoded).decode("utf-8"))
 
     def _inference_server(self):
@@ -97,7 +99,7 @@ class DetectorServer(object):
 
         request_image = request_data["image"]
         try:
-            if isinstance(request_image,list):
+            if isinstance(request_image, list):
                 image_np = [_ for _ in DetectionProcessor.pre_process(request_image)]
             else:
                 image_np = DetectionProcessor.pre_process(request_image)
@@ -108,7 +110,7 @@ class DetectorServer(object):
             return self._json_response(ERROR_IMAGE_PARSER, 'bad request, input image parse failed:' + str(e))
 
         try:
-            if isinstance(image_np,list):
+            if isinstance(image_np, list):
                 outputs = self.detector.inference_batch(image_np)
             else:
                 outputs = self.detector.inference(image_np)
@@ -138,14 +140,14 @@ class DetectorServer(object):
         name, ext = os.path.splitext(upload.filename)
         ext = ext.lower()
         if ext not in ('.png', '.jpg', '.jpeg', ".tif", ".bmp"):
-            return self._json_response(ERROR_IMAGE_FORMAT,"Image File Is Invalid!")
+            return self._json_response(ERROR_IMAGE_FORMAT, "Image File Is Invalid!")
 
-        upload.save(self.upload_dir,overwrite=True)
-        det_img_name = "{}_det.{}".format(name,ext)
-        det_img_path = os.path.join(self.upload_dir,det_img_name)
-        upload_img_path = os.path.join(self.upload_dir,upload.filename)
-        inference_result = self.detector.inference(upload_img_path,save_path=det_img_path,score_thr=score_thr)
-        if isinstance(inference_result,DetectionResult):
+        upload.save(self.upload_dir, overwrite=True)
+        det_img_name = "{}_det.{}".format(name, ext)
+        det_img_path = os.path.join(self.upload_dir, det_img_name)
+        upload_img_path = os.path.join(self.upload_dir, upload.filename)
+        inference_result = self.detector.inference(upload_img_path, save_path=det_img_path, score_thr=score_thr)
+        if isinstance(inference_result, DetectionResult):
             return self._json_response(
                 code=ERROR_DETECT_ERROR,
                 success=True,
@@ -158,9 +160,9 @@ class DetectorServer(object):
                 image_detect="/img/%s" % det_img_name,
             )
 
-        return self._json_response(ERROR_DETECT_ERROR,"Predict Error!")
+        return self._json_response(ERROR_DETECT_ERROR, "Predict Error!")
 
-    def start_server(self,port,upload_dir=None,debug=True):
+    def start_server(self, port, upload_dir=None, debug=True):
         self.detector._warmup()
 
         if upload_dir is None:
@@ -174,12 +176,12 @@ class DetectorServer(object):
 
         self.upload_dir = upload_dir
 
-        self.app.route("/static/:path#.+#",HttpMethod.GET,lambda path:static_file(path,self.static_root))
-        self.app.route("/img/:filename",HttpMethod.GET,lambda filename:static_file(filename,upload_dir))
-        self.app.route("/upload",HttpMethod.POST,self._inference_upload_for_predict)
-        self.app.route("/api",HttpMethod.POST,self._inference_server)
+        self.app.route("/static/:path#.+#", HttpMethod.GET, lambda path: static_file(path, self.static_root))
+        self.app.route("/img/:filename", HttpMethod.GET, lambda filename: static_file(filename, upload_dir))
+        self.app.route("/upload", HttpMethod.POST, self._inference_upload_for_predict)
+        self.app.route("/api", HttpMethod.POST, self._inference_server)
         if self.open_web:
             self.app.route("/page", HttpMethod.GET)(self._inference_page)
             self.app.route("/", HttpMethod.GET)(self._inference_page)
 
-        self.app.run(host="0.0.0.0",port=port,debug=debug)
+        self.app.run(host="0.0.0.0", port=port, debug=debug)

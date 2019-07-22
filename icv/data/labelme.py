@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 from .dataset import IcvDataSet
-from icv.utils import is_seq,is_dir
-from icv.image import imwrite
-from icv.data.core.bbox import BBox
-from icv.data.core.polys import Polygon
-from icv.data.core.sample import Sample, Anno
-from icv.vis.color import STANDARD_COLORS
+from ..utils import is_seq,is_dir
+from ..image import imwrite
+from ..data.core.bbox import BBox
+from ..data.core.polys import Polygon
+from ..data.core.sample import Sample, Anno
+from ..vis.color import STANDARD_COLORS
 import random
 import os
 import json

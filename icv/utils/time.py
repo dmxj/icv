@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-from time import time
+from time import time,localtime,strftime
 
 class Time(object):
     def __init__(self,):
@@ -10,8 +10,16 @@ class Time(object):
         return time()
 
     @staticmethod
-    def nowStr():
-        return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+    def now_str():
+        return strftime("%Y-%m-%d %H:%M:%S", localtime(time()))
+
+    @staticmethod
+    def is_before(t):
+        return time() - t < 0
+
+    @staticmethod
+    def is_after(t):
+        return time() - t > 0
 
     def start(self):
         self.running = True

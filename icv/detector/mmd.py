@@ -9,9 +9,9 @@ except ModuleNotFoundError as e:
 import os
 import warnings
 import numpy as np
-from icv.data import BBox
-from icv.utils import ckpt_load, Config, Timer, is_file, concat_list
-from icv.image import imread, imwrite, imshow, imresize
+from ..data import BBox
+from ..utils import ckpt_load, Config, Timer, is_file, concat_list
+from ..image import imread, imwrite, imshow, imresize
 from .detector import Detector
 from .result import DetectionResult
 import pycocotools.mask as maskUtils

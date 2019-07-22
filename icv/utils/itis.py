@@ -1,8 +1,6 @@
 # -*- coding: UTF-8 -*-
-import collections
 import os
 import numpy as np
-
 
 def is_str(input):
     return isinstance(input, str)

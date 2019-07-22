@@ -1,9 +1,8 @@
 # -*- coding: UTF-8 -*-
 import torch
-import torchvision
 from torch.utils import model_zoo
 from collections import OrderedDict
-from icv.utils import is_file,mkdir
+from . import is_file,mkdir
 import os
 import time
 

@@ -1,6 +1,6 @@
-from icv.data.core import *
-from icv.data import *
-from icv.model import *
-from icv.utils import *
-from icv.vis import *
+from .vis import *
+from .utils import *
+from .image import *
+from .detector import *
+from .data import *
 

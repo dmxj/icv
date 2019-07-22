@@ -3,8 +3,7 @@ import logging
 
 import tensorflow as tf
 from google.protobuf import text_format
-from icv.core.protos import string_int_label_map_pb2
-
+from ..core.protos import string_int_label_map_pb2
 
 def _validate_label_map(label_map):
     """Checks if a label map is valid.

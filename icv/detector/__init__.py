@@ -1,17 +1,19 @@
 # -*- coding: UTF-8 -*-
+from .service.client import DetectorClient
+
 try:
     from .tf_obj import TfObjectDetector
-except:
+except Exception as e:
     pass
 
 try:
     from .mb import MbDetector
-except:
+except Exception as e:
     pass
 
 try:
     from .mmd import MmdetDetector
-except:
+except Exception as e:
     pass
 
-from .service.client import DetectorClient
+# __all__ = ['DetectorClient', 'TfObjectDetector', 'MbDetector', 'MmdetDetector']

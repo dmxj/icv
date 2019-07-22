@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-from icv.vis.color import STANDARD_COLORS
+from ..vis.color import STANDARD_COLORS
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 from terminaltables import AsciiTable
