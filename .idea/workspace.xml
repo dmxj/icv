@@ -5,43 +5,77 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="98ef7887-09e4-4ece-a7f0-c13012ce3b9f" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/icv/core/protos/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/icv/utils/require.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/core/http/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/core/http/client/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/core/http/server/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/data/augment/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/data/converter/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/data/converter/coco_converter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/data/converter/labelme_converter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/data/converter/voc_converter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/data/core/image.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/data/shape/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/data/shape/transforms/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/data/shape/transforms/bbox.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/detector/process/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/detector/resource/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/detector/resource/static/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/detector/service/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/detector/utils/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/eval/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/eval/class/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/eval/detector/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/eval/semseg/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/image/transforms/colorspace.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/image/transforms/geometry.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/image/transforms/normalize.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/utils/codec.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/icv/vis/plot.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_dataset_convert.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MANIFEST.in" beforeDir="false" afterPath="$PROJECT_DIR$/MANIFEST.in" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/__version__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/__version__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/core/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/core/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/core/http/client/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/core/http/client/client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/core/http/server/simple_http_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/core/http/server/simple_http_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/core/protos/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/core/protos/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/data/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/data/classify.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/classify.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/data/coco.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/coco.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/data/core/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/core/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/data/core/bbox.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/core/bbox.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/data/core/bbox_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/core/bbox_list.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/data/core/mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/core/mask.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/data/core/meta.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/core/meta.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/data/core/polys.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/core/polys.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/data/core/sample.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/core/sample.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/data/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/dataset.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/data/labelme.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/labelme.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/data/voc.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/data/voc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/detector/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/detector/detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/detector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/detector/ground_truth.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/ground_truth.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/detector/mb.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/mb.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/detector/mmd.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/mmd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/detector/process/detect_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/process/detect_processor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/detector/result.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/result.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/detector/service/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/service/client.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/detector/service/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/service/server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/detector/tf_obj.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/tf_obj.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/detector/utils/ops.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/detector/utils/ops.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/image/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/image/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/image/io.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/image/io.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/image/transforms/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/image/transforms/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/image/transforms/resize.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/image/transforms/resize.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/image/vis.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/image/vis.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/utils/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/utils/checkpoint.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/checkpoint.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/utils/anno.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/anno.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/utils/http.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/http.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/utils/image.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/image.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/utils/itis.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/itis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/utils/label_map_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/label_map_util.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/utils/mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/mask.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icv/utils/time.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/time.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/utils/path.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/utils/path.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/icv/vis/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/vis/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icv/vis/color.py" beforeDir="false" afterPath="$PROJECT_DIR$/icv/vis/color.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_coco.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_coco.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_iqi.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_iqi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_vis.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_vis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_voc.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_voc.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,15 +89,16 @@
     <SUITE FILE_PATH="coverage/icv$vis.coverage" NAME="vis Coverage Results" MODIFIED="1556614459778" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/icv/image" />
     <SUITE FILE_PATH="coverage/icv$pytest_in_test_voc_py.coverage" NAME="pytest in test_voc.py Coverage Results" MODIFIED="1559357318676" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/icv$sample_test.coverage" NAME="sample_test Coverage Results" MODIFIED="1562323742702" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/icv$test_coco.coverage" NAME="test_coco Coverage Results" MODIFIED="1563685231457" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/icv$test_vis.coverage" NAME="test_vis Coverage Results" MODIFIED="1563702753635" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/icv$test_coco.coverage" NAME="test_coco Coverage Results" MODIFIED="1564240978556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/icv$test_vis.coverage" NAME="test_vis Coverage Results" MODIFIED="1564298835402" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/icv$test_detector_mb.coverage" NAME="test_detector_mb Coverage Results" MODIFIED="1559294453083" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/icv$mmdet.coverage" NAME="mmdet Coverage Results" MODIFIED="1556519599061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/icv/detector" />
     <SUITE FILE_PATH="coverage/icv$pytest_in_test_detector_tf_obj_py.coverage" NAME="pytest in test_detector_tf_obj.py Coverage Results" MODIFIED="1558318472998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/icv$pytest_in_test_iqi_py.coverage" NAME="pytest in test_iqi.py Coverage Results" MODIFIED="1563551979616" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/icv$test_labelme.coverage" NAME="test_labelme Coverage Results" MODIFIED="1563707233686" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/icv$test_voc.coverage" NAME="test_voc Coverage Results" MODIFIED="1563685363716" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/icv$test_iqi.coverage" NAME="test_iqi Coverage Results" MODIFIED="1563552062519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/icv$pytest_in_test_iqi_py.coverage" NAME="pytest in test_iqi.py Coverage Results" MODIFIED="1564040668389" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/icv$test_voc.coverage" NAME="test_voc Coverage Results" MODIFIED="1564239742944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/icv$test_iqi.coverage" NAME="test_iqi Coverage Results" MODIFIED="1564042003234" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/icv$test_dataset_convert.coverage" NAME="test_dataset_convert Coverage Results" MODIFIED="1564329605234" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/icv$test_http_server.coverage" NAME="test_http_server Coverage Results" MODIFIED="1557578230228" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/icv$pytest_in_test_vis_py.coverage" NAME="pytest in test_vis.py Coverage Results" MODIFIED="1563702745074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/icv$test_detector_tf_obj.coverage" NAME="test_detector_tf_obj Coverage Results" MODIFIED="1558321505863" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
@@ -76,11 +111,11 @@
     <session id="1066467170">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="17" />
+          <entry key="project.closed" value="18" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.11" value="1" />
-          <entry key="project.open.time.13" value="1" />
+          <entry key="project.open.time.13" value="2" />
           <entry key="project.open.time.14" value="2" />
           <entry key="project.open.time.15" value="2" />
           <entry key="project.open.time.18" value="2" />
@@ -103,6 +138,7 @@
           <entry key="project.open.time.45" value="1" />
           <entry key="project.open.time.46" value="1" />
           <entry key="project.open.time.54" value="1" />
+          <entry key="project.open.time.59" value="1" />
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.65" value="1" />
           <entry key="project.open.time.7" value="1" />
@@ -110,7 +146,7 @@
           <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.81" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="39" />
+          <entry key="project.opened" value="41" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -118,33 +154,38 @@
           <entry key="dummy" value="42" />
           <entry key="gitignore" value="6" />
           <entry key="html" value="439" />
+          <entry key="in" value="7" />
           <entry key="js" value="99" />
-          <entry key="py" value="76694" />
+          <entry key="py" value="91942" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="439" />
           <entry key="JavaScript" value="99" />
-          <entry key="PLAIN_TEXT" value="48" />
-          <entry key="Python" value="76694" />
+          <entry key="PLAIN_TEXT" value="55" />
+          <entry key="Python" value="91942" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
+          <entry key="gitignore" value="1" />
           <entry key="html" value="3" />
+          <entry key="in" value="1" />
           <entry key="jpeg" value="3" />
           <entry key="js" value="4" />
-          <entry key="py" value="825" />
+          <entry key="png" value="4" />
+          <entry key="py" value="1067" />
           <entry key="pyi" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="HTML" value="3" />
-          <entry key="Image" value="3" />
+          <entry key="Image" value="7" />
           <entry key="JavaScript" value="4" />
-          <entry key="Python" value="825" />
+          <entry key="PLAIN_TEXT" value="2" />
+          <entry key="Python" value="1067" />
           <entry key="PythonStub" value="1" />
         </counts>
       </usages-collector>
@@ -152,104 +193,122 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/icv/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="8" selection-start-column="8" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/icv/utils/time.py">
+        <entry file="file://$PROJECT_DIR$/icv/data/voc.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="180">
-              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+              <caret line="326" selection-start-line="326" selection-end-line="326" />
               <folding>
-                <marker date="1563784482561" expanded="true" signature="408:444" ph="..." />
+                <element signature="e#24#55#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/icv/utils/timer.py">
+        <entry file="file://$PROJECT_DIR$/icv/data/coco.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1595" />
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/icv/vis/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+            <state relative-caret-position="-2143">
+              <caret line="129" column="20" selection-start-line="129" selection-start-column="20" selection-end-line="129" selection-end-column="20" />
               <folding>
-                <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#24#33#0" expanded="true" />
+                <marker date="1564289184888" expanded="true" signature="1242:1898" ph="..." />
+                <marker date="1564289184888" expanded="true" signature="1624:1898" ph="..." />
+                <marker date="1564289184888" expanded="true" signature="6263:6721" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/icv/detector/__init__.py">
+        <entry file="file://$PROJECT_DIR$/icv/data/converter/labelme_converter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="50">
-              <caret line="6" selection-start-line="6" selection-end-line="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/icv/detector/tf_obj.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="4" column="25" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/icv/utils/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="19" column="113" selection-start-line="19" selection-start-column="113" selection-end-line="19" selection-end-column="113" />
+            <state relative-caret-position="-167">
+              <caret line="47" column="17" lean-forward="true" selection-start-line="47" selection-start-column="17" selection-end-line="47" selection-end-column="17" />
               <folding>
-                <element signature="e#0#147#0" expanded="true" />
+                <element signature="e#24#53#0" expanded="true" />
+                <marker date="1564326502804" expanded="true" signature="250:2444" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/icv/data/core/bbox.py">
+        <entry file="file://$PROJECT_DIR$/tests/test_dataset_convert.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="16" selection-start-column="16" selection-end-column="16" />
+            <state relative-caret-position="124">
+              <caret line="50" column="41" lean-forward="true" selection-start-line="50" selection-start-column="41" selection-end-line="50" selection-end-column="41" />
               <folding>
-                <element signature="e#24#63#0" expanded="true" />
-                <marker date="1563783874348" expanded="true" signature="2533:2581" ph="..." />
-                <marker date="1563783874348" expanded="true" signature="2739:2796" ph="..." />
-                <marker date="1563783874348" expanded="true" signature="2825:2873" ph="..." />
-                <marker date="1563783874348" expanded="true" signature="4246:11606" ph="..." />
+                <element signature="e#24#109#0" expanded="true" />
+                <marker date="1564327487845" expanded="true" signature="161:2192" ph="..." />
+                <marker date="1564327487845" expanded="true" signature="746:2125" ph="..." />
+                <marker date="1564327487845" expanded="true" signature="1298:2125" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/icv/__version__.py">
+        <entry file="file://$PROJECT_DIR$/icv/data/core/polys.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="57">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+            <state relative-caret-position="78">
+              <caret line="65" selection-start-line="65" selection-end-line="65" />
+              <folding>
+                <element signature="e#24#42#0" expanded="true" />
+                <marker date="1564288329185" expanded="true" signature="5976:6033" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/icv/install.py">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/icv/data/core/sample.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1477">
+              <caret line="83" selection-start-line="83" selection-end-line="83" />
+              <folding>
+                <element signature="e#24#67#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/icv/data/core/mask.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="154" column="44" selection-start-line="154" selection-start-column="44" selection-end-line="154" selection-end-column="44" />
+              <folding>
+                <element signature="e#24#42#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/icv/data/converter/coco_converter.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-77">
+              <caret line="16" column="12" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
+              <folding>
+                <element signature="e#24#45#0" expanded="true" />
+                <marker date="1564326552658" expanded="true" signature="183:1335" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/icv/data/converter/voc_converter.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="190">
+              <caret line="14" column="24" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
+              <folding>
+                <element signature="e#24#45#0" expanded="true" />
+                <marker date="1564326561692" expanded="true" signature="206:1312" ph="..." />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -264,36 +323,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>print</find>
-      <find>base64_to_np</find>
-      <find>glob</find>
-      <find>imdraw_polygons</find>
-      <find>y1</find>
+      <find>lxml</find>
+      <find>inference_detector</find>
+      <find>model.CLASSES</find>
+      <find>====&gt; vis</find>
+      <find>draw.text</find>
+      <find>imdraw_polygons_with_bbox</find>
+      <find>json_decode</find>
+      <find>import json</find>
+      <find>json</find>
+      <find>pjson</find>
+      <find>build_detector</find>
+      <find>get_classes</find>
+      <find>mean</find>
+      <find>shape</find>
+      <find>get_mean_std</find>
+      <find>os.makedirs</find>
+      <find>Sample</find>
       <find>merge</find>
-      <find>PolygonInstance</find>
-      <find>super</find>
-      <find>is_out_of_image</find>
-      <find>BBoxList</find>
-      <find>image_id</find>
-      <find>coco.anns</find>
-      <find>sample_db</find>
-      <find>abc</find>
-      <find>imdraw_bbox</find>
-      <find>BBox</find>
-      <find>_get_mask_np</find>
-      <find>_cover_with_maskpng</find>
-      <find>from .</find>
-      <find>red</find>
-      <find>center_y</find>
-      <find>load_numpy_array_into_image</find>
-      <find>load_image_into_numpy_array</find>
-      <find>stat</find>
-      <find>statistic</find>
-      <find>seg_model_polys</find>
-      <find>seg_model_mask</find>
-      <find>bbox_list</find>
-      <find>cv2</find>
-      <find>imshow_bboxes</find>
+      <find>immerge</find>
+      <find>save(</find>
+      <find>image_dir</find>
+      <find>one_index</find>
+      <find>encode_to_file</find>
+      <find>color_map</find>
+      <find>getCatIds</find>
+      <find>self._width</find>
+      <find>ImageDraw</find>
+      <find>id2img</find>
+      <find>self.split</find>
+      <find>_write_sample</find>
     </findStrings>
     <replaceStrings>
       <replace>HttpMethod</replace>
@@ -310,10 +369,11 @@
       <dir>$PROJECT_DIR$/icv/core/http/server</dir>
       <dir>$PROJECT_DIR$/icv/core/http</dir>
       <dir>$PROJECT_DIR$/icv/detector</dir>
+      <dir>$PROJECT_DIR$</dir>
       <dir>$PROJECT_DIR$/icv/utils</dir>
       <dir>$PROJECT_DIR$/icv/data</dir>
+      <dir>$PROJECT_DIR$/icv/image</dir>
       <dir>$PROJECT_DIR$/icv</dir>
-      <dir>$PROJECT_DIR$</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -322,57 +382,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/icv/utils/easy_dict.py" />
-        <option value="$PROJECT_DIR$/icv/data/core/polygon_list.py" />
-        <option value="$PROJECT_DIR$/icv/data/core/segmentation.py" />
-        <option value="$PROJECT_DIR$/icv/data/core/polys.py" />
-        <option value="$PROJECT_DIR$/icv/data/core/mask.py" />
-        <option value="$PROJECT_DIR$/tests/test_coco.py" />
-        <option value="$PROJECT_DIR$/tests/test_voc.py" />
-        <option value="$PROJECT_DIR$/icv/data/core/anno_shape.py" />
-        <option value="$PROJECT_DIR$/tests/test_labelme.py" />
-        <option value="$PROJECT_DIR$/tests/test_color.py" />
-        <option value="$PROJECT_DIR$/icv/data/core/sample.py" />
-        <option value="$PROJECT_DIR$/tests/test_vis.py" />
-        <option value="$PROJECT_DIR$/icv/vis/show.py" />
-        <option value="$PROJECT_DIR$/setup.py" />
-        <option value="$PROJECT_DIR$/icv/utils/label_map_util.py" />
-        <option value="$PROJECT_DIR$/icv/core/protos/__init__.py" />
-        <option value="$PROJECT_DIR$/icv/vis/__init__.py" />
+        <option value="$PROJECT_DIR$/icv/vis/color.py" />
+        <option value="$PROJECT_DIR$/tests/test_iqi.py" />
         <option value="$PROJECT_DIR$/icv/utils/http.py" />
-        <option value="$PROJECT_DIR$/icv/utils/image.py" />
-        <option value="$PROJECT_DIR$/icv/utils/checkpoint.py" />
-        <option value="$PROJECT_DIR$/icv/utils/itis.py" />
-        <option value="$PROJECT_DIR$/icv/utils/mask.py" />
-        <option value="$PROJECT_DIR$/icv/image/io.py" />
-        <option value="$PROJECT_DIR$/icv/image/vis.py" />
-        <option value="$PROJECT_DIR$/icv/image/__init__.py" />
-        <option value="$PROJECT_DIR$/icv/image/transforms/resize.py" />
-        <option value="$PROJECT_DIR$/icv/detector/detector.py" />
-        <option value="$PROJECT_DIR$/icv/detector/ground_truth.py" />
-        <option value="$PROJECT_DIR$/icv/detector/mb.py" />
-        <option value="$PROJECT_DIR$/icv/detector/mmd.py" />
-        <option value="$PROJECT_DIR$/icv/detector/result.py" />
-        <option value="$PROJECT_DIR$/icv/detector/utils/ops.py" />
-        <option value="$PROJECT_DIR$/icv/detector/service/client.py" />
         <option value="$PROJECT_DIR$/icv/detector/service/server.py" />
-        <option value="$PROJECT_DIR$/icv/detector/process/detect_processor.py" />
-        <option value="$PROJECT_DIR$/icv/data/labelme.py" />
-        <option value="$PROJECT_DIR$/icv/data/voc.py" />
-        <option value="$PROJECT_DIR$/icv/data/dataset.py" />
-        <option value="$PROJECT_DIR$/icv/data/coco.py" />
-        <option value="$PROJECT_DIR$/icv/data/__init__.py" />
-        <option value="$PROJECT_DIR$/icv/core/__init__.py" />
-        <option value="$PROJECT_DIR$/icv/__init__.py" />
-        <option value="$PROJECT_DIR$/icv/utils/require.py" />
+        <option value="$PROJECT_DIR$/icv/detector/service/client.py" />
+        <option value="$PROJECT_DIR$/icv/core/http/client/client.py" />
+        <option value="$PROJECT_DIR$/icv/core/http/server/simple_http_handler.py" />
+        <option value="$PROJECT_DIR$/icv/utils/checkpoint.py" />
+        <option value="$PROJECT_DIR$/icv/detector/mmd.py" />
         <option value="$PROJECT_DIR$/icv/__version__.py" />
-        <option value="$PROJECT_DIR$/icv/data/classify.py" />
+        <option value="$PROJECT_DIR$/setup.py" />
+        <option value="$PROJECT_DIR$/icv/data/core/bbox_list.py" />
+        <option value="$PROJECT_DIR$/icv/image/transforms/normalize.py" />
+        <option value="$PROJECT_DIR$/icv/utils/image.py" />
+        <option value="$PROJECT_DIR$/icv/image/transforms/resize.py" />
+        <option value="$PROJECT_DIR$/icv/image/transforms/colorspace.py" />
+        <option value="$PROJECT_DIR$/icv/data/shape/__init__.py" />
+        <option value="$PROJECT_DIR$/icv/data/shape/transforms/__init__.py" />
+        <option value="$PROJECT_DIR$/icv/data/core/image.py" />
         <option value="$PROJECT_DIR$/icv/data/core/__init__.py" />
-        <option value="$PROJECT_DIR$/icv/detector/tf_obj.py" />
+        <option value="$PROJECT_DIR$/icv/data/classify.py" />
+        <option value="$PROJECT_DIR$/icv/image/transforms/geometry.py" />
+        <option value="$PROJECT_DIR$/icv/image/transforms/__init__.py" />
+        <option value="$PROJECT_DIR$/icv/image/__init__.py" />
+        <option value="$PROJECT_DIR$/icv/data/shape/transforms/bbox.py" />
+        <option value="$PROJECT_DIR$/tests/test_voc.py" />
+        <option value="$PROJECT_DIR$/icv/utils/itis.py" />
+        <option value="$PROJECT_DIR$/tests/test_coco.py" />
+        <option value="$PROJECT_DIR$/icv/data/dataset.py" />
+        <option value="$PROJECT_DIR$/icv/data/core/meta.py" />
+        <option value="$PROJECT_DIR$/icv/utils/codec.py" />
         <option value="$PROJECT_DIR$/icv/data/core/bbox.py" />
-        <option value="$PROJECT_DIR$/icv/detector/__init__.py" />
+        <option value="$PROJECT_DIR$/icv/data/core/sample.py" />
+        <option value="$PROJECT_DIR$/icv/image/vis.py" />
+        <option value="$PROJECT_DIR$/icv/utils/path.py" />
         <option value="$PROJECT_DIR$/icv/utils/__init__.py" />
-        <option value="$PROJECT_DIR$/icv/utils/time.py" />
+        <option value="$PROJECT_DIR$/icv/data/core/polys.py" />
+        <option value="$PROJECT_DIR$/icv/data/coco.py" />
+        <option value="$PROJECT_DIR$/icv/utils/anno.py" />
+        <option value="$PROJECT_DIR$/icv/vis/__init__.py" />
+        <option value="$PROJECT_DIR$/tests/test_vis.py" />
+        <option value="$PROJECT_DIR$/icv/vis/plot.py" />
+        <option value="$PROJECT_DIR$/icv/data/converter/__init__.py" />
+        <option value="$PROJECT_DIR$/icv/data/__init__.py" />
+        <option value="$PROJECT_DIR$/icv/data/labelme.py" />
+        <option value="$PROJECT_DIR$/icv/data/converter/labelme_converter.py" />
+        <option value="$PROJECT_DIR$/icv/data/converter/coco_converter.py" />
+        <option value="$PROJECT_DIR$/icv/data/converter/voc_converter.py" />
+        <option value="$PROJECT_DIR$/tests/test_dataset_convert.py" />
+        <option value="$PROJECT_DIR$/icv/data/core/mask.py" />
+        <option value="$PROJECT_DIR$/icv/data/voc.py" />
       </list>
     </option>
   </component>
@@ -382,8 +442,8 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="26" />
     <option name="width" value="1440" />
     <option name="height" value="797" />
   </component>
@@ -405,18 +465,6 @@
               <item name="icv" type="462c0819:PsiDirectoryNode" />
               <item name="icv" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="icv" type="b2602c69:ProjectViewProjectNode" />
-              <item name="icv" type="462c0819:PsiDirectoryNode" />
-              <item name="icv" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="icv" type="b2602c69:ProjectViewProjectNode" />
-              <item name="icv" type="462c0819:PsiDirectoryNode" />
-              <item name="icv" type="462c0819:PsiDirectoryNode" />
-              <item name="vis" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -429,7 +477,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -444,11 +492,11 @@
       <recent name="$PROJECT_DIR$/icv/core/http" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/icv/image/transforms" />
+      <recent name="$PROJECT_DIR$/icv/eval/semseg" />
+      <recent name="$PROJECT_DIR$/icv/eval/detector" />
+      <recent name="$PROJECT_DIR$/icv/eval/class" />
       <recent name="$PROJECT_DIR$/icv/detector/resource" />
-      <recent name="$PROJECT_DIR$/icv/detector" />
-      <recent name="$PROJECT_DIR$/icv/utils" />
-      <recent name="$PROJECT_DIR$/icv/detector/utils" />
-      <recent name="$PROJECT_DIR$/icv/core" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -463,8 +511,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.tf_obj">
-    <configuration name="test_labelme" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.test_dataset_convert">
+    <configuration name="test_coco" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="icv" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -477,7 +525,51 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_labelme.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_coco.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_dataset_convert" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="icv" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_dataset_convert.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_iqi" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="icv" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_iqi.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -530,58 +622,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="tf_obj" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="icv" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/icv/detector" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/icv/detector/tf_obj.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pytest in test_vis.py" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="icv" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/test_vis.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.test_voc" />
-      <item itemvalue="Python.test_labelme" />
-      <item itemvalue="Python tests.pytest in test_vis.py" />
+      <item itemvalue="Python.test_iqi" />
+      <item itemvalue="Python.test_coco" />
+      <item itemvalue="Python.test_dataset_convert" />
       <item itemvalue="Python.test_vis" />
-      <item itemvalue="Python.tf_obj" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.tf_obj" />
-        <item itemvalue="Python.test_labelme" />
+        <item itemvalue="Python.test_dataset_convert" />
         <item itemvalue="Python.test_vis" />
-        <item itemvalue="Python tests.pytest in test_vis.py" />
+        <item itemvalue="Python.test_coco" />
         <item itemvalue="Python.test_voc" />
+        <item itemvalue="Python.test_iqi" />
       </list>
     </recent_temporary>
   </component>
@@ -599,12 +653,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="pytest_in_test_detector_client_py - 2019.05.17 at 17h 52m 03s.xml">
-      <configuration name="pytest in test_detector_client.py" configurationId="tests" />
-    </history-entry>
-    <history-entry file="pytest_in_test_detector_tf_obj_py - 2019.05.20 at 10h 14m 34s.xml">
-      <configuration name="pytest in test_detector_tf_obj.py" configurationId="tests" />
-    </history-entry>
     <history-entry file="pytest_in_test_detector_client_py - 2019.05.21 at 15h 31m 15s.xml">
       <configuration name="pytest in test_detector_client.py" configurationId="tests" />
     </history-entry>
@@ -629,31 +677,36 @@
     <history-entry file="pytest_in_test_vis_py - 2019.07.21 at 17h 52m 28s.xml">
       <configuration name="pytest in test_vis.py" configurationId="tests" />
     </history-entry>
+    <history-entry file="pytest_in_test_iqi_py - 2019.07.25 at 15h 35m 43s.xml">
+      <configuration name="pytest in test_iqi.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_test_iqi_py - 2019.07.25 at 15h 44m 30s.xml">
+      <configuration name="pytest in test_iqi.py" configurationId="tests" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="797" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1440" height="797" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20317003" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12536024" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.41253644" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.5349854" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.5058309" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.35568514" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.1793003" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="11" weight="0.21820809" />
+      <window_info anchor="bottom" id="Version Control" order="11" weight="0.21720117" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" weight="0.23631124" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.32564843" />
       <window_info anchor="right" id="Database" order="4" />
     </layout>
     <layout-to-restore>
@@ -687,348 +740,456 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/icv/utils/mask.py">
+    <entry file="file://$PROJECT_DIR$/icv/image/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="114">
+          <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
           <folding>
-            <element signature="e#53#63#0" expanded="true" />
+            <element signature="e#0#89#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/image/transforms/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="9" column="1" lean-forward="true" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#78#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/image/transforms/geometry.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-11">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/detector/service/client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#24#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/shape/transforms/bbox.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-52">
+          <caret line="1" column="18" selection-start-line="1" selection-start-column="18" selection-end-line="1" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/image/io.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="46" column="2" selection-start-line="46" selection-start-column="2" selection-end-line="46" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/utils/easy_dict.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="131" column="8" selection-start-line="131" selection-start-column="8" selection-end-line="131" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/icv/utils/misc.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/utils/opencv.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/utils/path.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        <state relative-caret-position="76">
+          <caret line="5" column="36" lean-forward="true" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/utils/itis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="68" column="73" selection-start-line="68" selection-start-column="73" selection-end-line="68" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_voc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="19" column="61" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="61" />
           <folding>
-            <element signature="e#24#37#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/icv/utils/video.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/utils/http.py">
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/json/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+        <state relative-caret-position="-1095">
+          <caret line="119" column="12" selection-start-line="119" selection-start-column="9" selection-end-line="119" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/icv/model/build.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/image/transforms/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/model/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/image/io.py">
+    <entry file="file://$PROJECT_DIR$/icv/data/core/meta.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" column="34" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
+        <state relative-caret-position="228">
+          <caret line="16" column="15" selection-start-line="16" selection-start-column="15" selection-end-line="16" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/demjson.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-110">
+          <caret line="5723" lean-forward="true" selection-start-line="5723" selection-end-line="5723" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/utils/codec.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="20" lean-forward="true" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
           <folding>
-            <marker date="1563782032771" expanded="true" signature="2492:2591" ph="..." />
+            <marker date="1564246581594" expanded="true" signature="491:552" ph="..." />
+            <marker date="1564246581594" expanded="true" signature="971:972" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/icv/image/transforms/resize.py">
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/pycocotools/coco.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2">
-          <caret line="64" column="4" selection-start-line="64" selection-start-column="4" selection-end-line="64" selection-end-column="4" />
+        <state relative-caret-position="-96">
+          <caret line="156" column="8" selection-start-line="156" selection-start-column="8" selection-end-line="156" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/core/bbox.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="323" lean-forward="true" selection-start-line="323" selection-end-line="323" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#24#63#0" expanded="true" />
+            <marker date="1564246937694" expanded="true" signature="1344:1586" ph="..." />
+            <marker date="1564246937694" expanded="true" signature="2713:2763" ph="..." />
+            <marker date="1564246937694" expanded="true" signature="2921:2979" ph="..." />
+            <marker date="1564246937694" expanded="true" signature="3008:3056" ph="..." />
+            <marker date="1564246937694" expanded="true" signature="4434:11823" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/skimage/draw/draw.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-285">
+          <caret line="410" column="4" selection-start-line="410" selection-start-column="4" selection-end-line="410" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/icv/image/vis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="44" column="4" selection-start-line="44" selection-start-column="4" selection-end-line="44" selection-end-column="4" />
+        <state relative-caret-position="155">
+          <caret line="295" selection-start-line="295" selection-end-line="295" />
           <folding>
             <element signature="e#24#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/ground_truth.py">
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/os.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="30" column="105" selection-start-line="30" selection-start-column="105" selection-end-line="30" selection-end-column="105" />
-          <folding>
-            <element signature="e#24#52#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/detector.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/mb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
-          <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/mmd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8">
-          <caret line="8" column="9" lean-forward="true" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/result.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" column="12" lean-forward="true" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/service/client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/service/server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/process/detect_processor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-          <folding>
-            <element signature="e#25#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/process/processor.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/data/labelme.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" column="12" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
-          <folding>
-            <marker date="1563782505960" expanded="true" signature="1598:2249" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/data/elf.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/data/voc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="11" column="19" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/utils/ops.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-598">
-          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/data/coco.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="11" column="20" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/data/dataset.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="17" lean-forward="true" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/core/errors.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/utils/label_map_util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-          <folding>
-            <element signature="e#25#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/core/http/client/client.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/core/http/exceptions.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/core/http/client/request.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/core/http/client/response.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/core/http/methods.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/core/http/status_code.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="15" lean-forward="true" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/image/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="40" lean-forward="true" selection-start-line="7" selection-start-column="40" selection-end-line="7" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#84#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/core/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/utils/require.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="15" column="64" lean-forward="true" selection-start-line="15" selection-start-column="64" selection-end-line="15" selection-end-column="64" />
-          <folding>
-            <element signature="e#24#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/data/classify.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/data/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/data/core/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" column="61" selection-start-line="8" selection-start-column="61" selection-end-line="8" selection-end-column="61" />
-          <folding>
-            <element signature="e#53#75#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/data/core/bbox.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="16" selection-start-column="16" selection-end-column="16" />
-          <folding>
-            <element signature="e#24#63#0" expanded="true" />
-            <marker date="1563783874348" expanded="true" signature="2533:2581" ph="..." />
-            <marker date="1563783874348" expanded="true" signature="2739:2796" ph="..." />
-            <marker date="1563783874348" expanded="true" signature="2825:2873" ph="..." />
-            <marker date="1563783874348" expanded="true" signature="4246:11606" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/detector/tf_obj.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" column="25" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/__version__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/install.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/vis/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/utils/timer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1595" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icv/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="8" selection-start-column="8" selection-end-column="8" />
+        <state relative-caret-position="-322">
+          <caret line="194" column="39" selection-start-line="194" selection-start-column="31" selection-end-line="194" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/icv/utils/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="19" column="113" selection-start-line="19" selection-start-column="113" selection-end-line="19" selection-end-column="113" />
+        <state relative-caret-position="320">
+          <caret line="20" column="48" selection-start-line="20" selection-start-column="48" selection-end-line="20" selection-end-column="48" />
           <folding>
             <element signature="e#0#147#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/icv/utils/time.py">
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2018.2/python_stubs/-1821537435/pycocotools/_mask.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="34" column="4" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_coco.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="817">
+          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/pycocotools/mask.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1463">
+          <caret line="77" column="19" selection-start-line="77" selection-start-column="14" selection-end-line="77" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/shapely/geometry/polygon.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="260" column="17" selection-start-line="260" selection-start-column="8" selection-end-line="260" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/core/polygon.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="24" column="35" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/utils/anno.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="78" column="37" selection-start-line="78" selection-start-column="37" selection-end-line="78" selection-end-column="37" />
+          <folding>
+            <marker date="1564290480971" expanded="true" signature="3225:3436" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/benchmark.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/matplotlib/artist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="554">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/matplotlib/text.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="98">
+          <caret line="843" selection-start-line="843" selection-end-line="843" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/matplotlib/pyplot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="415" column="4" selection-start-line="415" selection-start-column="4" selection-end-line="415" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/vis/show.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/vis/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" column="93" selection-start-line="4" selection-start-column="93" selection-end-line="4" selection-end-column="93" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/benchmark_map_time.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_vis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="447">
+          <caret line="36" column="21" selection-start-line="36" selection-start-column="21" selection-end-line="36" selection-end-column="21" />
+          <folding>
+            <element signature="e#24#98#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/vis/plot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+          <folding>
+            <element signature="e#24#42#0" expanded="true" />
+            <marker date="1564325269849" expanded="true" signature="704:2672" ph="..." />
+            <marker date="1564325269849" expanded="true" signature="2927:3412" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-90">
+          <caret line="97" column="36" selection-start-line="97" selection-start-column="26" selection-end-line="97" selection-end-column="36" />
+          <folding>
+            <element signature="e#24#63#0" expanded="true" />
+            <marker date="1564243080569" expanded="true" signature="2934:3328" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="9" column="61" selection-start-line="9" selection-start-column="61" selection-end-line="9" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_labelme.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="12" column="43" lean-forward="true" selection-start-line="6" selection-start-column="4" selection-end-line="12" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/converter/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/labelme.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="136" lean-forward="true" selection-start-line="136" selection-end-line="136" />
+          <folding>
+            <element signature="e#24#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/utils/path.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="29" column="4" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="4" />
+          <folding>
+            <element signature="e#24#37#0" expanded="true" />
+            <marker date="1564286075291" expanded="true" signature="132:280" ph="..." />
+            <marker date="1564286075291" expanded="true" signature="852:945" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/converter/voc_converter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="14" column="24" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
+          <folding>
+            <element signature="e#24#45#0" expanded="true" />
+            <marker date="1564326561692" expanded="true" signature="206:1312" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/core/mask_list.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="18" column="39" lean-forward="true" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/coco.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2143">
+          <caret line="129" column="20" selection-start-line="129" selection-start-column="20" selection-end-line="129" selection-end-column="20" />
+          <folding>
+            <element signature="e#24#33#0" expanded="true" />
+            <marker date="1564289184888" expanded="true" signature="1242:1898" ph="..." />
+            <marker date="1564289184888" expanded="true" signature="1624:1898" ph="..." />
+            <marker date="1564289184888" expanded="true" signature="6263:6721" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/core/polys.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="78">
+          <caret line="65" selection-start-line="65" selection-end-line="65" />
+          <folding>
+            <element signature="e#24#42#0" expanded="true" />
+            <marker date="1564288329185" expanded="true" signature="5976:6033" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/core/sample.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1477">
+          <caret line="83" selection-start-line="83" selection-end-line="83" />
+          <folding>
+            <element signature="e#24#67#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_dataset_convert.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="50" column="41" lean-forward="true" selection-start-line="50" selection-start-column="41" selection-end-line="50" selection-end-column="41" />
+          <folding>
+            <element signature="e#24#109#0" expanded="true" />
+            <marker date="1564327487845" expanded="true" signature="161:2192" ph="..." />
+            <marker date="1564327487845" expanded="true" signature="746:2125" ph="..." />
+            <marker date="1564327487845" expanded="true" signature="1298:2125" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/converter/labelme_converter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-167">
+          <caret line="47" column="17" lean-forward="true" selection-start-line="47" selection-start-column="17" selection-end-line="47" selection-end-column="17" />
+          <folding>
+            <element signature="e#24#53#0" expanded="true" />
+            <marker date="1564326502804" expanded="true" signature="250:2444" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/converter/coco_converter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-77">
+          <caret line="16" column="12" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
+          <folding>
+            <element signature="e#24#45#0" expanded="true" />
+            <marker date="1564326552658" expanded="true" signature="183:1335" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/core/mask.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="154" column="44" selection-start-line="154" selection-start-column="44" selection-end-line="154" selection-end-column="44" />
+          <folding>
+            <element signature="e#24#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/icv/data/voc.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
-          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+          <caret line="326" selection-start-line="326" selection-end-line="326" />
           <folding>
-            <marker date="1563784482561" expanded="true" signature="408:444" ph="..." />
+            <element signature="e#24#55#0" expanded="true" />
           </folding>
         </state>
       </provider>

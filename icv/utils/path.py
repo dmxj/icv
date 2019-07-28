@@ -4,6 +4,12 @@ import os
 import six
 from .itis import is_seq,is_file,is_dir
 
+def mkfile(filepath,content=""):
+    if not is_dir(os.path.dirname(filepath)):
+        mkdir(os.path.dirname(filepath))
+    with open(filepath,"w") as f:
+        f.write(content)
+
 def mkdir(dir_name,mode=0o777):
     if six.PY3:
         os.makedirs(dir_name, mode=mode, exist_ok=True)
@@ -20,6 +26,11 @@ def mkdir_force(dir_name, subdirs=None,mode=0o777):
     if subdirs is not None:
         for subdir in subdirs:
             mkdir(os.path.join(dir_name,subdir),mode)
+
+def reset_dir(dir_name):
+    if os.path.exists(dir_name):
+        shutil.rmtree(dir_name)
+    os.makedirs(dir_name)
 
 def fcopy(source_path,dist_path,rename=True):
     """拷贝文件或文件列表到目标目录中

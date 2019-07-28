@@ -3,12 +3,13 @@ import numpy as np
 from .kps import Keypoint
 from icv.utils import EasyDict as edict
 from icv.utils import is_np_array
-from icv.image.vis import imdraw_polygons,imdraw_polygons_with_bbox
+from icv.image.vis import imdraw_polygons
 import pycocotools.mask as mask_utils
 
+
 class Polygon(object):
-    def __init__(self, exterior, label=None,**kwargs):
-        if isinstance(exterior,list):
+    def __init__(self, exterior, label=None, **kwargs):
+        if isinstance(exterior, list):
             if not exterior:
                 # for empty lists, make sure that the shape is (0, 2) and not (0,) as that is also expected when the
                 # input is a numpy array
@@ -16,22 +17,23 @@ class Polygon(object):
             elif isinstance(exterior[0], Keypoint):
                 # list of Keypoint
                 self.exterior = np.float32([[point.x, point.y] for point in exterior])
-            elif not isinstance(exterior[0],(list,tuple)):
+            elif not isinstance(exterior[0], (list, tuple)):
                 assert len(exterior) % 2 == 0
                 self.exterior = []
-                for i,v in enumerate(exterior):
+                for i, v in enumerate(exterior):
                     if i % 2 == 0:
-                        self.exterior.append([v,exterior[i+1]])
+                        self.exterior.append([v, exterior[i + 1]])
                 self.exterior = np.float32(self.exterior)
             else:
                 # list of tuples (x, y)
                 self.exterior = np.float32([[point[0], point[1]] for point in exterior])
         else:
             assert is_np_array(exterior), ("Expected exterior to be a list of tuples (x, y) or "
-                          + "an (N, 2) array, got type %s") % (exterior,)
+                                           + "an (N, 2) array, got type %s") % (exterior,)
 
             assert exterior.ndim == 2 and exterior.shape[1] == 2, ("Expected exterior to be a list of tuples (x, y) or "
-                                                                   "an (N, 2) array, got an array of shape %s") % (exterior.shape,)
+                                                                   "an (N, 2) array, got an array of shape %s") % (
+                                                                      exterior.shape,)
 
             self.exterior = np.float32(exterior)
 
@@ -60,13 +62,12 @@ class Polygon(object):
 
     @staticmethod
     def init_from(polys, label=None):
-        if isinstance(polys,list) or is_np_array(polys):
-            return Polygon(polys,label)
-        elif isinstance(polys,Polygon):
+        if isinstance(polys, list) or is_np_array(polys):
+            return Polygon(polys, label)
+        elif isinstance(polys, Polygon):
             return polys.deepcopy(label=label)
         else:
             raise TypeError("Type of polys should be list or ndarray or Polygon")
-
 
     def add_field(self, field, field_data):
         self.fields[field] = field_data
@@ -179,6 +180,10 @@ class Polygon(object):
         xx = self.xx
         return max(xx) - min(xx)
 
+    @property
+    def polygons(self):
+        return np.array(self.exterior).reshape(-1)
+
     def to_shapely_polygon(self):
         """
         Convert this polygon to a Shapely polygon.
@@ -189,7 +194,6 @@ class Polygon(object):
         """
         # load shapely lazily, which makes the dependency more optional
         import shapely.geometry
-
         return shapely.geometry.Polygon([(point[0], point[1]) for point in self.exterior])
 
     def to_bounding_box(self):
@@ -221,11 +225,11 @@ class Polygon(object):
 
         return [Keypoint(x=point[0], y=point[1]) for point in self.exterior]
 
-    def to_mask(self):
+    def to_mask(self, height, width):
         if self.mask is not None:
             return self.mask
         from .mask import Mask
-        rles = mask_utils.frPyObjects(self.exterior)
+        rles = mask_utils.frPyObjects([self.polygons], height, width)
         rle = mask_utils.merge(rles)
         mask = mask_utils.decode(rle)
         self.mask = Mask(mask)
@@ -307,7 +311,7 @@ class Polygon(object):
 
         result = np.copy(image) if copy else image
 
-        result = imdraw_polygons(result,[self.exterior.tolist()], color=color,alpha=alpha)
+        result = imdraw_polygons(result, [self.exterior.tolist()], color=color, alpha=alpha)
         return result
 
     def __repr__(self):

@@ -14,11 +14,11 @@ import os
 import numpy as np
 from ..utils import Timer,is_file
 from torchvision import transforms as T
+from ..data.core import BBox
 from maskrcnn_benchmark.modeling.detector import build_detection_model
 from maskrcnn_benchmark.utils.checkpoint import DetectronCheckpointer
 from maskrcnn_benchmark.structures.image_list import to_image_list
 from maskrcnn_benchmark.modeling.roi_heads.mask_head.inference import Masker
-from ..data import BBox
 from maskrcnn_benchmark.structures.bounding_box import BoxList
 from maskrcnn_benchmark.config import cfg
 

@@ -47,7 +47,7 @@ class Detector(object):
     @abstractmethod
     def start_server(
             self,
-            port=8088,
+            port=9527,
             open_web=True,
             secret=None,
             upload_dir=None,

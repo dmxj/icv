@@ -1,13 +1,17 @@
+# -*- coding: UTF-8 -*-
 from __future__ import division
 
 import cv2
+from ..io import imread
 
 
 def _scale_size(size, scale):
     """Rescale a size by a ratio.
+
     Args:
         size (tuple): w, h.
         scale (float): Scaling factor.
+
     Returns:
         tuple[int]: scaled size.
     """
@@ -26,17 +30,19 @@ interp_codes = {
 
 def imresize(img, size, return_scale=False, interpolation='bilinear'):
     """Resize image to a given size.
+
     Args:
         img (ndarray): The input image.
         size (tuple): Target (w, h).
         return_scale (bool): Whether to return `w_scale` and `h_scale`.
         interpolation (str): Interpolation method, accepted values are
             "nearest", "bilinear", "bicubic", "area", "lanczos".
+
     Returns:
         tuple or ndarray: (`resized_img`, `w_scale`, `h_scale`) or
             `resized_img`.
     """
-    h, w = img.shape[:2]
+    h, w = imread(img).shape[:2]
     resized_img = cv2.resize(
         img, size, interpolation=interp_codes[interpolation])
     if not return_scale:
@@ -49,21 +55,24 @@ def imresize(img, size, return_scale=False, interpolation='bilinear'):
 
 def imresize_like(img, dst_img, return_scale=False, interpolation='bilinear'):
     """Resize image to the same size of a given image.
+
     Args:
         img (ndarray): The input image.
         dst_img (ndarray): The target image.
         return_scale (bool): Whether to return `w_scale` and `h_scale`.
         interpolation (str): Same as :func:`resize`.
+
     Returns:
         tuple or ndarray: (`resized_img`, `w_scale`, `h_scale`) or
             `resized_img`.
     """
-    h, w = dst_img.shape[:2]
-    return imresize(img, (w, h), return_scale, interpolation)
+    h, w = imread(dst_img).shape[:2]
+    return imresize(imread(img), (w, h), return_scale, interpolation)
 
 
 def imrescale(img, scale, return_scale=False, interpolation='bilinear'):
     """Resize image while keeping the aspect ratio.
+
     Args:
         img (ndarray): The input image.
         scale (float or tuple[int]): The scaling factor or maximum size.
@@ -73,10 +82,11 @@ def imrescale(img, scale, return_scale=False, interpolation='bilinear'):
         return_scale (bool): Whether to return the scaling factor besides the
             rescaled image.
         interpolation (str): Same as :func:`resize`.
+
     Returns:
         ndarray: The rescaled image.
     """
-    h, w = img.shape[:2]
+    h, w = imread(img).shape[:2]
     if isinstance(scale, (float, int)):
         if scale <= 0:
             raise ValueError(

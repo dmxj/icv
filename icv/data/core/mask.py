@@ -1,12 +1,10 @@
 # -*- coding: UTF-8 -*-
 import numpy as np
-import cv2
 from skimage import measure
 from icv.utils import EasyDict as edict
-from icv.utils import is_seq, is_np_array
-from .bbox import BBox
+from icv.utils import is_seq, is_np_array,is_file
 from .polys import Polygon
-import pycocotools.mask as mask_utils
+from icv.image.io import imread,imwrite
 from icv.image.vis import imdraw_mask
 
 
@@ -147,3 +145,13 @@ class Mask(object):
             color = np.uint8(color)
 
         return imdraw_mask(image=result, mask=self.mask, color=color, alpha=alpha)
+
+    def save(self, dist_path, id=1):
+        m = self.mask[::]
+        m[np.where(m != 0)] = id
+        if is_file(dist_path):
+            m0 = imread(dist_path,0)
+            m = m + m0
+            m[np.where(m>max(id,np.max(m0)))] = id
+
+        imwrite(m, dist_path)

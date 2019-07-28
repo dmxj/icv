@@ -1,10 +1,17 @@
 # -*- coding: UTF-8 -*-
 from ..vis.color import STANDARD_COLORS
+from ..utils import is_seq, is_dir, mkdir
+from ..image.transforms import imcrop, imresize
+from .classify import Classify
+from .core import BBox, Image
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 from terminaltables import AsciiTable
+import shutil
 import random
 import copy
+import os
+from time import time
 
 
 class IcvDataSet(object):
@@ -38,7 +45,19 @@ class IcvDataSet(object):
         img_id = self.ids[index]
         return img_id
 
-    def set_colormap(self):
+    def set_colormap(self, color_list_or_map=None):
+        assert color_list_or_map is None or isinstance(color_list_or_map, dict) or is_seq(color_list_or_map)
+        if color_list_or_map is not None and len(self.categories) > 0:
+            if isinstance(color_list_or_map, dict):
+                self.color_map = {c: color_list_or_map[c] for c in color_list_or_map if c in self.categories}
+                self.color_map.update({
+                    c: random.choice(STANDARD_COLORS)
+                    for c in self.categories if c not in self.color_map
+                })
+            elif is_seq(color_list_or_map) and len(color_list_or_map) > 0:
+                self.color_map = {self.categories[i]: color_list_or_map[i % len(color_list_or_map)] for i in
+                                  range(len(self.categories))}
+            return
         self.color_map = {}
         _colors = STANDARD_COLORS
         # random.shuffle(_colors)
@@ -57,6 +76,20 @@ class IcvDataSet(object):
 
     def get_categories(self):
         return self.categories
+
+    def set_categories(self, categories):
+        assert is_seq(categories)
+        self.categories = list(categories)
+
+        self.id2cat = {}
+        self.cat2id = {}
+        for i, cate in enumerate(self.categories):
+            if self.one_index:
+                self.id2cat[i + 1] = cate
+                self.cat2id[cate] = i + 1
+            else:
+                self.id2cat[i] = cate
+                self.cat2id[cate] = i
 
     def get_samples(self, ids=None):
         self.samples = []
@@ -100,12 +133,47 @@ class IcvDataSet(object):
         return dataset
 
     @abstractmethod
-    def save(self, output_dir, split=None):
+    def save(self, output_dir, reset_dir=False, split=None):
         pass
 
     @abstractmethod
     def concat(self, dataset, out_dir, reset=False, new_split=None):
         pass
+
+    @abstractmethod
+    def crop_bbox_for_classify(self, output_dir, reset=False, split="train", pad=0, resize=None):
+        assert resize is None or (is_seq(resize) and len(resize) == 2)
+        if reset and is_dir(output_dir):
+            shutil.rmtree(output_dir)
+        if not is_dir(output_dir):
+            mkdir(output_dir)
+        samples = self.get_samples()
+
+        tmp_dir = os.path.join(output_dir, str(time()))
+        mkdir(tmp_dir)
+
+        classify_dataset = Classify(root_dir=output_dir, categories=self.categories)
+        for sample in samples:
+            _bboxes = []
+            _cats = []
+            for anno in sample.annos:
+                if isinstance(anno.bbox, BBox):
+                    _bbox = anno.bbox.copy()
+                    _bbox.extend(pad, sample.shape)
+                    _bboxes.append(_bbox.bbox)
+                    _cats.append(anno.label)
+            patches = imcrop(sample.image, _bboxes)
+            assert len(patches) == len(_cats)
+
+            for i, p in enumerate(patches):
+                if resize is not None:
+                    p = imresize(p, resize)
+                imgobj = Image(img=p, ext=sample.ext, name="")
+                classify_dataset.img2cat[imgobj] = _cats[i]
+                classify_dataset.img2set[imgobj] = split
+
+        classify_dataset.save(output_dir, rename=True)
+        shutil.rmtree(tmp_dir)
 
     @abstractmethod
     def statistic(self, print_log=False):

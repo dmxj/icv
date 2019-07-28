@@ -5,8 +5,11 @@ from .detector import Detector
 from ..data.core import BBox
 from ..utils import Timer, is_file, is_seq
 from .result import DetectionResult
-import tensorflow as tf
-import numpy as np
+try:
+    import tensorflow as tf
+    import numpy as np
+except ImportError as e:
+    print("you are not install tensorflow or numpy")
 from .utils import ops as utils_ops
 
 class TfObjectDetector(Detector):

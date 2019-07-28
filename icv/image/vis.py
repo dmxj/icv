@@ -2,10 +2,10 @@
 import os
 from PIL import Image, ImageDraw, ImageFont, ImageColor
 from .io import imread, imwrite, pil_img_to_np
+from skimage import draw
 from ..utils import is_seq, is_empty, is_np_array, is_str
 from ..vis.color import STANDARD_COLORS, MASK_COLORS
 import random
-import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -18,28 +18,6 @@ def imshow(img):
     plt.axis('off')
     plt.imshow(imread(img))
     plt.show()
-
-
-def immerge(img_list, origin="x", resize=False):
-    assert origin in ["x", "y"], "param origin should be 'x' or 'y'"
-    assert is_seq(img_list) and not is_empty(img_list), "param img_list should be a sequence"
-    if len(img_list) == 1:
-        return imread(img_list[0])
-
-    imgnp_list = []
-    shape = ()
-    for img in img_list:
-        imgnp = imread(img)
-        if not is_empty(shape):
-            if resize:
-                imgnp = cv2.resize(imgnp, shape)
-            if (origin == "x" and imgnp.shape[0] != shape[0]) or (origin == "y" and imgnp.shape[1] != shape[1]):
-                raise Exception("image shape must match exactly or use resize=True.")
-        shape = (imgnp.shape[0], imgnp.shape[1])
-        imgnp_list.append(imgnp)
-
-    merged_img_np = np.concatenate(imgnp_list, axis=1 if origin == "x" else 0)
-    return merged_img_np
 
 
 def imshow_bboxes(
@@ -55,16 +33,16 @@ def imshow_bboxes(
         use_normalized_coordinates=False,
         is_show=False,
         save_path=None):
-    assert classes is None or is_seq(classes) or isinstance(classes, np.ndarray)
-    assert labels is None or is_seq(labels) or isinstance(labels, np.ndarray)
-    assert scores is None or is_seq(scores) or isinstance(scores, np.ndarray)
-    assert masks is None or is_seq(masks) or isinstance(masks, np.ndarray)
+    assert classes is None or is_seq(classes) or is_np_array(classes)
+    assert labels is None or is_seq(labels) or is_np_array(labels)
+    assert scores is None or is_seq(scores) or is_np_array(scores)
+    assert masks is None or is_seq(masks) or is_np_array(masks)
 
-    from icv.data import BBoxList, BBox
+    from icv.data.core import BBoxList, BBox
 
     if isinstance(bboxes, BBoxList):
         bboxes = np.array(bboxes.tolist())
-    elif isinstance(bboxes, list) and isinstance(bboxes[0], BBox):
+    elif isinstance(bboxes, list) and len(bboxes) > 0 and isinstance(bboxes[0], BBox):
         bboxes = np.array([bbox.bbox for bbox in bboxes])
     else:
         bboxes = np.array(bboxes)
@@ -81,22 +59,22 @@ def imshow_bboxes(
 
         return image
 
-    bboxes = bboxes[np.where(scores >= score_thresh)] if scores is not None else bboxes
+    bboxes = bboxes[np.where(np.array(scores) >= score_thresh)] if scores is not None else bboxes
 
     if labels is not None:
-        if not isinstance(labels, np.ndarray):
+        if not is_np_array(labels):
             labels = np.array(labels)
         labels = labels[np.where(scores >= score_thresh)] if scores is not None else labels
         assert labels.shape[0] == bboxes.shape[0], "param labels's length is not equals to bboxes!"
 
     if masks is not None:
-        if not isinstance(masks, np.ndarray):
+        if not is_np_array(masks):
             masks = np.array(masks)
         masks = masks[np.where(scores >= score_thresh)] if scores is not None else masks
         assert masks.shape[0] == bboxes.shape[0], "param masks's length is not equals to bboxes!"
 
     if scores is not None:
-        if not isinstance(scores, np.ndarray):
+        if not is_np_array(scores):
             scores = np.array(scores)
         scores = scores[np.where(scores >= score_thresh)]
 
@@ -105,7 +83,7 @@ def imshow_bboxes(
     colorMap = {}
     default_color = color if color else "DarkOrange"
     if classes is not None:
-        if isinstance(classes, np.ndarray):
+        if is_np_array(classes):
             classes = list(classes)
         for cat in classes:
             colorMap[cat] = STANDARD_COLORS[classes.index(cat) % len(STANDARD_COLORS)]
@@ -167,6 +145,7 @@ def imdraw_bbox(image, xmin, ymin, xmax, ymax, color="red", thickness=1, display
         return image
 
     rgb = ImageColor.getrgb(color) if is_str(color) else color
+    rgb_text = (255 - rgb[0], 255 - rgb[1], 255 - rgb[2])
     rgba = rgb + (128,)
 
     try:
@@ -194,13 +173,13 @@ def imdraw_bbox(image, xmin, ymin, xmax, ymax, color="red", thickness=1, display
     draw.text(
         (left + margin, text_bottom - text_height - margin),
         display_str,
-        fill='black',
+        fill=rgb_text,
         font=font)
 
     return pil_img_to_np(image)
 
 
-def imdraw_mask(image, mask, color='red', alpha=0.4):
+def imdraw_mask(image, mask, color='red', alpha=0.8):
     """Draws mask on an image.
 
     Args:
@@ -233,22 +212,16 @@ def imdraw_mask(image, mask, color='red', alpha=0.4):
     return image
 
 
-def imdraw_polygons(image, polygons, color='red', alpha=0.4):
+def imdraw_polygons(image, polygons, color='red', alpha=0.8):
     image = imread(image)
-
-    polygons = _format_polygons(polygons)
+    polygons = np.array(_format_polygons(polygons))
+    polygons = np.squeeze(polygons)
+    X, Y = polygons[:, 0], polygons[:, 1]
+    rr, cc = draw.polygon(Y, X)
 
     rgb = ImageColor.getrgb(color) if is_str(color) else color
-    alpha = int(alpha * 255) if alpha <= 1 else int(alpha)
-    rgba = rgb + (alpha,)
-    pil_image = Image.fromarray(image)
+    draw.set_color(image, [rr, cc], color=rgb, alpha=alpha)
 
-    draw = ImageDraw.Draw(pil_image)
-    for polygon in polygons:
-        points = [tuple(p) for p in polygon]
-        draw.polygon(points, fill=rgba)
-
-    np.copyto(image, np.array(pil_image.convert('RGB')))
     return image
 
 
@@ -292,8 +265,8 @@ def imdraw_polygons_with_bbox(
         outline=1,
         color_map=None,
         with_bbox=False,
-        bbox_color='black',
-        text_color='black'
+        bbox_color='blue',
+        text_color='blue'
 ):
     image = imread(image)
     pil_image = Image.fromarray(image)
@@ -313,6 +286,7 @@ def imdraw_polygons_with_bbox(
     assert color_map is None or isinstance(color_map, dict)
 
     color_map_history = {}
+    color_list = []
     for ix, polygon in enumerate(polygons):
         color = random.choice(MASK_COLORS)
 
@@ -365,9 +339,13 @@ def imdraw_polygons_with_bbox(
                 font=font)
             text_bottom -= text_height - 2 * margin
 
-        draw.polygon(points, fill=color, outline=outline)
+        color_list.append(color)
+        # draw.polygon(points, fill=color, outline=outline)
 
     np.copyto(image, np.array(pil_image.convert('RGB')))
+
+    for ix, polygon in enumerate(polygons):
+        image = imdraw_polygons(image, polygon, color=color_list[i], alpha=alpha)
 
     if save_path is not None:
         pil_image.save(save_path)

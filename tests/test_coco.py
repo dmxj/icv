@@ -7,7 +7,6 @@ import random
 if __name__ == '__main__':
     import os
 
-
     # test_coco = Coco(image_dir="/Users/rensike/Work/huaxing/huaxing_coco_v2/images/val",
     #                  anno_file="/Users/rensike/Work/huaxing/huaxing_coco_v2/annotations/val.json")
     #
@@ -51,3 +50,8 @@ if __name__ == '__main__':
     # test_coco.vis(random.choice(test_coco.ids),is_show=True,save_dir="/Users/rensike/Work/icv/test_coco_vis")
 
     test_coco.statistic(print_log=True)
+
+    # test_coco.crop_bbox_for_classify("/Users/rensike/Work/icv/test_crop_bbox_for_classify_coco", reset=True, split="trainval",
+    #                                 pad=20)
+
+    test_coco.save("/Users/rensike/Work/icv/test_coco_save_test", reset_dir=True, split="train")

@@ -62,6 +62,11 @@ def is_empty(input):
         return input == ""
     if is_seq(input):
         return len(input) == 0
+    if is_file(input):
+        return float(os.path.getsize(input)) > 0
+    if is_dir(input):
+        from glob import glob
+        return len(glob(os.path.join(input,"**","*"),recursive=True)) > 0
 
     return input is None
 

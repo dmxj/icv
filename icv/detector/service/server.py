@@ -2,6 +2,7 @@
 import numpy as np
 import os
 import base64
+from ...utils import json_encode
 from ...core.http.methods import HttpMethod
 from ..process.detect_processor import DetectionProcessor
 from ..result import DetectionResult
@@ -9,7 +10,6 @@ from .. import detector
 from bottle import template, Bottle, request, static_file, tob
 from io import BytesIO
 import tempfile
-
 import bottle
 
 bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024
@@ -58,7 +58,7 @@ class DetectorServer(object):
                 "code": code,
                 "message": message,
                 "success": success,
-                "data": data
+                "data": json_encode(data)
             }
         else:
             res = {
@@ -143,7 +143,7 @@ class DetectorServer(object):
             return self._json_response(ERROR_IMAGE_FORMAT, "Image File Is Invalid!")
 
         upload.save(self.upload_dir, overwrite=True)
-        det_img_name = "{}_det.{}".format(name, ext)
+        det_img_name = "{}_det{}".format(name, ext)
         det_img_path = os.path.join(self.upload_dir, det_img_name)
         upload_img_path = os.path.join(self.upload_dir, upload.filename)
         inference_result = self.detector.inference(upload_img_path, save_path=det_img_path, score_thr=score_thr)

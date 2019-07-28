@@ -1,24 +1,29 @@
 # -*- coding: UTF-8 -*-
 from .dataset import IcvDataSet
-from ..utils import is_seq,is_dir
+from ..utils import is_seq, is_dir
 from ..image import imwrite
 from ..data.core.bbox import BBox
 from ..data.core.polys import Polygon
 from ..data.core.sample import Sample, Anno
+from ..data.core.meta import AnnoMeta,SampleMeta
 from ..vis.color import STANDARD_COLORS
 import random
 import os
 import json
 import shutil
+from tqdm import tqdm
 
 
 class LabelMe(IcvDataSet):
-    def __init__(self, image_anno_path_list, keep_no_anno_image=True, categories=None, one_index=False):
+    def __init__(self, image_anno_path_list, split="trainval", keep_no_anno_image=True, categories=None,
+                 one_index=False):
         assert is_seq(image_anno_path_list)
         image_anno_path_list = list(image_anno_path_list)
         image_path_list, anno_path_list = list(zip(*image_anno_path_list))
 
+        self.split = split
         self.keep_no_anno_image = keep_no_anno_image
+        self.one_index = one_index
 
         self.ids = [os.path.basename(_).rsplit(".", 1)[0] for _ in image_path_list]
         self.id2imgpath = {id: image_path_list[ix] for ix, id in enumerate(self.ids)}
@@ -30,6 +35,20 @@ class LabelMe(IcvDataSet):
         self.categories = categories if categories is not None else self.get_categories()
 
         super(LabelMe, self).__init__(self.ids, self.categories, self.keep_no_anno_image, one_index)
+        print("there have %d samples in LabelMe dataset" % len(self.ids))
+        print("there have %d categories in LabelMe dataset" % len(self.categories))
+
+    @property
+    def is_seg_mode(self):
+        if self.length == 0:
+            return False
+
+        for i in range(self.length):
+            for anno in self.get_sample(self.ids[i]).annos:
+                if anno.seg_mode_polys or anno.seg_mode_mask:
+                    return True
+
+        return False
 
     def get_categories(self):
         categories = []
@@ -39,12 +58,13 @@ class LabelMe(IcvDataSet):
                 categories.extend(label_list)
         categories = list(set(categories))
         categories.sort()
+        self.set_categories(categories)
         return categories
 
-    def save(self, output_dir, split=None):
-        anno_path, image_path = LabelMe.reset_dir(output_dir,reset=True)
+    def save(self, output_dir, reset_dir=False, split=None):
+        anno_path, image_path = LabelMe.reset_dir(output_dir, reset=reset_dir)
         for id in self.ids:
-            self._write(self.get_sample(id),anno_path,image_path)
+            self._write(self.get_sample(id), anno_path, image_path)
 
     @staticmethod
     def reset_dir(dist_dir, reset=False):
@@ -60,8 +80,7 @@ class LabelMe(IcvDataSet):
             if reset or not is_dir(_path):
                 os.makedirs(_path)
 
-        return anno_path,image_path
-
+        return anno_path, image_path
 
     def _get_bbox_from_points(self, points):
         """
@@ -111,6 +130,8 @@ class LabelMe(IcvDataSet):
                     label=label,
                     color=self.color_map[label],
                     polys=Polygon.init_from(points, label=label) if shape["shape_type"] == "polygon" else None,
+                    meta=AnnoMeta()
+
                 )
                 annos.append(anno)
 
@@ -118,6 +139,7 @@ class LabelMe(IcvDataSet):
             name=id,
             image=img_file,
             annos=annos,
+            meta=SampleMeta()
         )
         return sample
 
@@ -125,10 +147,10 @@ class LabelMe(IcvDataSet):
         assert isinstance(anno_sample, Sample)
 
         if is_dir(anno_path):
-            anno_path = os.path.join(anno_path,"%s.json" % anno_sample.name)
+            anno_path = os.path.join(anno_path, "%s.json" % anno_sample.name)
 
         if is_dir(img_path):
-            img_path = os.path.join(img_path,"%s.jpg" % anno_sample.name)
+            img_path = os.path.join(img_path, "%s.jpg" % anno_sample.name)
 
         imwrite(anno_sample.image, img_path)
         anno_json = {
@@ -153,7 +175,7 @@ class LabelMe(IcvDataSet):
 
             anno_json["shapes"].append(shape)
 
-        json.dump(anno_json,open(anno_path, "w"))
+        json.dump(anno_json, open(anno_path, "w"))
 
     def vis(self, id=None, with_bbox=True, with_seg=True, is_show=False, save_dir=None, reset_dir=False):
         if save_dir is not None:
@@ -169,7 +191,7 @@ class LabelMe(IcvDataSet):
             return sample.vis(with_bbox=with_bbox, with_seg=with_seg, is_show=is_show, save_path=save_path)
 
         image_vis = []
-        for id in self.ids:
+        for id in tqdm(self.ids):
             sample = self.get_sample(id)
             save_path = None if save_dir is None else os.path.join(save_dir, "%s.jpg" % sample.name)
             image = sample.vis(with_bbox=with_bbox, with_seg=with_seg, is_show=False, save_path=save_path)

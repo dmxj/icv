@@ -2,6 +2,7 @@
 from ..core.http.client.client import IcvHttpClient
 from ..core.http.methods import HttpMethod
 from .itis import is_dir,is_seq
+from .codec import json_encode
 
 def request(method,url,data=None,params=None,headers=None,timeout=3000):
     method = str(method).upper()
@@ -54,14 +55,18 @@ def simple(port,methods=None,debug=False):
     from bottle import Bottle,request
     app = Bottle()
 
-    app.route("/<url:path>",
-              methods,
-              lambda url: dict(
-                  url_path=url,
-                  url_query=request.query.decode(),
-                  request_method=request.method,
-                  request_data=request.json,
-                  request_headers=request.headers
-              ))
+    def _handler(uri):
+        return json_encode(dict(
+            uri=uri,
+            url_path=request.url,
+            url_query=request.query.decode(),
+            request_method=request.method,
+            request_data=request.json,
+            request_headers=request.headers
+        ))
 
-    app.run(host="0.0.0.0",port=port,debug=debug)
+    app.route(["/<uri:re:.+>", "/"],
+              methods,
+              _handler)
+
+    app.run(host="0.0.0.0", port=port, debug=debug)

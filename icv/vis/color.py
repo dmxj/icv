@@ -26,13 +26,27 @@ STANDARD_COLORS = [
     'WhiteSmoke', 'Yellow', 'YellowGreen'
 ]
 
+# DARK_COLORS = [
+#     (255, 48, 48), (148, 0, 211), (160, 82, 45), (139, 0, 0), (71, 71, 71), (34, 139, 34), (3, 3, 3), (0, 0, 238),
+#     (238, 0, 238)
+# ]
+
+DARK_COLORS = ["darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgrey", "darkgreen",
+               "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred",
+               "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkslategrey",
+               "darkturquoise", "darkviolet"]
+
+LIGHT_COLORS = ['lightblue', 'lightcoral', 'lightcyan', 'lightgoldenrodyellow', 'lightgreen',
+                'lightgray', 'lightgrey', 'lightpink', 'lightsalmon', 'lightseagreen', 'lightskyblue',
+                'lightslategray', 'lightslategrey', 'lightsteelblue', 'lightyellow']
+
 MASK_COLORS = [
-    (0,0,139),
-    (67,205,128),
-    (0,206,209),
-    (255,106,106),
-    (192,255,62),
-    (130,130,130),
-    (139,87,66),
-    (25,25,112)
+    (0, 0, 139),
+    (67, 205, 128),
+    (0, 206, 209),
+    (255, 106, 106),
+    (192, 255, 62),
+    (130, 130, 130),
+    (139, 87, 66),
+    (25, 25, 112)
 ]

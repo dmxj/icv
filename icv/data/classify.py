@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 from ..utils import is_dir, list_from_file
+from ..image.io import imwrite
+from .core import Image
 import os
 import shutil
 
@@ -26,8 +28,6 @@ class Classify(object):
         else:
             self.categories = list(set(self.img2cat.values()))
 
-        # super(Classify, self).__init__(self.ids, self.categories, one_index=one_index,build_cat=False)
-
     def save(self, output, rename=False, suffix=None):
         catidx = {}
         for img in self.img2set:
@@ -45,11 +45,18 @@ class Classify(object):
             if not is_dir(cat_dir):
                 os.makedirs(cat_dir)
 
-            name, ext = os.path.basename(img).rsplit(".", 1)
+            if isinstance(img,Image):
+                name, ext = img.name,img.ext
+            else:
+                name, ext = os.path.basename(img).rsplit(".", 1)
             suffix = ext if suffix is None else suffix.strip(".")
 
             new_name = "{}_{}.{}".format(cat, catidx[cat], suffix) if rename else "{}.{}".format(name, suffix)
-            shutil.copy(img, os.path.join(cat_dir, new_name))
+
+            if isinstance(img,Image):
+                imwrite(img.img,os.path.join(cat_dir, new_name))
+            else:
+                shutil.copy(img, os.path.join(cat_dir, new_name))
 
     @staticmethod
     def extract_by_dir(root_dir):

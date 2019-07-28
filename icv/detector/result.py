@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 from ..utils import is_seq
-from ..data import BBox,BBoxList
+from ..data.core import BBoxList
 from ..image import imshow_bboxes
 import numpy as np
 
@@ -29,9 +29,8 @@ class DetectionResult(object):
         self._det_bboxes.select(filter_ids[0])
         self._det_classes = self._det_classes[filter_ids]
         # TODO: 这里的过滤失效？？
-        # if self._det_masks is not None:
-        #     print("====> self._det_masks:",self._det_masks)
-        #     self._det_masks = self._det_masks[filter_ids]
+        if self._det_masks is not None:
+            self._det_masks = self._det_masks[filter_ids]
 
         if self.categories is not None:
             self._det_labels = [self.categories[_-1] for _ in self._det_classes]
@@ -103,6 +102,12 @@ class DetectionResult(object):
         )
 
     def vis(self,img):
-        image_drawed = imshow_bboxes(img,self.det_bboxes,classes=self.categories,labels=self.det_labels,scores=self.det_scores)
+        image_drawed = imshow_bboxes(img,
+                                     self.det_bboxes,
+                                     classes=self.categories,
+                                     labels=self.det_labels,
+                                     scores=self.det_scores,
+                                     masks=self.det_masks
+                                     )
         self._det_image = image_drawed
         return image_drawed

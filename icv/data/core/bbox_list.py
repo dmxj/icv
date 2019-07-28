@@ -40,6 +40,9 @@ class BBoxList(Iterable):
     def tolist(self):
         return [[bbox.xmin,bbox.ymin,bbox.xmax,bbox.ymax] for bbox in self._bbox_list]
 
+    def to_np_array(self):
+        return np.array(self.tolist())
+
     @property
     def bbox_list(self):
         return self._bbox_list

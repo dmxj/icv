@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 from icv.utils import IS_PY3
+
 try:
     if IS_PY3:
         from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler
@@ -13,29 +14,31 @@ from urllib.parse import urlparse
 from ..exceptions import HttpParseException
 import os
 import re
-import json
+from icv.utils import json_encode
 from ..status_code import HTTP_STATUS_CODES
 from http import HTTPStatus
 import socket
 from .context import Context
 
+
 def api(ctx):
     data = ctx.request.data_json
-    print("======> data_json:",data)
-    print("======> data_post:",ctx.request.data_post)
-    print("======> data:",ctx.request.data)
     if data and "name" in data:
         print("yes!!!!!")
     ctx.response.send("post api")
 
+
 def error(ctx):
-    ctx.response.send({"error":"you are wrong"},500)
+    ctx.response.send({"error": "you are wrong"}, 500)
+
 
 def ok_ke(ctx):
     ctx.response.send("post ok ke")
 
+
 def hello(ctx):
     ctx.response.send("get hello")
+
 
 def _init_routes():  # 初始化
     global routes
@@ -57,7 +60,8 @@ def _init_routes():  # 初始化
         ]
     }
 
-def add_route(action,methods,function):
+
+def add_route(action, methods, function):
     routes[action] = (methods, function)
     if isinstance(methods, str):
         method_routes[methods].append((action, function))
@@ -66,18 +70,19 @@ def add_route(action,methods,function):
             method_routes[m] = []
         method_routes[m].append((action, function))
 
+
 class IcvHandler(SimpleHTTPRequestHandler):
-    def _prepare_response(self,status_code=200,content_type="text/plain",**kwargs):
+    def _prepare_response(self, status_code=200, content_type="text/plain", **kwargs):
         self.send_response(status_code)
         self.send_header('Content-Type', content_type)
         for k in kwargs:
-            self.send_header(k,kwargs[k])
+            self.send_header(k, kwargs[k])
         self.end_headers()
 
-    def render(self,html,enc="utf-8"):
-        print("#### render html:",html)
+    def render(self, html, enc="utf-8"):
+        print("#### render html:", html)
         if os.path.isfile(html):
-            encoded = open(html,"r").read().encode(enc, 'surrogateescape')
+            encoded = open(html, "r").read().encode(enc, 'surrogateescape')
         else:
             # encoded = html.encode(enc, 'surrogateescape')
             return self.error_404()
@@ -91,26 +96,26 @@ class IcvHandler(SimpleHTTPRequestHandler):
         self.wfile.write(encoded)
 
     def error_404(self):
-        self.error(404,"404 Not Found.")
+        self.error(404, "404 Not Found.")
 
-    def error(self,status_code=500,errMsg=None):
-        errMsg = errMsg if errMsg and isinstance(errMsg,str) else "Internal Server Error"
-        self.response(errMsg,status_code=status_code)
+    def error(self, status_code=500, errMsg=None):
+        errMsg = errMsg if errMsg and isinstance(errMsg, str) else "Internal Server Error"
+        self.response(errMsg, status_code=status_code)
 
-    def response(self,data,status_code=200,**kwargs):
-        if isinstance(data,dict):
-            res = json.dumps(data).encode("utf-8")
-        elif isinstance(data,str):
+    def response(self, data, status_code=200, **kwargs):
+        if isinstance(data, dict):
+            res = json_encode(data).encode("utf-8")
+        elif isinstance(data, str):
             res = data.encode("utf-8")
-        elif isinstance(data,bytes):
+        elif isinstance(data, bytes):
             res = data
         else:
             return self.error()
 
         content_type = None
-        if isinstance(data,str):
+        if isinstance(data, str):
             content_type = "text/plain;charset=utf-8"
-        elif isinstance(data,dict):
+        elif isinstance(data, dict):
             content_type = "application/json;charset=utf-8"
         else:
             if "Content-Type" in kwargs:
@@ -119,9 +124,9 @@ class IcvHandler(SimpleHTTPRequestHandler):
                 content_type = kwargs["content-type"]
 
         if content_type is not None:
-            self._prepare_response(status_code=status_code,content_type=content_type,**kwargs)
+            self._prepare_response(status_code=status_code, content_type=content_type, **kwargs)
         else:
-            self._prepare_response(status_code=status_code,**kwargs)
+            self._prepare_response(status_code=status_code, **kwargs)
         self.wfile.write(res)
 
     def _build_ctx(self):
@@ -133,12 +138,12 @@ class IcvHandler(SimpleHTTPRequestHandler):
             ctx.request.data = post_data
             return ctx
         except HttpParseException as e:
-            self.error(e.code,e.msg)
+            self.error(e.code, e.msg)
             self.finish()
-            print("===> HttpParseException:",e.msg)
+            print("===> HttpParseException:", e.msg)
         except Exception as e:
             self.error()
-            print("===> Exception:",e)
+            print("===> Exception:", e)
 
     def handle_one_request(self):
         try:
@@ -167,11 +172,11 @@ class IcvHandler(SimpleHTTPRequestHandler):
             if target is None:
                 if up.path.rstrip("/") == "":
                     self.response({
-                        "up":"true",
-                        "method":self.command,
-                        "path":up.path,
-                        "params":up.params,
-                        "query":up.query,
+                        "up": "true",
+                        "method": self.command,
+                        "path": up.path,
+                        "params": up.params,
+                        "query": up.query,
                     })
                     return
                 self.send_error(
@@ -180,15 +185,15 @@ class IcvHandler(SimpleHTTPRequestHandler):
                 )
                 return
 
-            ms,func,_ = target
-            if isinstance(ms,str) and self.command != ms:
+            ms, func, _ = target
+            if isinstance(ms, str) and self.command != ms:
                 self.send_error(
                     HTTPStatus.METHOD_NOT_ALLOWED,
                     "method not allowed (%r)" % self.command
                 )
                 return
 
-            if isinstance(ms,(list,tuple)) and self.command not in ms:
+            if isinstance(ms, (list, tuple)) and self.command not in ms:
                 self.send_error(
                     HTTPStatus.METHOD_NOT_ALLOWED,
                     "method not allowed (%r)" % self.command
@@ -196,37 +201,37 @@ class IcvHandler(SimpleHTTPRequestHandler):
 
             method = getattr(self, mname)
             method(func)
-            self.wfile.flush() #actually send the response if not already done.
+            self.wfile.flush()  # actually send the response if not already done.
         except socket.timeout as e:
-            #a read or a write timed out.  Discard this connection
+            # a read or a write timed out.  Discard this connection
             self.log_error("Request timed out: %r", e)
             self.close_connection = True
             return
 
     def _match(self, rpath):
-        print("now math path:",rpath)
-        print("routes:",routes)
+        print("now math path:", rpath)
+        print("routes:", routes)
         for action in routes:
-            handler_method,handler_func = routes[action]
+            handler_method, handler_func = routes[action]
             result = re.compile("^" + str(action) + "$").match(str(rpath))
             if result:
-                return handler_method,handler_func,[x for x in result.groups()]
+                return handler_method, handler_func, [x for x in result.groups()]
         # No match, return None
-        print("=====> not match path:",rpath)
+        print("=====> not match path:", rpath)
         return None
 
-    def _filter(self,method=None):
+    def _filter(self, method=None):
         target = self._match(self.path)
         if target is None:
-            self.error(404,HTTP_STATUS_CODES[404][0])
+            self.error(404, HTTP_STATUS_CODES[404][0])
             self.finish()
             return None
 
         if method is None:
             return target
 
-        handler_method,_,_ = target
-        if isinstance(handler_method,str):
+        handler_method, _, _ = target
+        if isinstance(handler_method, str):
             if handler_method.upper() != str(method).upper():
                 self.error(501, HTTP_STATUS_CODES[501][0])
                 self.finish()
@@ -239,28 +244,28 @@ class IcvHandler(SimpleHTTPRequestHandler):
 
         return target
 
-    def do_GET(self,handler=None):
-        if handler is None:
-            self.error(400,"handler not exist!")
-            return
-
-        handler(self._build_ctx())
-
-    def do_PUT(self,handler=None):
+    def do_GET(self, handler=None):
         if handler is None:
             self.error(400, "handler not exist!")
             return
 
         handler(self._build_ctx())
 
-    def do_DELETE(self,handler=None):
+    def do_PUT(self, handler=None):
         if handler is None:
             self.error(400, "handler not exist!")
             return
 
         handler(self._build_ctx())
 
-    def do_POST(self,handler=None):
+    def do_DELETE(self, handler=None):
+        if handler is None:
+            self.error(400, "handler not exist!")
+            return
+
+        handler(self._build_ctx())
+
+    def do_POST(self, handler=None):
         if handler is None:
             self.response("handler not exist!")
             return

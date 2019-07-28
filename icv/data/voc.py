@@ -3,14 +3,15 @@ from .dataset import IcvDataSet
 import os
 import shutil
 import numpy as np
-from ..utils import load_voc_anno, make_empty_voc_anno, fcopy, list_from_file, list_to_file, is_file, is_dir
+from ..utils import load_voc_anno, save_voc_anno, make_empty_voc_anno, fcopy, list_from_file, list_to_file, is_file, \
+    is_dir, mkdir
 from ..image import imread
 from ..data.core.meta import SampleMeta, AnnoMeta
 from ..data.core.sample import Sample, Anno
 from ..data.core.bbox import BBox
 from ..data.core.mask import Mask
-from lxml.etree import Element, SubElement, ElementTree
-import sys
+from ..data.core.polys import Polygon
+from tqdm import tqdm
 import random
 from ..vis.color import STANDARD_COLORS
 
@@ -29,6 +30,7 @@ class Voc(IcvDataSet):
         self.use_difficult = use_difficult
         self.keep_no_anno_image = keep_no_anno_image
         self.image_suffix = image_suffix
+        self.one_index = one_index
 
         self._annopath = os.path.join(self.root, "Annotations", "%s.xml")
         self._imgpath = os.path.join(self.root, "JPEGImages", "%s." + image_suffix)
@@ -36,16 +38,25 @@ class Voc(IcvDataSet):
         self._seg_object_imgpath = os.path.join(self.root, "SegmentationObject", "%s.png")
         self._imgsetpath = os.path.join(self.root, "ImageSets", self.image_set, "%s.txt")
 
+        self.categories = categories
+
+        self.init()
+
+        super(Voc, self).__init__(self.ids, self.categories, self.keep_no_anno_image, one_index)
+
+    def init(self):
         self.ids = list_from_file(self._imgsetpath % self.split)
         self.id2img = {k: v for k, v in enumerate(self.ids)}
 
-        self.sample_db = {}
-        self.color_map = {}
-        if categories is not None:
-            self.categories = categories
-        else:
+        if self.categories is None:
+            print("parsing categories ...")
             self.categories = self.get_categories()
-        super(Voc, self).__init__(self.ids, self.categories, self.keep_no_anno_image, one_index)
+
+        self.set_categories(self.categories)
+        self.sample_db = {}
+        self.set_colormap()
+        print("there have %d samples in VOC dataset" % len(self.ids))
+        print("there have %d categories in VOC dataset" % len(self.categories))
 
     def concat(self, voc, output_dir, reset=False, new_split=None):
         assert isinstance(voc, Voc)
@@ -108,15 +119,18 @@ class Voc(IcvDataSet):
         voc.root = output_dir
         return voc
 
-    def save(self, output_dir, split=None):
+    def save(self, output_dir, reset_dir=False, split=None):
         split = split if split is not None else self.split
         anno_path, image_path, imgset_path, imgset_seg_path, seg_class_image_path, seg_object_image_path = Voc.reset_dir(
-            output_dir)
+            output_dir, reset=reset_dir)
         for id in self.ids:
-            fcopy(self._annopath % id, anno_path)
-            fcopy(self._imgpath % id, image_path)
-            fcopy(self._seg_class_imgpath % id, seg_class_image_path)
-            fcopy(self._seg_object_imgpath % id, seg_object_image_path)
+            if is_file(self._annopath % id) and is_file(self._imgpath % id):
+                fcopy(self._annopath % id, anno_path)
+                fcopy(self._imgpath % id, image_path)
+                fcopy(self._seg_class_imgpath % id, seg_class_image_path)
+                fcopy(self._seg_object_imgpath % id, seg_object_image_path)
+            else:
+                self._write_sample(self.get_sample(id), output_dir)
 
         if self.is_seg_mode:
             list_to_file(self.ids, os.path.join(imgset_seg_path, "%s.txt" % split))
@@ -140,7 +154,7 @@ class Voc(IcvDataSet):
 
         for _path in [anno_path, image_path, imgset_path, imgset_seg_path, seg_class_image_path, seg_object_image_path]:
             if reset or not is_dir(_path):
-                os.makedirs(_path)
+                mkdir(_path)
 
         return anno_path, image_path, imgset_path, imgset_seg_path, seg_class_image_path, seg_object_image_path
 
@@ -187,6 +201,7 @@ class Voc(IcvDataSet):
             img_segobj = imread(segobj_file, 0)
 
         annos = []
+        from icv.image import imshow
         if "object" in anno_data:
             for obj in anno_data["object"]:
                 if "difficult" in obj and obj["difficult"] != '0' and self.use_difficult:
@@ -220,32 +235,11 @@ class Voc(IcvDataSet):
                     bin_mask[ymin:ymax, xmin:xmax] = img_segobj[ymin:ymax, xmin:xmax]
                     bin_mask[np.where(bin_mask != 0)] = 1
                     anno.mask = Mask(bin_mask)
-
-                    # focus = img_segobj[int(anno.bbox.center_y), int(anno.bbox.center_x)]
-                    # if focus[0] == 0:
-                    #     bin_mask[np.where(img_segobj != focus)] = 1
-                    # else:
-                    #     bin_mask[np.where(img_segobj == focus)] = 1
-                    # anno.mask = Mask(bin_mask[...,0])
                 elif img_segcls is not None:
                     bin_mask = np.zeros_like(img_segcls, np.uint8)
                     bin_mask[ymin:ymax, xmin:xmax] = img_segcls[ymin:ymax, xmin:xmax]
                     bin_mask[np.where(bin_mask != 0)] = 1
                     anno.mask = Mask(bin_mask)
-                    # bin_mask = np.zeros_like(img_segobj, np.uint8)
-                    # focus = img_segobj[int(anno.bbox.center_y), int(anno.bbox.center_x)]
-                    # if focus[0] == 0:
-                    #     bin_mask[np.where(img_segobj != focus)] = 1
-                    # else:
-                    #     bin_mask[np.where(img_segobj == focus)] = 1
-                    #
-                    # labels = measure_label(bin_mask > 0, connectivity=bin_mask.ndim)
-                    # labels = measure_label(labels > 0, connectivity=1)
-                    #
-                    # labels[np.where(labels != labels[int(anno.bbox.center_y), int(anno.bbox.center_x)])] = 0
-                    # labels[np.where(labels != 0)] = 1
-                    #
-                    # anno.mask = Mask(bin_mask[...,0])
 
                 annos.append(anno)
 
@@ -259,92 +253,70 @@ class Voc(IcvDataSet):
         self.sample_db[id] = sample
         return sample
 
-        #
-        #
-        #
-        # # TODO wait for delete
-        # anno_data["size"]["width"] = image_width
-        # anno_data["size"]["height"] = image_height
-        # anno_data["size"]["depth"] = image_depth
-        #
-        # anno_sample = Sample.init(
-        #     name=os.path.basename(image_file).rsplit(".", 1)[0],
-        #     bbox_list=BBoxList(
-        #         bbox_list=[
-        #             BBox(
-        #                 xmin=int(object["bndbox"]["xmin"]),
-        #                 ymin=int(object["bndbox"]["ymin"]),
-        #                 xmax=int(object["bndbox"]["xmax"]),
-        #                 ymax=int(object["bndbox"]["ymax"]),
-        #                 label=object["name"],
-        #                 **anno_data
-        #             )
-        #             for object in anno_data["object"]
-        #             if "difficult" not in object or object["difficult"] == '0' or (
-        #                         object["difficult"] != '0' and self.use_difficult)
-        #         ]
-        #     ),
-        #     image=image_file,
-        #     **anno_data
-        # )
-        #
-        # self.sample_db[id] = sample
-        # return anno_sample
+    def _write_sample(self, sample, dist_dir):
+        assert isinstance(sample, Sample)
 
-    def _write_sample(self, anno_sample, dist_path):
-        assert "folder" in anno_sample
-        assert "filename" in anno_sample
-        assert "size" in anno_sample
-        assert "width" in anno_sample["size"]
-        assert "height" in anno_sample["size"]
-        assert "depth" in anno_sample["size"]
-        assert "object" in anno_sample
+        reset_dir = not os.path.exists(dist_dir)
+        anno_path, image_path, imgset_path, imgset_seg_path, \
+        seg_class_image_path, seg_object_image_path = Voc.reset_dir(dist_dir, reset_dir)
 
-        segmented = anno_sample["segmented"] if self.include_segment and "segmented" in anno_sample else "0"
-        pose = "Unspecified"
+        anno_dist_path = os.path.join(anno_path, "%s.xml" % sample.name)
+        anno_data = {
+            "segmented": 1 if self.is_seg_mode else 0,
+            "folder": image_path,
+            "filename": os.path.basename(sample.path),
+            "size": {
+                "width": sample.width,
+                "height": sample.height,
+                "depth": sample.dim
+            },
+            "objects": []
+        }
 
-        root = Element("annotation")
-        SubElement(root, 'folder').text = anno_sample["folder"]
-        SubElement(root, 'filename').text = anno_sample["filename"]
+        for ix, anno in enumerate(sample.annos):
+            bndbox = anno.meta.dict()
+            if "truncated" not in bndbox and "difficult" not in bndbox:
+                bndbox = {
+                    "truncated": 1,
+                    "difficult": 0,
+                }
+            bndbox["name"] = anno.label
+            bndbox["bndbox"] = {
+                "xmin": anno.bbox.xmin_int,
+                "ymin": anno.bbox.ymin_int,
+                "xmax": anno.bbox.xmax_int,
+                "ymax": anno.bbox.ymax_int,
+            }
 
-        source = SubElement(root, 'source')
-        SubElement(source, 'database').text = "The VOC2012 Database"
-        SubElement(source, 'annotation').text = "PASCAL VOC2012"
-        SubElement(source, 'image').text = "flickr"
+            catid = self.cat2id[anno.label]
+            if not self.one_index:
+                catid += 1
 
-        size = SubElement(root, 'size')
-        SubElement(size, 'width').text = str(anno_sample["size"]["width"])
-        SubElement(size, 'height').text = str(anno_sample["size"]["height"])
-        SubElement(size, 'depth').text = str(anno_sample["size"]["depth"])
+            if anno.seg_mode_mask:
+                anno.mask.save(os.path.join(seg_class_image_path, "%s.png" % sample.name), id=catid)
+                # TODO: make sure object segment mask id
+                anno.mask.save(os.path.join(seg_object_image_path, "%s.png" % sample.name), id=ix + 1)
+            elif anno.seg_mode_polys:
+                assert isinstance(anno.polys, Polygon)
+                anno.polys.to_mask(sample.height, sample.width).save(
+                    os.path.join(seg_class_image_path, "%s.png" % sample.name),
+                    id=catid)
+                # TODO: make sure object segment mask id
+                anno.polys.to_mask(sample.height, sample.width).save(
+                    os.path.join(seg_object_image_path, "%s.png" % sample.name), id=ix + 1)
 
-        SubElement(root, 'segmented').text = segmented
+            anno_data["objects"].append(bndbox)
 
-        for object in anno_sample["object"]:
-            obj = SubElement(root, 'object')
-            SubElement(obj, 'name').text = object["name"]
-            SubElement(obj, 'pose').text = pose
-            truncated = str(object["truncated"]) if "truncated" in object else "0"
-            difficult = str(object["difficult"]) if "difficult" in object else "0"
-            if difficult == "1" and not self.use_difficult:
-                continue
-            SubElement(obj, 'truncated').text = truncated
-            SubElement(obj, 'difficult').text = difficult
-            bndbox = SubElement(obj, 'bndbox')
-            SubElement(bndbox, 'xmin').text = str(object["bndbox"]["xmin"])
-            SubElement(bndbox, 'ymin').text = str(object["bndbox"]["ymin"])
-            SubElement(bndbox, 'xmax').text = str(object["bndbox"]["xmax"])
-            SubElement(bndbox, 'ymax').text = str(object["bndbox"]["ymax"])
-
-        tree = ElementTree(root)
-        tree.write(dist_path, encoding='utf-8', pretty_print=True)
+        save_voc_anno(anno_data, anno_dist_path)
+        fcopy(sample.path, image_path)
 
     def vis(self, id=None, with_bbox=True, with_seg=True, is_show=False, save_dir=None, reset_dir=False):
         if save_dir is not None:
             if not os.path.exists(save_dir):
-                os.makedirs(save_dir)
+                mkdir(save_dir)
             elif reset_dir:
                 shutil.rmtree(save_dir)
-                os.makedirs(save_dir)
+                mkdir(save_dir)
 
         if id is not None:
             sample = self.get_sample(id)
@@ -352,9 +324,8 @@ class Voc(IcvDataSet):
             return sample.vis(with_bbox=with_bbox, with_seg=with_seg, is_show=is_show, save_path=save_path)
 
         image_vis = []
-        for id in self.ids:
+        for id in tqdm(self.ids):
             sample = self.get_sample(id)
-            print("====> vis:", id)
             save_path = None if save_dir is None else os.path.join(save_dir, "%s.jpg" % sample.name)
             image = sample.vis(with_bbox=with_bbox, with_seg=with_seg, is_show=is_show, save_path=save_path)
             image_vis.append(image)

@@ -6,16 +6,17 @@ except ModuleNotFoundError as e:
                     "(https://github.com/open-mmlab/mmdetection/blob/master/INSTALL.md) . " \
                     "Import mmdet Error!")
 
+MMDET_VERSION = int(mmdet.__version__.split("+")[0].replace(".", ""))
+
 import os
 import warnings
 import numpy as np
-from ..data import BBox
+from ..data.core import BBox
 from ..utils import ckpt_load, Config, Timer, is_file, concat_list
 from ..image import imread, imwrite, imshow, imresize
 from .detector import Detector
 from .result import DetectionResult
 import pycocotools.mask as maskUtils
-from mmdet.core import get_classes
 from mmdet.models import build_detector
 from mmdet.apis import inference_detector
 
@@ -29,7 +30,7 @@ class MmdetDetector(Detector):
         self._build_detector()
 
     def _build_detector(self):
-        self.model = self._init_detector(self.config_file, self.model_path)
+        self.model = self._init_detector(self.config_file, self.model_path, device=self.device)
 
     def _init_detector(self, config, checkpoint=None, device='cuda:0'):
         """Initialize a detector from config file.
@@ -49,16 +50,21 @@ class MmdetDetector(Detector):
             raise TypeError('config must be a filename or Config object, '
                             'but got {}'.format(type(config)))
         self.cfg.model.pretrained = None
-        model = build_detector(self.cfg.model, test_cfg=self.cfg.test_cfg)
-        if checkpoint is not None:
-            checkpoint = ckpt_load(model, checkpoint)
-            if 'CLASSES' in checkpoint['meta']:
-                model.CLASSES = checkpoint['meta']['classes']
-            else:
-                warnings.warn('Class names are not saved in the checkpoint\'s '
-                              'meta data, use COCO classes by default.')
-                model.CLASSES = get_classes('coco')
-        model.cfg = self.cfg  # save the config in the model for convenience
+        if MMDET_VERSION >= 60:
+            from mmdet.core import get_classes
+            model = build_detector(self.cfg.model, test_cfg=self.cfg.test_cfg)
+            if checkpoint is not None:
+                checkpoint = ckpt_load(model, checkpoint)
+                if 'CLASSES' in checkpoint['meta']:
+                    model.CLASSES = checkpoint['meta']['CLASSES']
+                else:
+                    warnings.warn('Class names are not saved in the checkpoint\'s '
+                                  'meta data, use COCO classes by default.')
+                    model.CLASSES = get_classes('coco')
+            model.cfg = self.cfg  # save the config in the model for convenience
+        else:
+            model = build_detector(self.cfg.model, test_cfg=self.cfg.test_cfg)
+            _ = ckpt_load(model, self.model_path)
         model.to(device)
         model.eval()
         return model
@@ -110,7 +116,10 @@ class MmdetDetector(Detector):
     def inference(self, image, is_show=False, save_path=None, score_thr=-1):
         image_np = imread(image)
         timer = Timer()
-        result = inference_detector(self.model, image_np, self.cfg)
+        if MMDET_VERSION >= 60:
+            result = inference_detector(self.model, image_np)
+        else:
+            result = inference_detector(self.model, image_np, self.cfg, self.device)
         inference_time = timer.since_start()
 
         score_thr = score_thr if score_thr >= 0 else self.score_thr
@@ -131,7 +140,10 @@ class MmdetDetector(Detector):
             image_np_list = [imresize(img_np, resize) for img_np in image_np_list]
 
         timer = Timer()
-        results = inference_detector(self.model, image_np_list, self.cfg)
+        if MMDET_VERSION >= 60:
+            results = inference_detector(self.model, image_np_list)
+        else:
+            results = inference_detector(self.model, image_np_list, self.cfg, self.device)
 
         inference_time = timer.since_start()
         score_thr = score_thr if score_thr >= 0 else self.score_thr

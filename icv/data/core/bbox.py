@@ -1,25 +1,20 @@
 # -*- coding: UTF-8 -*-
 from icv.utils import EasyDict as edict
-from icv.image import imread,imdraw_bbox
+from icv.image import imread, imdraw_bbox
+from ..shape.transforms import bbox_clip, bbox_scaling, bbox_extend
 import numpy as np
 
+
 class BBox(object):
-    def __init__(self,xmin,ymin,xmax,ymax,label=None,**kwargs):
+    def __init__(self, xmin, ymin, xmax, ymax, label=None, **kwargs):
         assert xmin <= xmax, "xmax should be large than xmin."
         assert ymin <= ymax, "ymax should be large than ymin."
 
-        self._xmin = xmin
-        self._ymin = ymin
-        self._xmax = xmax
-        self._ymax = ymax
-
-        self._center = ((xmax+xmin)/2,(ymax+ymin)/2)
-        self._width = (xmax - xmin)/2
-        self._height = (ymax - ymin)/2
+        self.set_bbox(xmin, ymin, xmax, ymax)
 
         self.fields = edict()
         for k in kwargs:
-            self.add_field(k,kwargs[k])
+            self.add_field(k, kwargs[k])
 
         self.label = label
 
@@ -32,14 +27,24 @@ class BBox(object):
         self.add_field("height", self.height)
 
     @staticmethod
-    def init_from(bbox,label=None):
+    def init_from(bbox, label=None):
         assert isinstance(bbox, BBox) or isinstance(bbox, list) or isinstance(bbox, np.ndarray)
         if isinstance(bbox, np.ndarray):
             bbox = bbox.tolist()
         if isinstance(bbox, list):
             assert len(bbox) == 4
-            bbox = BBox(xmin=bbox[0], ymin=bbox[1], xmax=bbox[2], ymax=bbox[3],label=label)
+            bbox = BBox(xmin=bbox[0], ymin=bbox[1], xmax=bbox[2], ymax=bbox[3], label=label)
         return bbox
+
+    def set_bbox(self, xmin, ymin, xmax, ymax):
+        self._xmin = xmin
+        self._ymin = ymin
+        self._xmax = xmax
+        self._ymax = ymax
+
+        self._center = ((xmax + xmin) / 2, (ymax + ymin) / 2)
+        self._width = xmax - xmin
+        self._height = ymax - ymin
 
     def add_field(self, field, field_data):
         self.fields[field] = field_data
@@ -55,7 +60,7 @@ class BBox(object):
 
     @property
     def bbox(self):
-        return [self._xmin,self._ymin,self._xmax,self._ymax]
+        return [self._xmin, self._ymin, self._xmax, self._ymax]
 
     @property
     def xmin(self):
@@ -95,11 +100,11 @@ class BBox(object):
 
     @property
     def center_x(self):
-        return self.xmin + self._width/2
+        return self.xmin + self._width / 2
 
     @property
     def center_y(self):
-        return self.ymin + self._height/2
+        return self.ymin + self._height / 2
 
     @property
     def width(self):
@@ -111,13 +116,13 @@ class BBox(object):
 
     @property
     def ratio(self):
-        return round(self._height / self._width,2)
+        return round(self._height / self._width, 2)
 
     @property
     def area(self):
         return self._height * self._width
 
-    def iou(self,other):
+    def iou(self, other):
         bbox = BBox.init_from(other)
         # TODO: check it
         # determine the (x, y)-coordinates of the intersection rectangle
@@ -152,15 +157,15 @@ class BBox(object):
         if xA > xB or yA > yB:
             return default
         else:
-            return BBox(xA,yA,xB,yB)
+            return BBox(xA, yA, xB, yB)
 
-    def union(self,other):
+    def union(self, other):
         bbox = BBox.init_from(other)
         return BBox(
-            xmin=min(self.xmin,bbox.xmin),
-            ymin=min(self.ymin,bbox.ymin),
-            xmax=max(self.xmax,bbox.xmax),
-            ymax=max(self.ymax,bbox.ymax)
+            xmin=min(self.xmin, bbox.xmin),
+            ymin=min(self.ymin, bbox.ymin),
+            xmax=max(self.xmax, bbox.xmax),
+            ymax=max(self.ymax, bbox.ymax)
         )
 
     def is_fully_within_image(self, image):
@@ -200,7 +205,7 @@ class BBox(object):
         shape = imread(image).shape
         height, width = shape[0:2]
         eps = np.finfo(np.float32).eps
-        img_bb = BBox(xmin=0, xmax=width-eps, ymin=0, ymax=height-eps)
+        img_bb = BBox(xmin=0, xmax=width - eps, ymin=0, ymax=height - eps)
         return self.intersection(img_bb) is not None
 
     def is_out_of_image(self, image, fully=True, partly=False):
@@ -311,8 +316,9 @@ class BBox(object):
         # from icv.image.vis import imdraw_bbox
 
         if raise_if_out_of_image and self.is_out_of_image(image):
-            raise Exception("Cannot draw bounding box xmin=%.8f, ymin=%.8f, xmax=%.8f, ymax=%.8f on image with shape %s." % (
-                self.xmin, self.ymin, self.xmax, self.ymax, image.shape))
+            raise Exception(
+                "Cannot draw bounding box xmin=%.8f, ymin=%.8f, xmax=%.8f, ymax=%.8f on image with shape %s." % (
+                    self.xmin, self.ymin, self.xmax, self.ymax, image.shape))
 
         result = np.copy(image) if copy else image
 
@@ -343,4 +349,14 @@ class BBox(object):
         s += "ymax={}, ".format(self.ymax)
         return s
 
+    def clip(self, img_shape):
+        clipped_bbox = bbox_clip(self, img_shape)[0]
+        self.set_bbox(clipped_bbox[0], clipped_bbox[1], clipped_bbox[2], clipped_bbox[3])
 
+    def scaling(self, scale, clip_shape=None):
+        scaled_bbox = bbox_scaling(self, scale, clip_shape)[0]
+        self.set_bbox(scaled_bbox[0], scaled_bbox[1], scaled_bbox[2], scaled_bbox[3])
+
+    def extend(self, pad, clip_shape=None):
+        extended_bbox = bbox_extend(self, pad, clip_shape)[0]
+        self.set_bbox(extended_bbox[0], extended_bbox[1], extended_bbox[2], extended_bbox[3])

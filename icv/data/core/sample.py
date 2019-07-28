@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
-from icv.image import imread,imshow,imwrite,imshow_bboxes
-from .bbox_list import BBoxList
-from icv.utils import EasyDict as edict,is_seq
-from .meta import SampleMeta,AnnoMeta
+from icv.image import imread,imshow,imwrite
+from icv.utils import is_seq,is_file
+from .meta import SampleMeta
 from .anno_shape import AnnoShape
+import os
 
 class Anno(AnnoShape):
     def __init__(self,bbox=None,polys=None,mask=None,label=None,color=None,meta=None):
@@ -19,8 +19,11 @@ class Sample(object):
             assert isinstance(anno,Anno)
 
         assert meta is None or isinstance(meta,SampleMeta)
+        assert is_file(image)
 
         self.name = name
+        self.path = image
+        _,self.ext = os.path.splitext(os.path.split(self.path)[1])
         self.image = imread(image)
         self.meta = meta
         self.annos = [] if annos is None else annos
@@ -46,6 +49,10 @@ class Sample(object):
     def height(self):
         return self.shape[0]
 
+    @property
+    def dim(self):
+        return 1 if len(self.shape) == 2 else self.shape[-1]
+
     def statistics(self):
         sta = dict(count=self.count, cats=dict(), ratios=dict())
         for anno in self.annos:
@@ -68,15 +75,15 @@ class Sample(object):
     def vis(self,color=None,with_bbox=True, with_seg=True, is_show=False,save_path=None):
         image_drawed = self.image
         for anno in self.annos:
-            color = color if color is not None else anno.color
-            color = color if color is not None else "Orange"
+            _color = color if color is not None else anno.color
+            _color = _color if _color is not None else "Orange"
 
             if with_bbox:
-                image_drawed = anno.bbox.draw_on_image(image_drawed,color=color)
+                image_drawed = anno.bbox.draw_on_image(image_drawed,color=_color)
             if with_seg and anno.seg_mode_mask:
-                image_drawed = anno.mask.draw_on_image(image_drawed,color=color)
+                image_drawed = anno.mask.draw_on_image(image_drawed,color=_color)
             if with_seg and anno.seg_mode_polys:
-                image_drawed = anno.polys.draw_on_image(image_drawed,color=color)
+                image_drawed = anno.polys.draw_on_image(image_drawed,color=_color)
 
         if is_show:
             imshow(image_drawed)

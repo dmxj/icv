@@ -17,12 +17,12 @@ DESCRIPTION = 'some common code and tools for computing version'
 URL = 'https://github.com/dmxj/icv'
 EMAIL = 'rensike@baidu.com'
 AUTHOR = 'rensike'
-REQUIRES_PYTHON = '>=3.6.0'
-VERSION = "0.0.1.2"
+REQUIRES_PYTHON = '>=3.5.0'
+VERSION = "0.0.1.6.3"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'Pillow', 'numpy', 'opencv-python', 'bottle', 'scikit-image', 'terminaltables'
+    'Pillow', 'numpy', 'opencv-python', 'bottle', 'scikit-image', 'terminaltables', 'lxml', 'tqdm'
 ]
 
 # What packages are optional?
@@ -103,7 +103,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(exclude=('tests',)),
+    packages=find_packages(exclude=('tests',),include=('icv/detector/resource/static/*')),
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['mypackage'],
 
