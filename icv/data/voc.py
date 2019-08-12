@@ -48,13 +48,14 @@ class Voc(IcvDataSet):
         self.ids = list_from_file(self._imgsetpath % self.split)
         self.id2img = {k: v for k, v in enumerate(self.ids)}
 
+        self.sample_db = {}
+        self.color_map = {}
         if self.categories is None:
             print("parsing categories ...")
             self.categories = self.get_categories()
 
         self.set_categories(self.categories)
-        self.sample_db = {}
-        self.set_colormap()
+        self.set_colormap(self.color_map)
         print("there have %d samples in VOC dataset" % len(self.ids))
         print("there have %d categories in VOC dataset" % len(self.categories))
 
@@ -201,7 +202,6 @@ class Voc(IcvDataSet):
             img_segobj = imread(segobj_file, 0)
 
         annos = []
-        from icv.image import imshow
         if "object" in anno_data:
             for obj in anno_data["object"]:
                 if "difficult" in obj and obj["difficult"] != '0' and self.use_difficult:

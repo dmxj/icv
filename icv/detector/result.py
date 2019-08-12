@@ -29,7 +29,7 @@ class DetectionResult(object):
         self._det_bboxes.select(filter_ids[0])
         self._det_classes = self._det_classes[filter_ids]
         # TODO: 这里的过滤失效？？
-        if self._det_masks is not None:
+        if self._det_masks is not None and self._det_masks.shape[0] > 0:
             self._det_masks = self._det_masks[filter_ids]
 
         if self.categories is not None:

@@ -13,7 +13,7 @@ from .image import base64_to_np, np_to_base64, get_mean_std
 from .codec import json_encode, json_decode, encode_to_file, decode_from_file
 from .easy_dict import EasyDict
 from .require import requires_package, requires_executable
-from .http import request, do_post, do_get, do_put, do_delete, do_options
+from .http import request, do_post, do_get, do_put, do_delete, do_options, simple, file_server
 
 __all__ = [
     'is_str', 'is_list', 'is_dir', 'is_seq', 'is_empty', 'is_file', 'is_py3', 'IS_PY3', 'is_seq_equal', 'is_valid_url',
@@ -21,10 +21,10 @@ __all__ = [
     'check_file_exist', 'concat_list', 'mkfile', 'mkdir', 'mkdir_force', 'reset_dir', 'fcopy', 'list_from_file',
     'list_to_file',
     'Time',
-    'Timer', 'load_voc_anno', 'make_empty_coco_anno', 'make_empty_voc_anno', 'USE_OPENCV2',
+    'Timer', 'load_voc_anno', 'save_voc_anno', 'make_empty_coco_anno', 'make_empty_voc_anno', 'USE_OPENCV2',
     'labelmap_to_category_index',
     'labelmap_to_categories', 'requires_package', 'requires_executable', 'json_encode', 'json_decode', 'encode_to_file',
     'decode_from_file',
     'ckpt_load', 'ckpt_save', 'Config', 'base64_to_np', 'np_to_base64', 'EasyDict',
-    'request', 'do_post', 'do_get', 'do_put', 'do_delete', 'do_options'
+    'request', 'do_post', 'do_get', 'do_put', 'do_delete', 'do_options', 'simple', 'file_server'
 ]

@@ -6,7 +6,6 @@ from .core.meta import SampleMeta, AnnoMeta
 from .core.sample import Sample, Anno
 from .core.bbox import BBox
 from .core.polys import Polygon
-from pycocotools.coco import COCO
 from ..utils import fcopy, is_file, is_empty, is_dir, make_empty_coco_anno, json_encode, encode_to_file, \
     decode_from_file
 import numpy as np
@@ -32,6 +31,7 @@ class Coco(IcvDataSet):
         super(Coco, self).__init__(self.ids, self.categories, self.keep_no_anno_image, one_index, False)
 
     def init(self):
+        from pycocotools.coco import COCO
         self.coco = COCO(self.anno_file)
         self.categories = self.get_categories()
         self.ids = self.coco.getImgIds()

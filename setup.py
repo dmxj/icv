@@ -18,11 +18,12 @@ URL = 'https://github.com/dmxj/icv'
 EMAIL = 'rensike@baidu.com'
 AUTHOR = 'rensike'
 REQUIRES_PYTHON = '>=3.5.0'
-VERSION = "0.0.1.6.3"
+VERSION = "0.0.1.6.6"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'Pillow', 'numpy', 'opencv-python', 'bottle', 'scikit-image', 'terminaltables', 'lxml', 'tqdm'
+    'Pillow', 'numpy', 'opencv-python', 'Cython', 'pycocotools', 'bottle', 'scikit-image', 'terminaltables', 'lxml',
+    'tqdm', 'addict'
 ]
 
 # What packages are optional?
@@ -88,7 +89,7 @@ class UploadCommand(Command):
         self.status('Pushing git tags…')
         os.system('git tag v{0}'.format(about['__version__']))
         os.system('git push --tags')
-        
+
         sys.exit()
 
 
@@ -103,7 +104,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(exclude=('tests',),include=('icv/detector/resource/static/*')),
+    packages=find_packages(exclude=('tests',), include=('icv/detector/resource/static/*')),
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['mypackage'],
 

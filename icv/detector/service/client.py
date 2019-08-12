@@ -4,7 +4,6 @@ from ...utils import do_post, is_file, is_seq, is_str, labelmap_to_categories, j
 import os
 import base64
 
-
 class DetectorClient(object):
     def __init__(self, host, port, secret=None, timeout=3000, categories=None):
         host = host.strip("/")

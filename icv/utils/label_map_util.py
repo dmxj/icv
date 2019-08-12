@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -* -
 import logging
 
-import tensorflow as tf
-from google.protobuf import text_format
-from ..core.protos import string_int_label_map_pb2
-
 def _validate_label_map(label_map):
     """Checks if a label map is valid.
     Args:
@@ -27,6 +23,10 @@ def load_labelmap(path):
     Returns:
       a StringIntLabelMapProto
     """
+    import tensorflow as tf
+    from google.protobuf import text_format
+    from ..core.protos import string_int_label_map_pb2
+
     with tf.gfile.GFile(path, 'r') as fid:
         label_map_string = fid.read()
         label_map = string_int_label_map_pb2.StringIntLabelMap()

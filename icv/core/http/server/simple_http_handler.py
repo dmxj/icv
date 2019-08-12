@@ -209,15 +209,12 @@ class IcvHandler(SimpleHTTPRequestHandler):
             return
 
     def _match(self, rpath):
-        print("now math path:", rpath)
-        print("routes:", routes)
         for action in routes:
             handler_method, handler_func = routes[action]
             result = re.compile("^" + str(action) + "$").match(str(rpath))
             if result:
                 return handler_method, handler_func, [x for x in result.groups()]
         # No match, return None
-        print("=====> not match path:", rpath)
         return None
 
     def _filter(self, method=None):

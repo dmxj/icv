@@ -1,33 +1,33 @@
 # -*- coding: UTF-8 -*-
-import demjson
+import json
+from .itis import is_file
 
-def encode_to_file(obj,filepath,encoding="utf-8", overwrite=False):
+def encode_to_file(obj,filepath,overwrite=True):
     """
     save obj to json file, like json.dump()
     :param filepath:
     :param obj:
-    :param encoding:
     :return:
     """
-    return demjson.encode_to_file(filepath,obj,encoding=encoding, overwrite=overwrite)
+    if not overwrite and is_file(filepath):
+        return
+    return json.dump(obj,open(filepath,"w"))
 
-def decode_from_file(filepath,encoding="utf-8"):
+def decode_from_file(filepath):
     """
     parse json file to obj, like json.load()
     :param filepath:
-    :param encoding:
     :return:
     """
-    return demjson.decode_file(filepath,encoding=encoding)
+    return json.load(open(filepath))
 
-def json_encode(obj, encoding="utf-8"):
+def json_encode(obj):
     """
     encode obj to json string, like json.dumps()
     :param obj:
-    :param encoding:
     :return:
     """
-    return demjson.encode(obj, encoding=encoding)
+    return json.dumps(obj)
 
 
 def json_decode(str, encoding="utf-8"):
@@ -37,4 +37,4 @@ def json_decode(str, encoding="utf-8"):
     :param encoding:
     :return:
     """
-    return demjson.decode(str, encoding=encoding)
+    return json.loads(str,encoding=encoding)

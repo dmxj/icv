@@ -1,9 +1,6 @@
 # -*- coding: UTF-8 -*-
-import torch
 import numpy as np
 import cv2
-import pycocotools.mask as mask_utils
-from .mask import Mask
 from . import FLIP_TOP_BOTTOM,FLIP_LEFT_RIGHT
 
 class MaskList(object):
@@ -14,6 +11,7 @@ class MaskList(object):
         if isinstance(masks,MaskList):
             self.masks = masks.masks
         elif isinstance(masks, (list, tuple)):
+            import pycocotools.mask as mask_utils
             if isinstance(masks[0],np.ndarray):
                 assert all([m.shape == masks[0].shape for m in masks])
                 masks = np.array(masks)
@@ -28,6 +26,7 @@ class MaskList(object):
             self.size = (self.masks.shape[1],self.masks.shape[2])
 
     def transpose(self, method):
+        import torch
         dim = 1 if method == FLIP_TOP_BOTTOM else 2
         flipped_masks = torch.Tensor(self.masks).flip(dim).detach().numpy()
         return MaskList(flipped_masks)
@@ -54,6 +53,7 @@ class MaskList(object):
         return MaskList(cropped_masks)
 
     def resize(self, size):
+        import torch
         try:
             iter(size)
         except TypeError:

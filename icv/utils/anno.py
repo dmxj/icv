@@ -5,7 +5,7 @@ import os
 import shutil
 
 
-def load_voc_anno(anno_path, filter_empty=True):
+def load_voc_anno(anno_path, filter_empty=False):
     """Recursively parses XML contents to python dict.
 
     We assume that `object` tags are the only ones that can appear
@@ -116,7 +116,7 @@ def make_empty_voc_anno(**kwargs):
             "depth": "0"
         },
         "segmented": "0",
-        "object": {},
+        "objects": {},
     }
 
     if "folder" in kwargs:

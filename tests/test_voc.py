@@ -9,15 +9,20 @@ if __name__ == '__main__':
     # voc.vis(random.choice(voc.ids),is_show=True,seg_inbox=False)
 
     # voc1 = Voc("/Users/rensike/Work/huaxing/huaxing_pascal_v0",mode="segment")
-    voc1 = Voc("/Users/rensike/Files/temp/voc_tiny", mode="segment")
+    voc1 = Voc("/Users/rensike/Work/icv/voc_sub1_test_save", mode="segment",split="val")
+    voc1.vis(save_dir="/Users/rensike/Work/icv/voc1_vis", reset_dir=True)
 
-    voc1_sub = voc1.sub(10)
-    print("voc1_sub.ids:", voc1_sub.ids)
+    # voc1_sub = voc1.sub(10)
+    # print("voc2_sub.ids:", voc1_sub.ids)
+    #
+    # voc1_sub.save("/Users/rensike/Work/icv/voc_sub1_test_save",reset_dir=True,split="val")
+    #
+    # voc1_sub.vis(save_dir="/Users/rensike/Work/icv/voc2_sub_vis", reset_dir=True)
 
     # voc1.crop_bbox_for_classify("/Users/rensike/Work/icv/test_crop_bbox_for_classify", reset=True, split="trainval",
     #                                 pad=20,resize=(200,200))
 
-    voc1_sub.save("/Users/rensike/Work/icv/voc_sub1_test_save",reset_dir=True,split="val")
+    # voc2_sub.save("/Users/rensike/Work/icv/voc_sub1_test_save",reset_dir=True,split="val")
 
     #
     # voc_concat = voc.concat(voc1_sub,output_dir="/Users/rensike/Work/icv/test_voc_concat",reset=True)

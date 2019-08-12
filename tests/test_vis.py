@@ -29,11 +29,48 @@ if __name__ == '__main__':
     #     color=["r","b"]
     # )
 
-    draw_bar(
-        data_list=[[0.789, 0.832, 0.889, 0.874, 0.873, 0.888, 0.868],
-                   [0.092, 0.147, 0.188, 0.168, 0.218, 0.180, 0.186]],
-        legends=["mAP", "inference time"],
-        save_path="./benchmark_map_time.png",
-        x_ticklabels=["frcnn_r50", "+fpn", "+fpn+se", "+fpn+dcn", "+fpn+se+dcn", "+fpn+dcn+gn", "+fpn+se+ms"],
-        title="mAP and infer time for different feature extractor network",
-    )
+    # draw_bar(
+    #     data_list=[[0.789, 0.832, 0.889, 0.874, 0.873, 0.888, 0.868],
+    #                [0.092, 0.147, 0.188, 0.168, 0.218, 0.180, 0.186]],
+    #     legends=["mAP", "inference time"],
+    #     save_path="./benchmark_map_time.png",
+    #     x_ticklabels=["frcnn_r50", "+fpn", "+fpn+se", "+fpn+dcn", "+fpn+se+dcn", "+fpn+dcn+gn", "+fpn+se+ms"],
+    #     title="mAP and infer time for different feature extractor network",
+    # )
+
+    # draw_line(
+    #     y_data=[[86,83.67,80.33],[93.67,88.67,88],[97.67,95.67,94.67],[93.33,87.67,89],[95,86,86.33]],
+    #     x_ticklabels=["epoch 1","epoch 1","","","","epoch 3","","","","epoch 6"],
+    #     y_label="non-defective-ratio",
+    #     y_line_values=95,
+    #     save_path="./non-defective-ratio.png",
+    #     title="non-defective-ratio for pure increment train",
+    #     legends=["Incr 3","Incr 6","Incr 10","Incr 15","Incr 20"],
+    #     color=['black','blue','darkgreen','gold','red']
+    # )
+
+    # draw_line(
+    #     y_data=[[73.33,72.67,74],[71.67,69.67,70.33],[46,50,50.67],[72,79,78.67],[64,70,69]],
+    #     x_ticklabels=["epoch 1","epoch 1","","","","epoch 3","","","","epoch 6"],
+    #     y_label="recall",
+    #     y_line_values=73,
+    #     save_path="./recall.png",
+    #     title="recall for pure increment train",
+    #     legends=["Incr 3","Incr 6","Incr 10","Incr 15","Incr 20"],
+    #     color=['black','blue','darkgreen','gold','red']
+    # )
+
+    # draw_line(
+    #     y_data=[[100,100,100],[100,100,100],[70,80,80],[86.67,100,100],[85,100,100]],
+    #     x_ticklabels=["epoch 1","epoch 1","","","","epoch 3","","","","epoch 6"],
+    #     y_label="accuracy",
+    #     save_path="./accuracy.png",
+    #     title="accuracy for pure increment train",
+    #     legends=["Incr 3","Incr 6","Incr 10","Incr 15","Incr 20"],
+    #     color=['black','blue','darkgreen','gold','red']
+    # )
+
+    img = imdraw_bbox("./od_infer_result.jpg",10.0,10.0,200.0,200.0,display_str="love")
+    print(img.shape)
+    imshow(img)
+

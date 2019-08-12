@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 import numpy as np
 import copy
-import pycocotools.mask as mask_utils
 from .mask import Mask
 from . import FLIP_TOP_BOTTOM,FLIP_LEFT_RIGHT
 
@@ -123,6 +122,8 @@ class PolygonInstance(object):
         return PolygonInstance(scaled_polygons, size=size)
 
     def convert_to_binarymask(self):
+        import pycocotools.mask as mask_utils
+
         width, height = self.size
         # formatting for COCO PythonAPI
         polygons = [p.numpy() for p in self.polygons]

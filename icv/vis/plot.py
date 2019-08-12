@@ -6,7 +6,7 @@ from ..utils.itis import is_str, is_seq
 # set draw style
 # plt.style.use("ggplot")
 # for Chinese
-# plt.rcParams["font.sans-serif"] = "KaiTi"
+# plt.rcParams["font.sans-serif"] = ["FangSong"]
 plt.rcParams["axes.unicode_minus"] = False
 
 plt.tick_params(top='off', right='off')
@@ -25,6 +25,9 @@ def draw_line(
         y_ticklabels=None,
         x_tick_rotation=0,
         y_tick_rotation=0,
+        x_line_values=None,
+        y_line_values=None,
+        marker='o',
         linestyle='-',
         linewidth=2,
         color='r',
@@ -56,9 +59,10 @@ def draw_line(
         color = ["r"] * cnt
 
     for i in range(cnt):
+        marker = marker if marker is not None else marks[i % len(marks)]
         plt.plot(
             x_data[i, :], y_data[i, :], linestyle=linestyle, linewidth=linewidth, color=color[i],
-            marker=marks[i % len(marks)],
+            marker=marker,
             label=None if legends is None else legends[i]
         )
 
@@ -87,6 +91,20 @@ def draw_line(
         if y_tick_rotation > 0:
             for tick in plt.gca().get_yticklabels():
                 tick.set_rotation(y_tick_rotation)
+
+    if x_line_values is not None:
+        if not is_seq(x_line_values):
+            x_line_values = [x_line_values]
+
+        for x in x_line_values:
+            plt.axvline(x=x,ymax=np.max(y_data),linestyle="--")
+
+    if y_line_values is not None:
+        if not is_seq(y_line_values):
+            y_line_values = [y_line_values]
+
+        for y in y_line_values:
+            plt.axhline(y=y,linestyle="--")
 
     if legends is not None:
         plt.legend()

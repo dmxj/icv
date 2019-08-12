@@ -1,8 +1,6 @@
 # -*- coding: UTF-8 -*-
-import torch
-from torch.utils import model_zoo
 from collections import OrderedDict
-from . import is_file,mkdir
+from . import is_file, mkdir
 import os
 import time
 
@@ -22,6 +20,7 @@ def load_state_dict(module, state_dict, strict=False, logger=None):
         logger (:obj:`logging.Logger`, optional): Logger to log the error
             message. If not specified, print function will be used.
     """
+    import torch
     unexpected_keys = []
     own_state = module.state_dict()
     for name, param in state_dict.items():
@@ -58,11 +57,12 @@ def load_state_dict(module, state_dict, strict=False, logger=None):
         else:
             print(err_msg)
 
+
 def ckpt_load(model,
-                    filename,
-                    map_location=None,
-                    strict=False,
-                    logger=None):
+              filename,
+              map_location=None,
+              strict=False,
+              logger=None):
     """Load checkpoint from a file or URI.
 
     Args:
@@ -77,6 +77,8 @@ def ckpt_load(model,
         dict or OrderedDict: The loaded checkpoint.
     """
     # load checkpoint from modelzoo or file or url
+    import torch
+    from torch.utils import model_zoo
     if filename.startswith('modelzoo://'):
         from torchvision.models.resnet import model_urls
         model_name = filename[11:]
@@ -105,6 +107,7 @@ def ckpt_load(model,
         load_state_dict(model, state_dict, strict, logger)
     return checkpoint
 
+
 def weights_to_cpu(state_dict):
     """Copy a model state_dict to cpu.
 
@@ -132,6 +135,7 @@ def ckpt_save(model, filename, optimizer=None, meta=None):
         optimizer (:obj:`Optimizer`, optional): Optimizer to be saved.
         meta (dict, optional): Metadata to be saved in checkpoint.
     """
+    import torch
     if meta is None:
         meta = {}
     elif not isinstance(meta, dict):

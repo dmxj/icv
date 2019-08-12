@@ -4,8 +4,6 @@ from .kps import Keypoint
 from icv.utils import EasyDict as edict
 from icv.utils import is_np_array
 from icv.image.vis import imdraw_polygons
-import pycocotools.mask as mask_utils
-
 
 class Polygon(object):
     def __init__(self, exterior, label=None, **kwargs):
@@ -228,6 +226,8 @@ class Polygon(object):
     def to_mask(self, height, width):
         if self.mask is not None:
             return self.mask
+
+        import pycocotools.mask as mask_utils
         from .mask import Mask
         rles = mask_utils.frPyObjects([self.polygons], height, width)
         rle = mask_utils.merge(rles)
