@@ -62,7 +62,7 @@ def req_seg(image_file,srv_addr):
     imdraw_polygons_with_bbox(
         image_file,
         polygons,
-        name_list=name_list,
+        label_list=name_list,
         is_show=True,
         save_path="./seg_infer_result.jpg"
     )
@@ -72,12 +72,14 @@ if __name__ == '__main__':
     # test_image = "/Users/rensike/Work/iqi/seginfer/test_seg.jpg"
     # endpoint = "http://127.0.0.1:9527/api/v1/predict"
 
-    # req_od(
+    req_od(
+        image_file="/Users/rensike/Files/data/images/018.jpg",
+        srv_addr="http://172.24.155.76:9527/api/MTcyLjE4LjAuODo5NTI3/api/v1/predict",
+        # srv_addr = "http://127.0.0.1:9527/api/v1/predict"
+    )
+
+    # req_seg(
     #     image_file="/Users/rensike/Files/data/images/018.jpg",
-    #     srv_addr="http://172.24.155.76:9527/api/MTcyLjE4LjAuNzo5NTI3/api/v1/predict"
+    #     srv_addr="http://172.24.155.76:9527/api/MTcyLjE4LjAuNDo5NTI3/api/v1/predict"
     # )
 
-    req_seg(
-        image_file="/Users/rensike/Files/data/images/018.jpg",
-        srv_addr="http://172.24.155.76:9527/api/MTcyLjE4LjAuNDo5NTI3/api/v1/predict"
-    )

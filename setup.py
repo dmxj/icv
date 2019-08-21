@@ -22,7 +22,7 @@ VERSION = "0.0.1.6.6"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'Pillow', 'numpy', 'opencv-python', 'Cython', 'pycocotools', 'bottle', 'scikit-image', 'terminaltables', 'lxml',
+    'Pillow', 'numpy', 'opencv-python', 'bottle', 'scikit-image', 'terminaltables', 'lxml',
     'tqdm', 'addict'
 ]
 

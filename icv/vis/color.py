@@ -41,6 +41,27 @@ LIGHT_COLORS = ['lightblue', 'lightcoral', 'lightcyan', 'lightgoldenrodyellow', 
                 'lightgray', 'lightgrey', 'lightpink', 'lightsalmon', 'lightseagreen', 'lightskyblue',
                 'lightslategray', 'lightslategrey', 'lightsteelblue', 'lightyellow']
 
+VIS_COLOR = [(244, 67, 54),
+             (233, 30, 99),
+             (156, 39, 176),
+             (103, 58, 183),
+             (63, 81, 181),
+             (33, 150, 243),
+             (3, 169, 244),
+             (0, 188, 212),
+             (0, 150, 136),
+             (76, 175, 80),
+             (139, 195, 74),
+             (205, 220, 57),
+             (255, 235, 59),
+             (255, 193, 7),
+             (255, 152, 0),
+             (255, 87, 34),
+             (121, 85, 72),
+             (158, 158, 158),
+             (96, 125, 139)
+             ]
+
 MASK_COLORS = [
     (0, 0, 139),
     (67, 205, 128),
@@ -81,10 +102,13 @@ def get_color_tuple(color, alpha=None):
         raise ValueError("color value invalid")
 
 
+def get_text_color():
+    return (255, 255, 255)
+
+
 def get_reverse_color(color):
     c = get_color_tuple(color)
     reverse_color = []
     for i in c:
         reverse_color.append(255 - i)
     return tuple(reverse_color)
-

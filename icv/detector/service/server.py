@@ -58,7 +58,7 @@ class DetectorServer(object):
                 "code": code,
                 "message": message,
                 "success": success,
-                "data": json_encode(data)
+                "data": data,
             }
         else:
             res = {

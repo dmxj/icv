@@ -129,7 +129,7 @@ class Mask(object):
             **kwargs
         )
 
-    def draw_on_image(self, image, color=(0, 255, 0), alpha=0.6,
+    def draw_on_image(self, image, color=(244, 67, 54), alpha=0.45,
                       copy=True, raise_if_out_of_image=False):
         assert image.shape[:2] == self.mask.shape
 

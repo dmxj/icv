@@ -13,7 +13,7 @@ except ImportError as e:
 from .utils import ops as utils_ops
 
 class TfObjectDetector(Detector):
-    def __init__(self, model_path, labelmap_path=None, categories=[], iou_thr=0.5, score_thr=0.5, device=None):
+    def __init__(self, model_path, labelmap_path=None, categories=None, iou_thr=0.5, score_thr=0.5, device=None):
         assert is_file(model_path)
         assert (is_seq(categories) and len(categories) > 0) or is_file(labelmap_path)
         super(TfObjectDetector, self).__init__(categories=categories, labelmap_path=labelmap_path, iou_thr=iou_thr,

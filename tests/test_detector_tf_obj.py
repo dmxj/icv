@@ -7,6 +7,6 @@ if __name__ == '__main__':
         labelmap_path="/Users/rensike/Workspace/themis_inference_service/config/mscoco_label_map.pbtxt"
     )
 
-    # detector.start_server(9527,secret="leilei")
-    detector.inference("/Users/rensike/Files/data/images/street.jpg",is_show=True)
+    detector.start_server(9527,secret="leilei")
+    # detector.inference("/Users/rensike/Files/data/images/street.jpg",is_show=True)
 

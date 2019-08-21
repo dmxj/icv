@@ -5,6 +5,7 @@ from icv.utils import EasyDict as edict
 from icv.utils import is_np_array
 from icv.image.vis import imdraw_polygons
 
+
 class Polygon(object):
     def __init__(self, exterior, label=None, **kwargs):
         if isinstance(exterior, list):
@@ -300,7 +301,7 @@ class Polygon(object):
 
     def draw_on_image(self,
                       image,
-                      color=(0, 255, 0), alpha=0.6,
+                      color=(244, 67, 54), alpha=0.45,
                       copy=True, raise_if_out_of_image=False):
 
         bbox = self.to_bounding_box()

@@ -285,7 +285,7 @@ class BBox(object):
         """
         return self.copy(xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax, label=label, **kwargs)
 
-    def draw_on_image(self, image, color=(0, 255, 0), thickness=1,
+    def draw_on_image(self, image, color=(244, 67, 54), thickness=1,
                       copy=True, raise_if_out_of_image=False):
         """
         Draw the bounding box on an image.

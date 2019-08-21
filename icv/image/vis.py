@@ -2,13 +2,14 @@
 from .io import imread, imwrite
 from skimage import draw
 from ..utils import is_seq, is_np_array
-from ..vis.color import STANDARD_COLORS, get_color_tuple, get_reverse_color
+from ..vis.color import VIS_COLOR, get_color_tuple, get_text_color
 import random
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
 TEXT_MARGIN = 2
+
 
 def imshow(img):
     """Show an image.
@@ -28,7 +29,7 @@ def imshow_bboxes(
         classes=None,
         score_thresh=0,
         masks=None,
-        color="red",
+        color=(244, 67, 54),
         thickness=1,
         use_normalized_coordinates=False,
         is_show=False,
@@ -85,11 +86,11 @@ def imshow_bboxes(
         if is_np_array(classes):
             classes = list(classes)
         for cat in classes:
-            colorMap[cat] = STANDARD_COLORS[classes.index(cat) % len(STANDARD_COLORS)]
+            colorMap[cat] = VIS_COLOR[classes.index(cat) % len(VIS_COLOR)]
 
     for ix, bbox in enumerate(bboxes):
         if isinstance(bbox, BBox):
-            label = labels[ix] if labels is not None else bbox.lable
+            label = labels[ix] if labels is not None else bbox.label
             color = colorMap[label] if label in colorMap else default_color
             label = label if label is not None else ""
             label = label + ": " + str(round(scores[ix], 3)) if scores is not None else label
@@ -103,10 +104,10 @@ def imshow_bboxes(
 
         if isinstance(bbox, BBox):
             image = imdraw_bbox(image, bbox.xmin, bbox.ymin, bbox.xmax, bbox.ymax, color, thickness, label,
-                                    use_normalized_coordinates)
+                                use_normalized_coordinates)
         else:
             image = imdraw_bbox(image, bbox[0], bbox[1], bbox[2], bbox[3], color, thickness, label,
-                                    use_normalized_coordinates)
+                                use_normalized_coordinates)
 
     if is_show:
         imshow(image)
@@ -117,7 +118,7 @@ def imshow_bboxes(
     return image
 
 
-def imdraw_bbox(image, xmin, ymin, xmax, ymax, color="red", thickness=1, display_str="", text_color=None,
+def imdraw_bbox(image, xmin, ymin, xmax, ymax, color=(244, 67, 54), thickness=1, display_str="", text_color=None,
                 use_normalized_coordinates=False):
     assert xmin <= xmax, "xmin shouldn't be langer than xmax!"
     assert ymin <= ymax, "ymin shouldn't be langer than ymax!"
@@ -135,7 +136,7 @@ def imdraw_bbox(image, xmin, ymin, xmax, ymax, color="red", thickness=1, display
     else:
         (left, right, top, bottom) = (xmin, xmax, ymin, ymax)
 
-    (left, right, top, bottom) = int(left),int(right),int(top),int(bottom)
+    (left, right, top, bottom) = int(left), int(right), int(top), int(bottom)
 
     color = get_color_tuple(color)
 
@@ -143,7 +144,7 @@ def imdraw_bbox(image, xmin, ymin, xmax, ymax, color="red", thickness=1, display
     if display_str == "":
         return image
 
-    text_width, text_height,line_height = _get_text_size(display_str)
+    text_width, text_height, line_height = _get_text_size(display_str)
     text_left = left + TEXT_MARGIN
     text_top = top - TEXT_MARGIN
 
@@ -153,12 +154,12 @@ def imdraw_bbox(image, xmin, ymin, xmax, ymax, color="red", thickness=1, display
     if text_top + text_height + TEXT_MARGIN > im_height:
         text_top = top + TEXT_MARGIN
 
-    text_color = get_color_tuple(text_color) if text_color is not None else get_reverse_color(color)
+    text_color = get_color_tuple(text_color) if text_color is not None else get_text_color()
     image = imdraw_text(image, display_str, text_left, text_top, text_color=text_color, bg_color=color)
     return image
 
 
-def imdraw_mask(image, mask, color='red', alpha=0.8):
+def imdraw_mask(image, mask, color='red', alpha=0.45):
     """Draws mask on an image.
 
     Args:
@@ -191,7 +192,7 @@ def imdraw_mask(image, mask, color='red', alpha=0.8):
     return image
 
 
-def imdraw_polygons(image, polygons, color='red', alpha=0.8):
+def imdraw_polygons(image, polygons, color='red', alpha=0.45):
     image = imread(image)
     polygons = np.array(_format_polygons(polygons))
     polygons = np.squeeze(polygons)
@@ -240,7 +241,7 @@ def imdraw_polygons_with_bbox(
         label_list=None,
         is_show=False,
         save_path=None,
-        alpha=0.5,
+        alpha=0.45,
         outline=1,
         color_map=None,
         with_bbox=False,
@@ -267,10 +268,10 @@ def imdraw_polygons_with_bbox(
         assert len(text_color) == len(polygons)
 
     if bbox_color is None:
-        bbox_color = random.choice(STANDARD_COLORS)
+        bbox_color = random.choice(VIS_COLOR)
 
     if text_color is None:
-        text_color = get_reverse_color(bbox_color)
+        text_color = get_text_color()
 
     if label_list is None:
         label_list = [""] * len(polygons)
@@ -320,26 +321,26 @@ def imdraw_polygons_with_bbox(
     return image
 
 
-def _get_text_size(text, font_face=cv2.FONT_HERSHEY_SIMPLEX, font_scale=0.5,thickness=1):
+def _get_text_size(text, font_face=cv2.FONT_HERSHEY_DUPLEX, font_scale=0.6, thickness=1):
     size = cv2.getTextSize(text, font_face, font_scale, thickness)
     text_width = size[0][0]
     text_height = size[0][1]
-    return text_width, text_height,size[1]
+    return text_width, text_height, size[1]
 
 
-def imdraw_text(image, text="-", x=0, y=0, font_scale=0.5, thickness=1, text_color=(255, 255,255), with_bg=True,
-                bg_color="white",bg_alpha=60):
+def imdraw_text(image, text="-", x=0, y=0, font_scale=0.6, thickness=1, text_color=(255, 255, 255), with_bg=True,
+                bg_color=(244, 67, 54), bg_alpha=60):
     image = imread(image)
     (height, width) = image.shape[:2]
     text_color = get_color_tuple(text_color)
     if with_bg:
         bg_color = get_color_tuple(bg_color, bg_alpha)
-        text_width, text_height,line_height = _get_text_size(text,font_scale=font_scale,thickness=thickness)
+        text_width, text_height, line_height = _get_text_size(text, font_scale=font_scale, thickness=thickness)
         xmin = int(max(0, x - TEXT_MARGIN))
         ymin = int(max(0, y - TEXT_MARGIN - text_height))
         xmax = int(min(width, x + text_width + TEXT_MARGIN))
         ymax = int(min(width, y + TEXT_MARGIN))
 
         cv2.rectangle(image, (xmin, ymin), (xmax, ymax), bg_color, thickness=-1)
-    cv2.putText(image, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, font_scale, text_color, thickness=thickness)
+    cv2.putText(image, text, (x, y), cv2.FONT_HERSHEY_DUPLEX, font_scale, text_color, thickness, cv2.LINE_AA)
     return image
