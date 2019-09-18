@@ -13,7 +13,7 @@ from ..data.core.mask import Mask
 from ..data.core.polys import Polygon
 from tqdm import tqdm
 import random
-from ..vis.color import STANDARD_COLORS
+from ..vis.color import VIS_COLOR
 
 
 # TODO: 分割数据（图像目录、segment=1）
@@ -23,7 +23,6 @@ class Voc(IcvDataSet):
         self.root = data_dir
         self.split = split if split else "trainval"
         self.mode = mode
-        self.is_seg_mode = self.mode != "detect"
         self.include_segment = include_segment
         self.image_set = "Main" if self.mode == "detect" else "Segmentation"
 
@@ -44,6 +43,10 @@ class Voc(IcvDataSet):
 
         super(Voc, self).__init__(self.ids, self.categories, self.keep_no_anno_image, one_index)
 
+    @property
+    def is_seg_mode(self):
+        return self.mode != "detect"
+
     def init(self):
         self.ids = list_from_file(self._imgsetpath % self.split)
         self.id2img = {k: v for k, v in enumerate(self.ids)}
@@ -52,7 +55,8 @@ class Voc(IcvDataSet):
         self.color_map = {}
         if self.categories is None:
             print("parsing categories ...")
-            self.categories = self.get_categories()
+            self.get_samples()
+            self.categories = self.parse_categories()
 
         self.set_categories(self.categories)
         self.set_colormap(self.color_map)
@@ -140,8 +144,9 @@ class Voc(IcvDataSet):
 
     @staticmethod
     def reset_dir(dist_dir, reset=False):
-        if not reset:
-            assert is_dir(dist_dir)
+        if not os.path.exists(dist_dir):
+            os.makedirs(dist_dir)
+
         if reset and os.path.exists(dist_dir):
             shutil.rmtree(dist_dir)
 
@@ -158,17 +163,6 @@ class Voc(IcvDataSet):
                 mkdir(_path)
 
         return anno_path, image_path, imgset_path, imgset_seg_path, seg_class_image_path, seg_object_image_path
-
-    def get_categories(self):
-        self.get_samples()
-        categories = []
-        for anno_sample in self.samples:
-            label_list = [l.label for l in anno_sample.annos if l.label is not None]
-            if label_list:
-                categories.extend(label_list)
-        categories = list(set(categories))
-        categories.sort()
-        return categories
 
     def get_sample(self, id):
         if id in self.sample_db:
@@ -208,7 +202,7 @@ class Voc(IcvDataSet):
                     continue
                 label = obj["name"]
                 if label not in self.color_map:
-                    self.color_map[label] = random.choice(STANDARD_COLORS)
+                    self.color_map[label] = random.choice(VIS_COLOR)
 
                 xmin = int(obj["bndbox"]["xmin"])
                 ymin = int(obj["bndbox"]["ymin"])

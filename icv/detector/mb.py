@@ -167,14 +167,14 @@ class MbDetector(Detector):
             if segm_result is not None:
                 detection_segm.append(segm_result[ix,...])
 
-        detection_segm = None if len(detection_segm) == 0 else detection_segm
+        detection_segm = np.array(detection_segm)
 
         score_thr = score_thr if score_thr >= 0 else self.score_thr
         det_result = DetectionResult(
             det_bboxes=detection_bboxes,
             det_classes=np.array(detection_classes),
             det_scores=np.array(detection_scores),
-            det_masks=np.array(detection_segm),
+            det_masks=detection_segm if detection_segm.shape[0] > 0 else None,
             det_time=inference_time,
             categories=self.categories,
             score_thr=score_thr

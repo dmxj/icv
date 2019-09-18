@@ -6,7 +6,7 @@ from ..data.core.bbox import BBox
 from ..data.core.polys import Polygon
 from ..data.core.sample import Sample, Anno
 from ..data.core.meta import AnnoMeta,SampleMeta
-from ..vis.color import STANDARD_COLORS
+from ..vis.color import VIS_COLOR
 import random
 import os
 import json
@@ -32,34 +32,11 @@ class LabelMe(IcvDataSet):
         self.sample_db = {}
         self.color_map = {}
         self.get_samples()
-        self.categories = categories if categories is not None else self.get_categories()
+        self.categories = categories if categories is not None else self.parse_categories()
 
         super(LabelMe, self).__init__(self.ids, self.categories, self.keep_no_anno_image, one_index)
         print("there have %d samples in LabelMe dataset" % len(self.ids))
         print("there have %d categories in LabelMe dataset" % len(self.categories))
-
-    @property
-    def is_seg_mode(self):
-        if self.length == 0:
-            return False
-
-        for i in range(self.length):
-            for anno in self.get_sample(self.ids[i]).annos:
-                if anno.seg_mode_polys or anno.seg_mode_mask:
-                    return True
-
-        return False
-
-    def get_categories(self):
-        categories = []
-        for anno_sample in self.samples:
-            label_list = [anno.label for anno in anno_sample.annos]
-            if label_list:
-                categories.extend(label_list)
-        categories = list(set(categories))
-        categories.sort()
-        self.set_categories(categories)
-        return categories
 
     def save(self, output_dir, reset_dir=False, split=None):
         anno_path, image_path = LabelMe.reset_dir(output_dir, reset=reset_dir)
@@ -123,7 +100,7 @@ class LabelMe(IcvDataSet):
 
                 label = shape["label"]
                 if label not in self.color_map:
-                    self.color_map[label] = random.choice(STANDARD_COLORS)
+                    self.color_map[label] = random.choice(VIS_COLOR)
 
                 anno = Anno(
                     bbox=BBox(xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax, label=label),
@@ -131,7 +108,6 @@ class LabelMe(IcvDataSet):
                     color=self.color_map[label],
                     polys=Polygon.init_from(points, label=label) if shape["shape_type"] == "polygon" else None,
                     meta=AnnoMeta()
-
                 )
                 annos.append(anno)
 
@@ -141,6 +117,7 @@ class LabelMe(IcvDataSet):
             annos=annos,
             meta=SampleMeta()
         )
+        self.sample_db[id] = sample
         return sample
 
     def _write(self, anno_sample, anno_path, img_path):

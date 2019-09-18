@@ -33,11 +33,12 @@ def loop_run(max_times=7,max_duration=7,sleep_time=0.2,loop_msg="out of memory",
 
 
 if __name__ == '__main__':
-    # voc = Voc("/Users/rensike/Files/temp/voc_tiny",mode="segment")
+    import random
+    voc = Voc("/Users/rensike/Files/temp/voc_tiny",mode="segment")
     #
     # print("voc ids:",voc.ids)
 
-    # voc.vis(random.choice(voc.ids),is_show=True,seg_inbox=False)
+    voc.vis(random.choice(voc.ids),is_show=True)
 
     # voc1 = Voc("/Users/rensike/Work/huaxing/huaxing_pascal_v0",mode="segment")
     # voc1 = Voc("/Users/rensike/Work/icv/voc_sub1_test_save", mode="segment",split="val")
@@ -79,5 +80,3 @@ if __name__ == '__main__':
     #     str(e)
     #
 
-    aa = Exception("device is busy")
-    print(repr(aa))

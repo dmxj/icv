@@ -1,12 +1,13 @@
 # -*- coding: UTF-8 -*-
 import numpy as np
+from .target import Target
 from .kps import Keypoint
 from icv.utils import EasyDict as edict
 from icv.utils import is_np_array
 from icv.image.vis import imdraw_polygons
 
 
-class Polygon(object):
+class Polygon(Target):
     def __init__(self, exterior, label=None, **kwargs):
         if isinstance(exterior, list):
             if not exterior:

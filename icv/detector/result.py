@@ -4,10 +4,12 @@ from ..data.core import BBoxList
 from ..image import imshow_bboxes
 import numpy as np
 
+
 class DetectionResult(object):
-    def __init__(self,det_bboxes,det_classes,det_scores,det_masks=None,det_time=0,det_image=None,categories=None,score_thr=0):
+    def __init__(self, det_bboxes, det_classes, det_scores, det_masks=None, det_time=0, det_image=None, categories=None,
+                 score_thr=0):
         assert is_seq(det_bboxes), "param det_bboxes should be a sequence."
-        self._score_thr = max(score_thr,0)
+        self._score_thr = max(score_thr, 0)
         self._det_scores = np.array(det_scores)
 
         self._det_bboxes = BBoxList(np.array(det_bboxes).tolist())
@@ -18,7 +20,7 @@ class DetectionResult(object):
         self.categories = categories
         self._det_labels = None
         if self.categories is not None:
-            self._det_labels = [self.categories[_-1] for _ in self._det_classes]
+            self._det_labels = [self.categories[_ - 1] for _ in self._det_classes]
 
         if self._score_thr >= 0:
             self.select_top_predictions()
@@ -33,7 +35,24 @@ class DetectionResult(object):
             self._det_masks = self._det_masks[filter_ids]
 
         if self.categories is not None:
-            self._det_labels = [self.categories[_-1] for _ in self._det_classes]
+            self._det_labels = [self.categories[_ - 1] for _ in self._det_classes]
+
+    def filter(self, min_score=0, max_score=1):
+        result = self.deepcopy()
+        if min_score <= 0 and max_score >= 1:
+            return result
+        filter_ids = np.where(np.logical_and(np.array(result.det_scores) >= min_score,
+                                             np.array(result.det_scores) <= max_score)
+                              )
+        result._det_scores = result._det_scores[filter_ids]
+        result._det_bboxes.select(filter_ids[0])
+        result._det_classes = result._det_classes[filter_ids]
+        if result._det_masks is not None and result._det_masks.shape[0] > 0:
+            result._det_masks = result._det_masks[filter_ids]
+
+        if result.categories is not None:
+            result._det_labels = [result.categories[_ - 1] for _ in result._det_classes]
+        return result
 
     @property
     def det_bboxes(self):
@@ -63,17 +82,17 @@ class DetectionResult(object):
     def det_image(self):
         return self._det_image
 
-    def topk(self,k=1):
+    def topk(self, k=1):
         if len(self) == 0:
-            return [(-1,-1)]
+            return [(-1, -1)]
 
-        assert k <= len(self),"param k should smaller than bbox count."
+        assert k <= len(self), "param k should smaller than bbox count."
 
         topk_idx = np.argsort(self.det_scores)[-k:]
         topk_class = self.det_classes[topk_idx][::-1]
         topk_score = self.det_scores[topk_idx][::-1]
 
-        _topk = list(zip(topk_class.tolist(),topk_score.tolist()))
+        _topk = list(zip(topk_class.tolist(), topk_score.tolist()))
         return _topk
 
     @property
@@ -96,12 +115,12 @@ class DetectionResult(object):
     def to_json(self):
         return dict(
             bboxes=self.det_bboxes.tolist(),
-            classes=self.det_classes.tolist() if isinstance(self.det_classes,np.ndarray) else self.det_classes,
-            scores=self.det_scores.tolist() if isinstance(self.det_classes,np.ndarray) else self.det_classes,
+            classes=self.det_classes.tolist() if isinstance(self.det_classes, np.ndarray) else self.det_classes,
+            scores=self.det_scores.tolist() if isinstance(self.det_classes, np.ndarray) else self.det_classes,
             time=self.det_time
         )
 
-    def vis(self,img):
+    def vis(self, img):
         image_drawed = imshow_bboxes(img,
                                      self.det_bboxes,
                                      classes=self.categories,
@@ -111,3 +130,21 @@ class DetectionResult(object):
                                      )
         self._det_image = image_drawed
         return image_drawed
+
+    def deepcopy(self):
+        result_copied = DetectionResult(
+            det_bboxes=self._det_bboxes,
+            det_classes=self._det_classes,
+            det_scores=self._det_scores,
+            det_masks=self._det_masks,
+            det_time=self._det_time,
+            det_image=self._det_image,
+            categories=self.categories,
+            score_thr=self._score_thr
+        )
+
+        result_copied._det_labels = self._det_labels
+        return result_copied
+
+    def copy(self):
+        return self.deepcopy()

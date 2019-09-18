@@ -175,6 +175,8 @@ def imdraw_mask(image, mask, color='red', alpha=0.45):
     if mask.dtype != np.uint8:
         raise ValueError('`mask` not of type np.uint8')
     if np.any(np.logical_and(mask != 1, mask != 0)):
+        print("======> this mask is:",mask)
+        print("======> unique id:",np.unique(mask))
         raise ValueError('`mask` elements should be in [0, 1]')
 
     image = imread(image)
@@ -183,7 +185,7 @@ def imdraw_mask(image, mask, color='red', alpha=0.45):
         raise ValueError('The image has spatial dimensions %s but the mask has '
                          'dimensions %s' % (image.shape[:2], mask.shape))
 
-    color_mask = get_color_tuple(color, alpha=alpha)
+    color_mask = get_color_tuple(color)
     color_mask = np.array(color_mask, dtype=np.uint8)
 
     mask_bin = mask.astype(np.bool)
@@ -339,7 +341,7 @@ def imdraw_text(image, text="-", x=0, y=0, font_scale=0.6, thickness=1, text_col
         xmin = int(max(0, x - TEXT_MARGIN))
         ymin = int(max(0, y - TEXT_MARGIN - text_height))
         xmax = int(min(width, x + text_width + TEXT_MARGIN))
-        ymax = int(min(width, y + TEXT_MARGIN))
+        ymax = int(min(height, y + TEXT_MARGIN))
 
         cv2.rectangle(image, (xmin, ymin), (xmax, ymax), bg_color, thickness=-1)
     cv2.putText(image, text, (x, y), cv2.FONT_HERSHEY_DUPLEX, font_scale, text_color, thickness, cv2.LINE_AA)

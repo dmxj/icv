@@ -93,13 +93,16 @@ def get_color_tuple(color, alpha=None):
         elif len(color) == 4:
             color = color[:3] + (alpha)
         else:
-            raise ValueError("color value invalid")
+            raise ValueError("color value invalid: ",color)
         return color
     elif is_str(color):
         from PIL import ImageColor
         return ImageColor.getrgb(color)
     else:
-        raise ValueError("color value invalid")
+        import numpy as np
+        if isinstance(color,np.ndarray) and color.ndim == 1:
+            return get_color_tuple(color.tolist(),alpha=alpha)
+        raise ValueError("color value invalid: ",color)
 
 
 def get_text_color():

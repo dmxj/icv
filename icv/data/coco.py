@@ -42,18 +42,6 @@ class Coco(IcvDataSet):
         print("there have %d samples in COCO dataset" % len(self.ids))
         print("there have %d categories in COCO dataset" % len(self.categories))
 
-    @property
-    def is_seg_mode(self):
-        if self.length == 0:
-            return False
-
-        for i in range(self.length):
-            for anno in self.get_sample(self.ids[i]).annos:
-                if anno.seg_mode_polys or anno.seg_mode_mask:
-                    return True
-
-        return False
-
     def concat(self, coco, out_dir=None, reset=False, new_split=None):
         assert isinstance(coco, Coco)
         split = self.split if new_split is None else new_split
@@ -118,8 +106,8 @@ class Coco(IcvDataSet):
 
     @staticmethod
     def reset_dir(dist_dir, split, reset=False):
-        if not reset:
-            assert is_dir(dist_dir)
+        if not os.path.exists(dist_dir):
+            os.makedirs(dist_dir)
 
         if reset and os.path.exists(dist_dir):
             shutil.rmtree(dist_dir)
@@ -223,57 +211,8 @@ class Coco(IcvDataSet):
                     if anno.label not in cats:
                         cats[anno.label] = {"supercategory": "", "id": anno_dict["category_id"], "name": anno.label}
 
-        annotation["categories"] = cats.values()
+        annotation["categories"] = list(cats.values())
         encode_to_file(annotation, os.path.join(dist_anno_path, "%s.json" % split))
-
-    # def _write_sample(self, anno_samples, dist_path):
-    #     annotation = {
-    #         "images": [],
-    #         "annotations": [],
-    #         "categories": [],
-    #     }
-    #
-    #     anno_id = 0
-    #     cats = {}
-    #     for id, sample in enumerate(anno_samples):
-    #         if sample.has_field("file_name"):
-    #             continue
-    #         img_height, img_width = sample.image.shape[:2]
-    #         annotation["images"].append(
-    #             {
-    #                 "id": id,
-    #                 "file_name": sample.get_field("file_name"),
-    #                 "width": img_width,
-    #                 "height": img_height
-    #             }
-    #         )
-    #
-    #         for bbox in sample.bbox_list:
-    #             if bbox.has_field("label"):
-    #                 continue
-    #             anno = {
-    #                 "bbox": [bbox.xmin, bbox.ymin, bbox.width, bbox.height]
-    #             }
-    #
-    #             if bbox.has_field("segmentation"):
-    #                 anno["segmentation"] = bbox.get_field("segmentation")
-    #
-    #             if bbox.has_field("area"):
-    #                 anno["area"] = bbox.get_field("area")
-    #
-    #             if bbox.has_field("iscrowd"):
-    #                 anno["iscrowd"] = bbox.get_field("iscrowd")
-    #
-    #             anno["category_id"] = self.cat2id[bbox.lable]
-    #             anno["image_id"] = id
-    #             anno["id"] = anno_id
-    #             anno_id += 1
-    #
-    #             if bbox.lable not in cats:
-    #                 cats[bbox.lable] = {"supercategory": "", "id": anno["category_id"], "name": bbox.lable}
-    #
-    #     annotation["categories"] = cats.values()
-    #     json.dump(annotation, open(dist_path, "w"))
 
     def showAnns(self, id, with_bbox=True, with_seg=True, is_show=True, save_path=None):
         """

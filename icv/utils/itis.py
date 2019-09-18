@@ -13,6 +13,10 @@ def is_list(input):
 def is_seq(input):
     return isinstance(input, tuple) or isinstance(input, list)
 
+def is_dict(input):
+    from collections import OrderedDict
+    from .easy_dict import EasyDict
+    return isinstance(input,dict) or isinstance(input,OrderedDict) or isinstance(input,EasyDict)
 
 def is_seq_equal(seq1, seq2, strict=False):
     """

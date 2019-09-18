@@ -2,13 +2,14 @@
 import numpy as np
 from skimage import measure
 from icv.utils import EasyDict as edict
-from icv.utils import is_seq, is_np_array,is_file
+from icv.utils import is_seq, is_np_array, is_file
 from .polys import Polygon
-from icv.image.io import imread,imwrite
+from .target import Target
+from icv.image.io import imread, imwrite
 from icv.image.vis import imdraw_mask
 
 
-class Mask(object):
+class Mask(Target):
     """
     Binary Mask
     """
@@ -38,6 +39,10 @@ class Mask(object):
         if isinstance(mask, Mask):
             return mask.deepcopy(label=label)
         return Mask(mask, label=label)
+
+    @property
+    def area(self):
+        return np.where(self.mask != 0)[0].size
 
     def add_field(self, field, field_data):
         self.fields[field] = field_data
@@ -147,11 +152,11 @@ class Mask(object):
         return imdraw_mask(image=result, mask=self.mask, color=color, alpha=alpha)
 
     def save(self, dist_path, id=1):
-        m = self.mask[::]
+        m = self.mask.copy()
         m[np.where(m != 0)] = id
         if is_file(dist_path):
-            m0 = imread(dist_path,0)
+            m0 = imread(dist_path, 0)
             m = m + m0
-            m[np.where(m>max(id,np.max(m0)))] = id
+            m[np.where(m > max(id, np.max(m0)))] = id
 
         imwrite(m, dist_path)

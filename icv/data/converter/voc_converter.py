@@ -25,7 +25,6 @@ class VocConverter(object):
                     dist_image_path,
                     dist_anno_file,
                     keep_no_anno_image=self.voc.keep_no_anno_image,
-                    one_index=self.voc.one_index,
                 )
         coco.set_categories(self.voc.categories)
 

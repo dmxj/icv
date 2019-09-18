@@ -12,7 +12,11 @@ def bbox_overlaps(bboxes1, bboxes2, mode='iou'):
         ious(ndarray): shape (n, k)
     """
 
+    from icv.data.core.bbox import BBox
     assert mode in ['iou', 'iof']
+
+    bboxes1 = np.array([np.array(b.bbox) if isinstance(b,BBox) else b for b in bboxes1])
+    bboxes2 = np.array([np.array(b.bbox) if isinstance(b,BBox) else b for b in bboxes2])
 
     bboxes1 = bboxes1.astype(np.float32)
     bboxes2 = bboxes2.astype(np.float32)

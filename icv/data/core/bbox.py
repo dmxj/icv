@@ -1,11 +1,12 @@
 # -*- coding: UTF-8 -*-
 from icv.utils import EasyDict as edict
 from icv.image import imread, imdraw_bbox
+from .target import Target
 from ..shape.transforms import bbox_clip, bbox_scaling, bbox_extend
 import numpy as np
 
 
-class BBox(object):
+class BBox(Target):
     def __init__(self, xmin, ymin, xmax, ymax, label=None, **kwargs):
         assert xmin <= xmax, "xmax should be large than xmin."
         assert ymin <= ymax, "ymax should be large than ymin."
@@ -146,6 +147,15 @@ class BBox(object):
 
         # return the intersection over union value
         return iou
+
+    def is_in(self, bbox, corner_include=False):
+        bbox = self.init_from(bbox)
+        if not corner_include and self.xmin > bbox.xmin and self.xmax < bbox.xmax and self.ymin > bbox.ymin and self.ymax < bbox.ymax:
+            return True
+
+        if corner_include and self.xmin >= bbox.xmin and self.xmax <= bbox.xmax and self.ymin >= bbox.ymin and self.ymax <= bbox.ymax:
+            return True
+        return False
 
     def intersection(self, other, default=None):
         bbox = BBox.init_from(other)

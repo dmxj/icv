@@ -1,6 +1,7 @@
-from .itis import is_str, is_list, is_dir, is_seq, is_empty, is_file, is_py3, IS_PY3, is_seq_equal, is_valid_url, \
+from .itis import is_str, is_list, is_dict, is_dir, is_seq, is_empty, is_file, is_py3, IS_PY3, is_seq_equal, is_valid_url, \
     is_np_array, is_float_array
-from .misc import check_file_exist, concat_list
+from .bbox import bbox_overlaps, py_cpu_nms, soft_nms
+from .misc import check_file_exist, concat_list, xml2json
 from .path import mkfile, mkdir, mkdir_force, reset_dir, fcopy, list_from_file, list_to_file
 from .time import Time
 from .timer import Timer
@@ -16,9 +17,10 @@ from .require import requires_package, requires_executable
 from .http import request, do_post, do_get, do_put, do_delete, do_options, simple, file_server
 
 __all__ = [
-    'is_str', 'is_list', 'is_dir', 'is_seq', 'is_empty', 'is_file', 'is_py3', 'IS_PY3', 'is_seq_equal', 'is_valid_url',
+    'is_str', 'is_list', 'is_dict','is_dir', 'is_seq', 'is_empty', 'is_file', 'is_py3', 'IS_PY3', 'is_seq_equal', 'is_valid_url',
     'is_np_array', 'is_float_array',
-    'check_file_exist', 'concat_list', 'mkfile', 'mkdir', 'mkdir_force', 'reset_dir', 'fcopy', 'list_from_file',
+    'bbox_overlaps', 'py_cpu_nms', 'soft_nms',
+    'check_file_exist', 'concat_list', 'xml2json','mkfile', 'mkdir', 'mkdir_force', 'reset_dir', 'fcopy', 'list_from_file',
     'list_to_file',
     'Time',
     'Timer', 'load_voc_anno', 'save_voc_anno', 'make_empty_coco_anno', 'make_empty_voc_anno', 'USE_OPENCV2',
