@@ -38,7 +38,7 @@ class ElfConverter(object):
             coco.ids.append(image_id)
             image_id += 1
 
-        coco.save(coco_root, reset_dir=True, split=split)
+        coco.save(coco_root, reset_dir=reset, split=split)
         coco.init()
         return coco
 
@@ -67,7 +67,7 @@ class ElfConverter(object):
             voc.sample_db[sample.name] = sample
             voc.ids.append(sample.name)
 
-        voc.save(voc_root, reset_dir=True, split=split)
+        voc.save(voc_root, reset_dir=reset, split=split)
         voc.init()
         return voc
 

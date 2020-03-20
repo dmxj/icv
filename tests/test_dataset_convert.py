@@ -50,11 +50,11 @@ def labelme_to_coco_voc():
 
     converter = LabelMeConverter(labelme)
 
-    # coco = converter.to_coco("/Users/rensike/Work/icv/labelme_seg_to_coco",split="train",reset=True)
-    # coco.vis(save_dir="/Users/rensike/Work/icv/labelme_seg_to_coco_vis",reset_dir=True)
+    coco = converter.to_coco("/Users/rensike/Work/icv/labelme_seg_to_coco",split="train",reset=True)
+    coco.vis(save_dir="/Users/rensike/Work/icv/labelme_seg_to_coco_vis",reset_dir=True)
 
-    voc = converter.to_voc("/Users/rensike/Work/icv/labelme_seg_to_voc",split="train",reset=True)
-    voc.vis(save_dir="/Users/rensike/Work/icv/labelme_seg_to_voc_vis",reset_dir=True)
+    # voc = converter.to_voc("/Users/rensike/Work/icv/labelme_seg_to_voc",split="train",reset=True)
+    # voc.vis(save_dir="/Users/rensike/Work/icv/labelme_seg_to_voc_vis",reset_dir=True)
 
 if __name__ == '__main__':
     # voc_to_coco()

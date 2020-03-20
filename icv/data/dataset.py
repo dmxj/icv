@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 from ..vis.color import VIS_COLOR
-from ..utils import is_seq, is_dir, mkdir
+from ..utils import is_seq, is_dir, mkdir, random_sample
 from ..image.transforms import imcrop, imresize
 from .classify import Classify
 from .core import BBox, Image
@@ -8,10 +8,10 @@ from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 from terminaltables import AsciiTable
 import shutil
-import random
 import copy
 import os
 from time import time
+from tqdm import tqdm
 
 
 class IcvDataSet(object):
@@ -51,7 +51,7 @@ class IcvDataSet(object):
             if isinstance(color_list_or_map, dict):
                 self.color_map = {c: color_list_or_map[c] for c in color_list_or_map if c in self.categories}
                 self.color_map.update({
-                    c: random.choice(VIS_COLOR)
+                    c: random_sample(VIS_COLOR)
                     for c in self.categories if c not in self.color_map
                 })
             elif is_seq(color_list_or_map) and len(color_list_or_map) > 0:
@@ -117,7 +117,7 @@ class IcvDataSet(object):
     def get_samples(self, ids=None):
         self.samples = []
         ids = ids if ids is not None else self.ids
-        for id in ids:
+        for id in tqdm(ids):
             sample = self.get_sample(id)
             if sample.count == 0 and not self.keep_no_anno_image:
                 continue
@@ -142,7 +142,7 @@ class IcvDataSet(object):
 
         count = min(self.length, count)
         if shuffle:
-            ids = random.sample(self.ids, count)
+            ids = random_sample(self.ids, count)
         else:
             ids = self.ids[:count]
 
@@ -154,6 +154,58 @@ class IcvDataSet(object):
             dataset.save(output_dir)
 
         return dataset
+
+    def copy(self):
+        dataset = copy.deepcopy(self)
+        return dataset
+
+    def remove(self, ids):
+        if not is_seq(ids):
+            ids = [ids]
+
+        self.ids = [_ for _ in self.ids if _ != ids]
+        if hasattr(self, "sample_db"):
+            for id in ids:
+                del self.sample_db[id]
+
+        return self
+
+    def keep(self, ids):
+        if not is_seq(ids):
+            ids = [ids]
+
+        self.ids = ids
+        if hasattr(self, "sample_db"):
+            self.sample_db = {_: self.sample_db[_] for _ in self.sample_db if _ in self.ids}
+
+        return self
+
+    def random(self, ratio=0, count=0):
+        assert ratio > 0 or count > 0
+        if ratio > 0:
+            self.ids = random_sample(self.ids, ratio)
+        elif count > 0:
+            self.ids = random_sample(self.ids, count)
+
+        if hasattr(self, "sample_db"):
+            self.sample_db = {_: self.sample_db[_] for _ in self.sample_db if _ in self.ids}
+
+        return self
+
+    def divide(self, output_dir, splits=None, ratios=None):
+        assert is_seq(splits) and len(splits) > 0
+        assert is_seq(ratios) and len(ratios) == len(splits)
+        ids = self.ids[::]
+        for ix, split in enumerate(splits):
+            reset_dir = True if ix == 0 else False
+            _ds = self.copy()
+            _ds.keep(random_sample(ids, round(ratios[ix]*len(self.ids))))
+            ids = [id for id in ids if id not in _ds.ids]
+            if len(ids) <= 0:
+                ids = random_sample(self.ids,1)
+            _ds.save(output_dir, reset_dir=reset_dir, split=split)
+
+        return self
 
     @abstractmethod
     def save(self, output_dir, reset_dir=False, split=None):
@@ -248,6 +300,23 @@ class IcvDataSet(object):
         sta["overview"]["ratio_distribution"] = dict(
             OrderedDict(sorted(sta["overview"]["ratio_distribution"].items(), key=lambda t: -t[1])[:RATIO_TOP_K]))
 
+        ratio_kvs_totals = [(r, c) for r, c in sta["detail"][label]["ratio_distribution"].items() for label in
+                            sta["detail"]]
+        ratio_kvs = []
+        forget_rks = []
+        for (r, c) in ratio_kvs_totals:
+            if r not in forget_rks:
+                ratio_kvs.append((r, c))
+            if len(ratio_kvs) >= RATIO_TOP_K:
+                break
+            forget_rks.append(r)
+
+        ratio_keys = list(zip(*ratio_kvs))[0]
+        for label in sta["detail"]:
+            sta["detail"][label]["ratio_distribution"] = {k: sta["detail"][label]["ratio_distribution"][k] for k in
+                                                          ratio_keys if k in sta["detail"][label]["ratio_distribution"]}
+
+        '''
         ratio_kvs = []
         for i, label in enumerate(sta["detail"]):
             tmp_rd = dict(
@@ -267,6 +336,7 @@ class IcvDataSet(object):
         for label in sta["detail"]:
             sta["detail"][label]["ratio_distribution"] = {k: sta["detail"][label]["ratio_distribution"][k] for k in
                                                           ratio_keys}
+        '''
 
         # get target(bbox/seg) size distribution
         bbox_size_dict = {}

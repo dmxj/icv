@@ -55,3 +55,20 @@ if __name__ == '__main__':
     #                                 pad=20)
 
     test_coco.save("/Users/rensike/Work/icv/test_coco_save_test", reset_dir=True, split="train")
+
+    from icv.data.coco import Coco
+    cat_ids = [1,2,3]
+
+    coco_train = Coco(
+        image_dir="/path/to/coco/images/train",
+        anno_file="/path/to/coco/annotations/train.json"
+    )
+    coco_train.ids = coco_train.coco.getImgIds(catIds=cat_ids)
+    coco_train.save("/path/to/new_coco/",reset_dir=True,split="train")
+
+    coco_val = Coco(
+        image_dir="/path/to/coco/images/val",
+        anno_file="/path/to/coco/annotations/val.json"
+    )
+    coco_val.ids = coco_val.coco.getImgIds(catIds=cat_ids)
+    coco_val.save("/path/to/new_coco/",split="val")

@@ -6,14 +6,15 @@ from .core.meta import SampleMeta, AnnoMeta
 from .core.sample import Sample, Anno
 from .core.bbox import BBox
 from .core.polys import Polygon
-from ..utils import fcopy, is_file, is_empty, is_dir, make_empty_coco_anno, json_encode, encode_to_file, \
+from ..utils import fcopy, is_file, is_empty, is_dir, is_list, make_empty_coco_anno, json_encode, encode_to_file, \
     decode_from_file
 import numpy as np
 from tqdm import tqdm
 
 
 class Coco(IcvDataSet):
-    def __init__(self, image_dir, anno_file, split=None, keep_no_anno_image=True, one_index=True, transform=None,
+    def __init__(self, image_dir, anno_file, split=None, keep_no_anno_image=True, remove_not_exist_image=True,
+                 one_index=True, transform=None,
                  target_transform=None):
         assert os.path.isdir(image_dir), "param image_dir is not a dir!"
         assert os.path.exists(anno_file), "param anno_file is not exist!"
@@ -23,6 +24,7 @@ class Coco(IcvDataSet):
         self.split = split if split is not None else os.path.basename(anno_file).rsplit(".", 1)[0]
 
         self.keep_no_anno_image = keep_no_anno_image
+        self.remove_not_exist_image = remove_not_exist_image
         self.one_index = one_index
         self.transform = transform
         self.target_transform = target_transform
@@ -33,14 +35,22 @@ class Coco(IcvDataSet):
     def init(self):
         from pycocotools.coco import COCO
         self.coco = COCO(self.anno_file)
-        self.categories = self.get_categories()
-        self.ids = self.coco.getImgIds()
+        self.categories = self.init_categories()
+        self.ids = [id for id in self.coco.getImgIds() if
+                    not self.remove_not_exist_image or os.path.isfile(self.image_path(id))]
 
         self.sample_db = {}
         self.set_colormap()
 
         print("there have %d samples in COCO dataset" % len(self.ids))
         print("there have %d categories in COCO dataset" % len(self.categories))
+
+    def keep_cats(self, cat_ids):
+        ids = []
+        for cat_id in cat_ids:
+            ids.append(self.coco.getImgIds(catIds=[cat_id]))
+        self.ids = list(set(ids[0]))
+        self.set_categories([self.id2cat[id] for id in cat_ids])
 
     def concat(self, coco, out_dir=None, reset=False, new_split=None):
         assert isinstance(coco, Coco)
@@ -121,28 +131,42 @@ class Coco(IcvDataSet):
 
         return dist_anno_path, dist_image_path
 
-    def get_categories(self):
+    def init_categories(self):
         categories = []
         catIds = sorted(self.coco.getCatIds())
+        if len(catIds) > 0 and min(catIds) > 0:
+            self.one_index = True
         for catid in catIds:
             categories.append(self.coco.cats[catid]["name"])
         self.set_categories(categories)
         return categories
 
+    def image_path(self, id):
+        path = self.coco.loadImgs(id)[0]['file_name']
+        return os.path.join(self.image_dir, path)
+
     def get_sample(self, id):
         if id in self.sample_db:
             return self.sample_db[id]
 
-        path = self.coco.loadImgs(id)[0]['file_name']
-        image_file = os.path.join(self.image_dir, path)
+        image_file = self.image_path(id)
 
         annos = []
         for ann in self.coco.imgToAnns[id]:
+            if ann["category_id"] not in self.coco.cats:
+                continue
+            cat = self.coco.cats[ann["category_id"]]["name"]
+            if cat not in self.categories:
+                continue
             xmin, ymin, width, height = ann["bbox"]
-            cat = self.id2cat[ann["category_id"]]
+            if "segmentation" not in ann or not ann["segmentation"] or (isinstance(ann["segmentation"],list) and not ann["segmentation"][0]):
+                polys = None
+            else:
+                polys = Polygon(ann["segmentation"][0], label=cat)
+
             annos.append(Anno(
                 bbox=BBox(xmin=xmin, ymin=ymin, xmax=xmin + width, ymax=ymin + height, label=cat),
-                polys=Polygon(ann["segmentation"][0], label=cat) if "segmentation" in ann else None,
+                polys=polys,
                 label=cat,
                 color=self.color_map[cat],
                 meta=AnnoMeta({k: ann[k] for k in ann if k not in ["bbox", "category_id", "segmentation"]})
@@ -150,7 +174,7 @@ class Coco(IcvDataSet):
 
         img_info = self.coco.imgs[id]
         sample = Sample(
-            name=path.rsplit(".", 1)[0],
+            name=os.path.basename(image_file).rsplit(".", 1)[0],
             image=image_file,
             annos=annos,
             meta=SampleMeta(img_info)
@@ -159,10 +183,11 @@ class Coco(IcvDataSet):
         self.sample_db[id] = sample
         return sample
 
-    def save(self, output_dir, reset_dir=False, split=None):
-        dist_anno_path, dist_image_path = Coco.reset_dir(output_dir, split, reset=reset_dir)
-        dist_anno_path = os.path.join(dist_anno_path, "%s.json" % split) if is_dir(dist_anno_path) else dist_anno_path
-        if is_file(self.anno_file) and not is_empty(self.image_dir):
+    def save(self, output_dir, reset_dir=False, split=None, raw_copy=False):
+        if raw_copy and is_file(self.anno_file) and not is_empty(self.image_dir):
+            dist_anno_path, dist_image_path = Coco.reset_dir(output_dir, split, reset=reset_dir)
+            dist_anno_path = os.path.join(dist_anno_path, "%s.json" % split) if is_dir(
+                dist_anno_path) else dist_anno_path
             fcopy(self.anno_file, dist_anno_path)
             fcopy(self.image_dir, dist_image_path)
         else:
@@ -174,7 +199,6 @@ class Coco(IcvDataSet):
         annotation = make_empty_coco_anno()
 
         anno_id = 1
-        cats = {}
         if os.path.isdir(dist_dir):
             for id in self.ids:
                 sample = self.get_sample(id)
@@ -190,6 +214,8 @@ class Coco(IcvDataSet):
                 )
 
                 for anno in sample.annos:
+                    if anno.label not in self.categories:
+                        continue
                     anno_dict = {}
                     anno_dict["bbox"] = [anno.bbox.xmin, anno.bbox.ymin, anno.bbox.width, anno.bbox.height]
                     if anno.seg_mode_polys:
@@ -200,6 +226,10 @@ class Coco(IcvDataSet):
                         anno_dict["segmentation"] = [anno.mask.to_ploygons().exterior.flatten().tolist()]
                         anno_dict["area"] = anno.mask.to_ploygons().area
                         anno_dict["iscrowd"] = 0
+                    else:
+                        anno_dict["segmentation"] = [[]]
+                        anno_dict["area"] = anno.bbox.width * anno.bbox.height
+                        anno_dict["iscrowd"] = 1
 
                     anno_dict["category_id"] = self.cat2id[anno.label]
                     anno_dict["image_id"] = id
@@ -208,8 +238,9 @@ class Coco(IcvDataSet):
 
                     annotation["annotations"].append(anno_dict)
 
-                    if anno.label not in cats:
-                        cats[anno.label] = {"supercategory": "", "id": anno_dict["category_id"], "name": anno.label}
+        cats = {}
+        for cat in self.cat2id:
+            cats[cat] = {"supercategory": "", "id": self.cat2id[cat], "name": cat}
 
         annotation["categories"] = list(cats.values())
         encode_to_file(annotation, os.path.join(dist_anno_path, "%s.json" % split))

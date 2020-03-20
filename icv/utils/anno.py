@@ -116,7 +116,7 @@ def make_empty_voc_anno(**kwargs):
             "depth": "0"
         },
         "segmented": "0",
-        "objects": {},
+        "objects": [],
     }
 
     if "folder" in kwargs:

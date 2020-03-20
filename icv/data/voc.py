@@ -130,17 +130,17 @@ class Voc(IcvDataSet):
             output_dir, reset=reset_dir)
         for id in self.ids:
             if is_file(self._annopath % id) and is_file(self._imgpath % id):
-                fcopy(self._annopath % id, anno_path)
-                fcopy(self._imgpath % id, image_path)
-                fcopy(self._seg_class_imgpath % id, seg_class_image_path)
-                fcopy(self._seg_object_imgpath % id, seg_object_image_path)
+                fcopy(self._annopath % id, anno_path, rename=False)
+                fcopy(self._imgpath % id, image_path, rename=False)
+                fcopy(self._seg_class_imgpath % id, seg_class_image_path, rename=False)
+                fcopy(self._seg_object_imgpath % id, seg_object_image_path, rename=False)
             else:
                 self._write_sample(self.get_sample(id), output_dir)
 
         if self.is_seg_mode:
-            list_to_file(self.ids, os.path.join(imgset_seg_path, "%s.txt" % split))
+            list_to_file(self.ids, os.path.join(imgset_seg_path, "%s.txt" % split), append=reset_dir)
         else:
-            list_to_file(self.ids, os.path.join(imgset_path, "%s.txt" % split))
+            list_to_file(self.ids, os.path.join(imgset_path, "%s.txt" % split), append=reset_dir)
 
     @staticmethod
     def reset_dir(dist_dir, reset=False):

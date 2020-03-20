@@ -39,7 +39,7 @@ class Detector(object):
         self.inference(np.zeros((100, 100, 3), dtype=np.uint8))
 
     @abstractmethod
-    def inference(self, image, show=False, save_path=None, score_thr=-1):
+    def inference(self, image, is_show=False, save_path=None, score_thr=-1):
         pass
 
     @abstractmethod

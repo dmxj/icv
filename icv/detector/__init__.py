@@ -16,4 +16,9 @@ try:
 except Exception as e:
     pass
 
-# __all__ = ['DetectorClient', 'TfObjectDetector', 'MbDetector', 'MmdetDetector']
+try:
+    from .pp_det import PPDetector
+except Exception as e:
+    pass
+
+# __all__ = ['DetectorClient', 'TfObjectDetector', 'MbDetector', 'MmdetDetector', 'PPDetector']

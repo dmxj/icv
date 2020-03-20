@@ -2,6 +2,7 @@
 from .io import imread, imwrite
 from skimage import draw
 from ..utils import is_seq, is_np_array
+from .transforms import bgr2rgb
 from ..vis.color import VIS_COLOR, get_color_tuple, get_text_color
 import random
 import numpy as np
@@ -17,9 +18,8 @@ def imshow(img):
         img (str or ndarray): The image to be displayed.
     """
     plt.axis('off')
-    plt.imshow(imread(img))
+    plt.imshow(imread(img,rgb_mode=True))
     plt.show()
-
 
 def imshow_bboxes(
         img,
@@ -175,8 +175,6 @@ def imdraw_mask(image, mask, color='red', alpha=0.45):
     if mask.dtype != np.uint8:
         raise ValueError('`mask` not of type np.uint8')
     if np.any(np.logical_and(mask != 1, mask != 0)):
-        print("======> this mask is:",mask)
-        print("======> unique id:",np.unique(mask))
         raise ValueError('`mask` elements should be in [0, 1]')
 
     image = imread(image)

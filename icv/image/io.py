@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import cv2
 import numpy as np
-from ..utils import is_str,is_seq,check_file_exist,USE_OPENCV2,mkdir,np_to_base64
+from ..utils import is_str, is_seq, check_file_exist, USE_OPENCV2, mkdir, np_to_base64
 import os
 from PIL import Image
 
@@ -18,6 +18,7 @@ imread_flags = {
     'unchanged': IMREAD_UNCHANGED
 }
 
+
 def imlist(img_dir, valid_exts=None, if_recursive=False):
     """
     List images under directory
@@ -29,13 +30,14 @@ def imlist(img_dir, valid_exts=None, if_recursive=False):
     from glob import glob
     if is_str(valid_exts):
         valid_exts = [valid_exts.strip(".")]
-    valid_exts = list(valid_exts) if is_seq(valid_exts) else ["jpg","jpeg","bmp","tif","gif","png"]
+    valid_exts = list(valid_exts) if is_seq(valid_exts) else ["jpg", "jpeg", "bmp", "tif", "gif", "png"]
     images = []
     for ext in valid_exts:
-        images.extend(glob(os.path.join(img_dir,"**","*.%s" % ext),recursive=if_recursive))
+        images.extend(glob(os.path.join(img_dir, "**", "*.%s" % ext), recursive=if_recursive))
     return images
 
-def imread(img_or_path, flag='color'):
+
+def imread(img_or_path, flag='color', rgb_mode=False):
     """Read an image.
     Args:
         img_or_path (ndarray or str or pillow Image): Either a numpy array or image path.
@@ -46,21 +48,28 @@ def imread(img_or_path, flag='color'):
     Returns:
         ndarray: Loaded image array.
     """
+    from .transforms import bgr2rgb
     if isinstance(img_or_path, np.ndarray):
+        if rgb_mode:
+            return bgr2rgb(img_or_path)
         return img_or_path
     elif is_str(img_or_path):
         flag = imread_flags[flag] if is_str(flag) else flag
         check_file_exist(img_or_path,
                          'img file does not exist: {}'.format(img_or_path))
         image = cv2.imread(img_or_path, flag)
-        if flag != 0:
-            image = image[...,::-1]
+        if rgb_mode:
+            image = bgr2rgb(image)
         return image
     else:
         try:
-            return pil_img_to_np(img_or_path)
+            image = pil_img_to_np(img_or_path)
+            if rgb_mode:
+                image = bgr2rgb(image)
+            return image
         except:
             raise TypeError('"img" must be a numpy array or a filename')
+
 
 def imread_topil(img_or_path):
     if is_str(img_or_path):
@@ -72,10 +81,12 @@ def imread_topil(img_or_path):
     else:
         raise TypeError('"img" must be a numpy array or a filename or a PIL Image')
 
+
 def imread_tob64(img_or_path):
     img = imread(img_or_path)
     img_b64 = np_to_base64(img)
     return img_b64.decode("utf-8")
+
 
 def imwrite(img, file_path, params=None, auto_mkdir=True):
     """Write image to file
@@ -92,10 +103,11 @@ def imwrite(img, file_path, params=None, auto_mkdir=True):
         dir_name = os.path.abspath(os.path.dirname(file_path))
         mkdir(dir_name)
 
-    img = imread(img)
+    img = imread(img, rgb_mode=True)
     return np_img_to_pil(img).save(file_path)
 
     # return cv2.imwrite(file_path, img, params)
+
 
 def pil_img_to_np(image):
     '''
@@ -117,4 +129,3 @@ def np_img_to_pil(np_arr):
     '''
     im = Image.fromarray(np_arr.astype('uint8')).convert('RGB')
     return im
-

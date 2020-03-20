@@ -36,7 +36,7 @@ class VocConverter(object):
             coco.ids.append(image_id)
             image_id += 1
 
-        coco.save(coco_root,reset_dir=True,split=split)
+        coco.save(coco_root,reset_dir=reset,split=split)
         coco.init()
         return coco
 

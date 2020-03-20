@@ -13,7 +13,7 @@ if __name__ == '__main__':
     #
     # image = imdraw_polygons("/Users/rensike/Files/temp/coco_tiny/val/000000136355.jpg",[polygons])
     #
-    # imshow(image)
+    imshow("/Users/rensike/Files/temp/coco_tiny/val/000000136355.jpg")
 
     # imshow_bboxes("/Users/rensike/Files/data/images/boy.jpg",bboxes=[[69,27,133,395]],is_show=True)
 
@@ -75,6 +75,8 @@ if __name__ == '__main__':
     # print(img.shape)
     # imshow(img)
 
+
+    '''
     # 横坐标
     xaxis = ["method 1", "method 2", "method 3", "method 4", "method 5"]
 
@@ -133,4 +135,4 @@ if __name__ == '__main__':
     plt.legend()
     plt.savefig("./model_iter_incr18.png")
     plt.show()
-
+    '''

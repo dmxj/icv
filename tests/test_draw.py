@@ -9,7 +9,8 @@ Authors: rensike(rensike@baidu.com)
 Date:    2019/9/5 下午7:37
 """
 
-from icv import imshow_bboxes
+from icv.image.vis import imshow_bboxes
+from icv.image import immerge,imwrite
 
 if __name__ == '__main__':
     imshow_bboxes(

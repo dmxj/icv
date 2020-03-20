@@ -12,9 +12,9 @@ if __name__ == '__main__':
     # prepared = req.prepare()
     # print(prepared.__dict__)
 
-    app = App()
+    app = App(port=9898)
 
-    @app.route("/leilei",["POST","PUT","GET"])
+    @app.route("/api/v1/predict",["POST","PUT","GET"])
     def love_leilei(ctx):
         print("=====> you are using method:",ctx.request.method)
         ctx.response.send("i love leilei")

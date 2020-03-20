@@ -36,6 +36,6 @@ class CocoConverter(object):
             voc.sample_db[sample.name] = sample
             voc.ids.append(sample.name)
 
-        voc.save(voc_root, reset_dir=True, split=split)
+        voc.save(voc_root, reset_dir=reset, split=split)
         voc.init()
         return voc

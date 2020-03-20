@@ -10,13 +10,14 @@ from .dataset import IcvDataSet
 from ..data.core.bbox import BBox
 from ..data.core.mask import Mask
 from ..data.core.sample import Sample, Anno
-from ..data.core.meta import AnnoMeta,SampleMeta
+from ..data.core.meta import AnnoMeta, SampleMeta
 from ..vis.color import VIS_COLOR
 from icv.image import imread
-from icv.utils import is_file,is_seq,is_dict,xml2json,mkdir
+from icv.utils import is_file, is_seq, is_dict, xml2json, mkdir
+
 
 class ElfFiles(object):
-    def __init__(self,image_file,anno_file,attachment_dir=None):
+    def __init__(self, image_file, anno_file, attachment_dir=None):
         assert is_file(image_file)
         assert is_file(anno_file)
         assert attachment_dir is None or is_file(attachment_dir)
@@ -25,15 +26,16 @@ class ElfFiles(object):
         self.anno_file = anno_file
         self.attachment_file = attachment_dir
 
+
 # TODO: bug 分割的label解析的有问题
 class Elf(IcvDataSet):
-    def __init__(self,image_anno_attachment_pathlist, split="trainval", keep_no_anno_image=True, categories=None,
+    def __init__(self, image_anno_attachment_pathlist, split="trainval", keep_no_anno_image=True, categories=None,
                  one_index=False):
         assert is_seq(image_anno_attachment_pathlist)
 
-        image_path_list, anno_path_list, attachment_dir_list = [],[], []
+        image_path_list, anno_path_list, attachment_dir_list = [], [], []
         for f in image_anno_attachment_pathlist:
-            assert is_seq(f) or is_dict(f) or isinstance(f,ElfFiles)
+            assert is_seq(f) or is_dict(f) or isinstance(f, ElfFiles)
             if is_seq(f):
                 assert len(f) >= 2
                 image_path_list.append(f[0])
@@ -72,11 +74,11 @@ class Elf(IcvDataSet):
         self.categories = categories if categories is not None else self.parse_categories()
 
         super(Elf, self).__init__(self.ids, self.categories, self.keep_no_anno_image, one_index)
-        print("there have %d samples in LabelMe dataset" % len(self.ids))
-        print("there have %d categories in LabelMe dataset" % len(self.categories))
+        print("there have %d samples in Elf dataset" % len(self.ids))
+        print("there have %d categories in Elf dataset" % len(self.categories))
 
-    def _get_bboxes_from_mask(self,mask_or_path):
-        mask = imread(mask_or_path,0)
+    def _get_bboxes_from_mask(self, mask_or_path):
+        mask = imread(mask_or_path, 0)
         contours = measure.find_contours(mask, 0.5)
 
         reshaped_contour = []
@@ -90,13 +92,13 @@ class Elf(IcvDataSet):
         bboxes = []
         for i in range(len(reshaped_contour)):
             contour = np.array(reshaped_contour[i])
-            xmin,xmax = int(np.min(contour[:,0])),int(np.max(contour[:,0]))
-            ymin,ymax = int(np.min(contour[:,1])),int(np.max(contour[:,1]))
-            bboxes.append([xmin,ymin,xmax,ymax])
+            xmin, xmax = int(np.min(contour[:, 0])) + 1, int(np.max(contour[:, 0])) + 1
+            ymin, ymax = int(np.min(contour[:, 1])) + 1, int(np.max(contour[:, 1])) + 1
+            bboxes.append([xmin, ymin, xmax, ymax])
 
         return bboxes
 
-    def _parse_anno_item(self,ix,obj,id,anno_data):
+    def _parse_anno_item(self, ix, obj, id, anno_data):
         if "name" in obj:
             label = obj["name"]
             if label not in self.color_map:
@@ -115,13 +117,16 @@ class Elf(IcvDataSet):
                 )
 
                 return [anno]
-            elif "attachments" in anno_data or ("doc" in anno_data and "attachments" in anno_data["doc"]): # for segmentation
-                attachments = anno_data["attachments"] if "attachments" in anno_data else anno_data["doc"]["attachments"]
+            elif "attachments" in anno_data or (
+                    "doc" in anno_data and "attachments" in anno_data["doc"]):  # for segmentation
+                attachments = anno_data["attachments"] if "attachments" in anno_data else anno_data["doc"][
+                    "attachments"]
+
                 def _parse_anno_from_attach(attach):
                     annos = []
                     if attach is not None and "file_name" in attach:
-                        mask_path = os.path.join(self.id2attachpath[id],attach["file_name"])
-                        img_mask = imread(mask_path,0)
+                        mask_path = os.path.join(self.id2attachpath[id], attach["file_name"])
+                        img_mask = imread(mask_path, 0)
                         bboxes = self._get_bboxes_from_mask(img_mask)
                         for bbox in bboxes:
                             in_others = False
@@ -132,7 +137,10 @@ class Elf(IcvDataSet):
                             if in_others:
                                 continue
 
-                            xmin,ymin,xmax,ymax = bbox
+                            xmin, ymin, xmax, ymax = bbox
+                            if xmax - xmin <= 2 or ymax - ymin <= 2:
+                                continue
+
                             anno = Anno(
                                 bbox=BBox(xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax, label=label),
                                 label=label,
@@ -141,7 +149,10 @@ class Elf(IcvDataSet):
                             )
 
                             bin_mask = np.zeros_like(img_mask, np.uint8)
-                            bin_mask[ymin:ymax, xmin:xmax] = img_mask[ymin:ymax, xmin:xmax]
+                            bin_mask[ymin:ymax+1, xmin:xmax+1] = img_mask[ymin:ymax+1, xmin:xmax+1]
+                            if np.where(bin_mask != 0)[0].size == 0:
+                                continue
+
                             bin_mask[np.where(bin_mask != 0)] = 1
                             anno.mask = Mask(bin_mask)
 
@@ -159,52 +170,53 @@ class Elf(IcvDataSet):
 
         return None
 
-    def _parse_json_annotation(self,id,anno_data):
+    def _parse_json_annotation(self, id, anno_data):
         annos = []
         if "labeled" in anno_data and not anno_data["labeled"]:
             return annos
 
         if "outputs" in anno_data and "object" in anno_data["outputs"]:
-            for ix,obj in enumerate(anno_data["outputs"]["object"]):
-                anno = self._parse_anno_item(ix,obj,id,anno_data)
+            for ix, obj in enumerate(anno_data["outputs"]["object"]):
+                anno = self._parse_anno_item(ix, obj, id, anno_data)
                 if anno is not None:
                     annos.extend(anno)
 
         return annos
 
-    def _parse_xml_annotation(self,id,anno_data):
+    def _parse_xml_annotation(self, id, anno_data):
         annos = []
         if "labeled" in anno_data and not anno_data["labeled"]:
             return annos
 
-        if "annotation" in anno_data:   # for pascal-voc (only detection)
+        if "annotation" in anno_data:  # for pascal-voc (only detection)
             if "object" in anno_data["annotation"]:
                 object = anno_data["annotation"]["object"]
                 if not is_seq(object):
                     object = [object]
                 for obj in object:
-                    anno = self._parse_anno_item(0,obj,id,anno_data)
+                    anno = self._parse_anno_item(0, obj, id, anno_data)
                     if anno is not None:
                         annos.extend(anno)
-        elif "doc" in anno_data:    # for xml style (detection or segmentation)
-            if "outputs" in anno_data["doc"] and "object" in anno_data["doc"]["outputs"] and "item" in anno_data["doc"]["outputs"]["object"]:
+        elif "doc" in anno_data:  # for xml style (detection or segmentation)
+            if "outputs" in anno_data["doc"] and "object" in anno_data["doc"]["outputs"] and "item" in \
+                    anno_data["doc"]["outputs"]["object"]:
                 items = anno_data["doc"]["outputs"]["object"]["item"]
                 if not is_seq(items):
                     items = [items]
-                for ix,obj in enumerate(items):
-                    anno = self._parse_anno_item(ix,obj,id,anno_data)
+                for ix, obj in enumerate(items):
+                    anno = self._parse_anno_item(ix, obj, id, anno_data)
                     if anno is not None:
                         annos.extend(anno)
 
         return annos
 
-    def _load_annotation(self,id,anno_file):
+    def _load_annotation(self, id, anno_file):
         if str(anno_file).endswith(".json"):
             anno_data = json.load(open(anno_file, "r"))
-            return self._parse_json_annotation(id,anno_data)
+            return self._parse_json_annotation(id, anno_data)
         elif str(anno_file).endswith(".xml"):
             anno_data = xml2json(anno_file)
-            return self._parse_xml_annotation(id,anno_data)
+            return self._parse_xml_annotation(id, anno_data)
 
     def get_sample(self, id):
         """
@@ -216,7 +228,7 @@ class Elf(IcvDataSet):
             return self.sample_db[id]
 
         anno_file = self.id2annopath[id]
-        annos = self._load_annotation(id,anno_file)
+        annos = self._load_annotation(id, anno_file)
         img_file = self.id2imgpath[id]
 
         sample = Sample(

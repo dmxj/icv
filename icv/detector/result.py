@@ -20,7 +20,7 @@ class DetectionResult(object):
         self.categories = categories
         self._det_labels = None
         if self.categories is not None:
-            self._det_labels = [self.categories[_ - 1] for _ in self._det_classes]
+            self._det_labels = [self.categories[_] for _ in self._det_classes]
 
         if self._score_thr >= 0:
             self.select_top_predictions()
@@ -35,7 +35,7 @@ class DetectionResult(object):
             self._det_masks = self._det_masks[filter_ids]
 
         if self.categories is not None:
-            self._det_labels = [self.categories[_ - 1] for _ in self._det_classes]
+            self._det_labels = [self.categories[_] for _ in self._det_classes]
 
     def filter(self, min_score=0, max_score=1):
         result = self.deepcopy()
@@ -51,7 +51,7 @@ class DetectionResult(object):
             result._det_masks = result._det_masks[filter_ids]
 
         if result.categories is not None:
-            result._det_labels = [result.categories[_ - 1] for _ in result._det_classes]
+            result._det_labels = [result.categories[_] for _ in result._det_classes]
         return result
 
     @property
@@ -84,7 +84,7 @@ class DetectionResult(object):
 
     def topk(self, k=1):
         if len(self) == 0:
-            return [(-1, -1)]
+            return [(-1, 0)]
 
         assert k <= len(self), "param k should smaller than bbox count."
 

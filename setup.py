@@ -18,11 +18,11 @@ URL = 'https://github.com/dmxj/icv'
 EMAIL = 'rensike@baidu.com'
 AUTHOR = 'rensike'
 REQUIRES_PYTHON = '>=3.5.0'
-VERSION = "0.0.1.6.8"
+VERSION = "0.0.1.7.1"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'Pillow', 'numpy', 'opencv-python', 'Cython', 'pycocotools', 'bottle', 'scikit-image', 'terminaltables', 'lxml',
+    'Pillow', 'numpy', 'opencv-python', 'Cython', 'bottle', 'pycocotools','scikit-image', 'terminaltables', 'lxml',
     'tqdm', 'addict', 'xmljson', 'yacs'
 ]
 

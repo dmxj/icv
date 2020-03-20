@@ -11,7 +11,7 @@ def encode_to_file(obj,filepath,overwrite=True):
     """
     if not overwrite and is_file(filepath):
         return
-    return json.dump(obj,open(filepath,"w"))
+    return json.dump(obj,open(filepath,"w"),indent=True)
 
 def decode_from_file(filepath):
     """
@@ -27,7 +27,7 @@ def json_encode(obj):
     :param obj:
     :return:
     """
-    return json.dumps(obj)
+    return json.dumps(obj,indent=True)
 
 
 def json_decode(str, encoding="utf-8"):

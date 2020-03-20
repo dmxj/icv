@@ -6,7 +6,7 @@ except ModuleNotFoundError as e:
                     "(https://github.com/open-mmlab/mmdetection/blob/master/INSTALL.md) . " \
                     "Import mmdet Error!")
 
-MMDET_VERSION = int(mmdet.__version__.split("+")[0].replace(".", ""))
+# MMDET_VERSION = int(mmdet.__version__.split("+")[0].replace(".", ""))
 
 import os
 import numpy as np
@@ -22,7 +22,7 @@ from mmdet.datasets.transforms import ImageTransform
 
 
 class MmdetDetector(Detector):
-    def __init__(self, model_path, config_file, categories, iou_thr=0.5, score_thr=0.5, device=None):
+    def __init__(self, model_path, config_file, categories, iou_thr=0.5, score_thr=0, device=None):
         super(MmdetDetector, self).__init__(categories=categories, iou_thr=iou_thr, score_thr=score_thr, device=device)
 
         self.model_path = model_path
@@ -139,7 +139,7 @@ class MmdetDetector(Detector):
         score_thr = score_thr if score_thr >= 0 else self.score_thr
         det_result = DetectionResult(
             det_bboxes=detection_bboxes,
-            det_classes=detection_classes + 1,
+            det_classes=detection_classes,
             det_scores=detection_scores,
             det_masks=detection_masks if detection_masks.shape[0] > 0 else None,  # TODO: process segm_result
             det_time=inference_time,

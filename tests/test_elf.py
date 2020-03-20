@@ -37,4 +37,3 @@ if __name__ == '__main__':
     coco.vis(save_dir="/Users/rensike/Work/icv/elf_segment_to_coco_xml/vis",reset_dir=True)
 
     # elf.vis(save_dir="/Users/rensike/Work/icv/annotation/elf/segment2_vis_xml",reset_dir=True)
-

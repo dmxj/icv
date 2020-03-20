@@ -23,7 +23,7 @@ from maskrcnn_benchmark.structures.bounding_box import BoxList
 from maskrcnn_benchmark.config import cfg
 
 class MbDetector(Detector):
-    def __init__(self,model_path,config_file,categories,show_mask_heatmaps=False,iou_thr=0.5,score_thr=0.5,device=None):
+    def __init__(self,model_path,config_file,categories,show_mask_heatmaps=False,iou_thr=0.5,score_thr=0,device=None):
         super(MbDetector, self).__init__(categories=categories, iou_thr=iou_thr, score_thr=score_thr,device=device)
 
         assert is_file(model_path),"model path does not exist!"
@@ -172,7 +172,7 @@ class MbDetector(Detector):
         score_thr = score_thr if score_thr >= 0 else self.score_thr
         det_result = DetectionResult(
             det_bboxes=detection_bboxes,
-            det_classes=np.array(detection_classes),
+            det_classes=np.array(detection_classes) - 1,
             det_scores=np.array(detection_scores),
             det_masks=detection_segm if detection_segm.shape[0] > 0 else None,
             det_time=inference_time,
